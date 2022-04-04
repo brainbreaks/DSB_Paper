@@ -1,0 +1,133 @@
+rdc_cluster	rdc_group	rdc_repliseq_type	rdc_hrom	rdc_genes	rdc_rrs
+RDC_045	1		chr16	Lsamp	358.36
+RDC_019	1		chr12	Npas3	357.74
+RDC_053	1	Long late	chr17	Nrxn1	186.97
+RDC_105	2	Midium S	chr9	Maml2	183.04
+RDC_086	2	Midium S	chr6	Ptn, Dgki	174.28
+RDC_090	1	External Ori	chr6	Ctnna2	132.53
+RDC_059	1	Internal Termination	chr19	Prkg1	112.75
+RDC_089	1	External Ori	chr6	Grid2	107.96
+RDC_099	1	External Ori	chr8	Csmd1	102.12
+RDC_084	1	Internal Termination	chr5	Sdk1	95.23
+RDC_104	1	Biphasic	chr8	Cdh13	90.44
+RDC_056	1	Internal Termination	chr18	Tcf4	84.61
+RDC_083	1	Biphasic	chr5	Auts2	82.42
+RDC_060	1	Long late	chr2	Lrp1b	82.23
+RDC_077	1	Complex	chr4	Nfia	81.85
+RDC_003	1	Internal Termination	chr1	Pard3b	80.06
+RDC_049	2	Not clear	chr17	Park2, Pacrg, Qk, Agpat4, Map3k4, Slc22a3, Igf2r	76.78
+RDC_040	1		chr15	Csmd3	71.07
+RDC_012	1	Long late	chr10	Grik2	70.57
+RDC_038	1		chr15	Ctnnd2	70.31
+RDC_106	2	Biphasic	chr9	Opcml, Ntm	70.01
+RDC_072	3	Midium S	chr3	--	69.01
+RDC_062	1	Not clear	chr2	Sema6d	66.14
+RDC_047	1		chr16	Cadm2	65.13
+RDC_034	1	Internal Termination	chr14	Gpc6	62.96
+RDC_022	1		chr12	Nrxn3	60.70
+RDC_068	1	External Ori	chr3	Nlgn1	60.29
+RDC_043	1		chr16	Rbfox1	56.40
+RDC_010	1	External Ori	chr10	Nkain2	56.11
+RDC_093	1	Biphasic	chr6	Sox5	51.07
+RDC_097	2	Midium S	chr7	Sox6, Pik3c2a	50.72
+RDC_063	1	Complex	chr2	Macrod2	47.73
+RDC_103	1	Biphasic	chr8	Wwox	46.80
+RDC_042	2		chr15	Ptk2, Ago2, Trappc9	45.45
+RDC_033	1	Long late	chr14	Pcdh9	43.62
+RDC_055	2	Midium S	chr18	Arhgap26, Fgf1	39.87
+RDC_013	2	Internal Termination	chr10	Anks1b, Apaf1	37.42
+RDC_102	1	External Ori	chr8	Inpp4b	36.42
+RDC_061	1	Long late	chr2	Lrrc4c	36.10
+RDC_079	1	Uni-direction	chr5	Magi2	36.07
+RDC_057	1	Internal Termination	chr18	Dcc	35.39
+RDC_065	2	Internal Termination	chr2	Ptprt, Zhx3, Chd6	35.13
+RDC_021	1		chr12	Gphn	34.70
+RDC_094	1	Midium S	chr7	Nav2	34.70
+RDC_002	2	Internal Ori	chr1	Prim2, Dst	33.68
+RDC_075	2	Uni-direction	chr4	Astn2	31.19
+RDC_026	2	Complex	chr13	Mctp1, 2210408I21Rik, Fam172a	30.80
+RDC_067	1	External Ori	chr3	Naaladl2	30.37
+RDC_044	1		chr16	Fgf12	27.49
+RDC_015	2	Internal Termination	chr10	Grip1	27.30
+RDC_069	1	Internal Termination	chr3	Tnik	26.02
+RDC_088	1	External Ori	chr6	Ccser1	24.71
+RDC_030	1	Internal Termination	chr14	Kcnma1	23.86
+RDC_054	2	Internal Termination	chr18	Fhod3, AW554918, Celf4	23.22
+RDC_110	1	Internal Termination	chr9	Rbms3	23.02
+RDC_037	1		chr15	Slc1a3	21.90
+RDC_011	1	Midium S	chr10	Rev3l	20.98
+RDC_046	1		chr16	Zbtb20	19.57
+RDC_051	1	Uni-direction	chr17	Dlgap1	19.12
+RDC_071	2	Biphasic	chr3	Lrba, Dclk2	18.91
+RDC_001	1	External Ori	chr1	Bai3	18.55
+RDC_025	2	Uni-direction	chr13	Wnk2, Cenpp, Phf2, Fam120a	18.37
+RDC_098	2	Internal Termination	chr7	Dock1	18.14
+RDC_016	2	Midium S	chr11	Nxn, Abr	18.08
+RDC_073	1	Uni-direction	chr3	Vav3	17.96
+RDC_032	1	External Ori	chr14	Nrg3	17.50
+RDC_050	1	Internal Termination	chr17	Ptprm	17.39
+RDC_035	1	External Ori	chr14	Fgf14	17.09
+RDC_014	1	External Ori	chr10	Nav3	16.98
+RDC_080	1	Uni-direction	chr5	Dpp6	16.37
+RDC_027	1	Complex	chr14	Fhit	15.66
+RDC_087	1	Midium S	chr6	Creb5	15.66
+RDC_081	1	Internal Termination	chr5	Lphn3	15.20
+RDC_096	2	External Ori	chr7	Stim1, Clpb, Nup98	15.18
+RDC_004	1	External Ori	chr1	Erbb4	15.06
+RDC_023	2		chr12	Mark3	12.01
+RDC_058	3	Midium S	chr19	--	12.01
+RDC_092	1	Long late	chr6	Cntn4	11.94
+RDC_020	1		chr12	Mdga2	11.90
+RDC_024	2	Internal Ori	chr13	Adarb2, Dip2c, Chrm3	10.88
+RDC_008	1	Midium S	chr1	Srgap2	9.80
+RDC_066	2	Not clear	chr2	Cdh4	9.80
+RDC_028	1	Internal Termination	chr14	Ptprg	9.55
+RDC_048	1	Not clear	chr17	Pde10a	9.55
+RDC_082	1	Biphasic	chr5	Slc4a4	9.55
+RDC_100	2	Uni-direction	chr8	Large1	9.55
+RDC_111	1		chrX	Dmd	9.55
+RDC_039	1		chr15	Oxr1	9.11
+RDC_076	1	Internal Termination	chr4	Ptprd	9.11
+RDC_112	1		chrX	Il1rapl1	9.11
+RDC_041	2		chr15	Trappc9	8.67
+RDC_005	2	Not clear	chr1	Pid1, Dner, Trip12	8.50
+RDC_052	1	Midium S	chr17	Prkce	8.50
+RDC_091	2	Midium S	chr6	Chchd6	8.50
+RDC_006	1	Midium S	chr1	Agap1	8.30
+RDC_018	1		chr12	Dgkb	8.05
+RDC_108	1	Internal Termination	chr9	Rora	7.97
+RDC_017	1		chr12	Hdac9	7.77
+RDC_078	2	Internal Termination	chr4	Csmd2	7.77
+RDC_085	1	Internal Termination	chr6	Exoc4	7.77
+RDC_101	2	Complex	chr8	Nr3c2, Arhgap10	7.77
+RDC_109	1	Midium S	chr9	Tcf12	7.77
+RDC_113	1		chrX	Pcdh11x	7.77
+RDC_009	1	Uni-direction	chr10	Utrn	7.22
+RDC_036	2		chr15	Wdr70, 2410089E03Rik, Nipbl	7.22
+RDC_070	2	Internal Ori	chr3	Dclk1, Nbea	6.64
+RDC_029	2	Midium S	chr14	Vcl, Adk, Kat6b	6.62
+RDC_064	3	Internal Ori	chr2	--	6.62
+RDC_074	1	External Ori	chr3	Dpyd	6.62
+RDC_095	2	Long late	chr7	Gabrg3, Gabra5, Gabrb3	6.62
+RDC_107	2	Internal Ori	chr9	Kirrel3	6.62
+RDC_031	2	Midium S	chr14	Zmiz1	6.10
+RDC_007	1	Internal Termination	chr1	Nckap5	6.00
+RDC_017	1	Long late	chr12	Hdac9
+RDC_018	1	Long late	chr12	Dgkb
+RDC_019	1	Biphasic	chr12	Npas3
+RDC_020	1	Long late	chr12	Mdga2
+RDC_021	1	Internal Termination	chr12	Gphn
+RDC_022	1		chr12	Nrxn3
+RDC_023	2	Midium S	chr12	Mark3
+RDC_036	2		chr15	Wdr70, 2410089E03Rik, Nipbl
+RDC_037	1		chr15	Slc1a3
+RDC_038	1	Internal Termination	chr15	Ctnnd2
+RDC_039	1		chr15	Oxr1
+RDC_040	1	Long late	chr15	Csmd3
+RDC_041	2		chr15	Trappc9
+RDC_042	2	Uni-direction	chr15	Ptk2, Ago2, Trappc9
+RDC_043	1	Internal Termination	chr16	Rbfox1
+RDC_044	1		chr16	Fgf12
+RDC_045	1		chr16	Lsamp
+RDC_046	1	Internal Termination	chr16	Zbtb20
+RDC_047	1		chr16	Cadm2
