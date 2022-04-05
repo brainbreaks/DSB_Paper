@@ -1,4 +1,4 @@
-setwd("~/Workspace/Everything")
+setwd("~/Workspace/DSB_Paper")
 
 library(readr)
 library(dplyr)
@@ -10,6 +10,15 @@ devtools::load_all('~/Workspace/breaktools/')
 
 proportions = function()
 {
+  params = macs2_params(extsize=1e5, exttype="symmetrical", llocal=1e7, minqvalue=0.01, effective_size=1.87e9, maxgap=2e5, minlen=1e5)
+
+  #
+  # Load genes
+  #
+  genes_df = gtf_read('~/Workspace/genomes/mm10/annotation/mm10.ncbiRefSeq.gtf.gz')
+  genes_ranges = genes_df %>% df2ranges(gene_chrom, gene_start, gene_end)
+
+
   #
   # Load TLX
   #
@@ -41,8 +50,7 @@ proportions = function()
   #
   replication_df = readr::read_tsv("data/replication_reduced_subsets.tsv")
   replication_ranges = replication_df %>%
-    dplyr::mutate(start=pmin(replication_start, replication_end), end=pmax(replication_start, replication_end)) %>%
-    df2ranges(replication_chrom, start, end)
+    df2ranges(replication_chrom, pmin(replication_start, replication_end), pmax(replication_start, replication_end))
 
   #
   # Load RDC
@@ -53,9 +61,47 @@ proportions = function()
     df2ranges(rdc_chrom, rdc_region_start, rdc_region_end)
   rdc_filter = paste0(setdiff(rdc_df$rdc_cluster, c("MACS_018|MACS_019|MACS_033|MACS_037|MACS_038|MACS_039|MACS_042|MACS_005|MACS_007")), collapse="|")
 
+  intersection_ranges = as.data.frame(GenomicRanges::intersect(replication_ranges, genes_ranges)) %>%
+    dplyr::mutate(intersection_chrom=seqnames, intersection_start=start, intersection_end=end) %>%
+    dplyr::mutate(intersection_width=intersection_end-intersection_start) %>%
+    GenomicRanges::makeGRangesFromDataFrame(keep.extra.columns=T)
+  genes2replication_df = innerJoinManyByOverlaps(list(intersection_ranges, replication_ranges, genes_ranges, tlx_ranges, rdc_ranges)) %>%
+    dplyr::group_by(replication_chrom, replication_start, replication_end) %>%
+    dplyr::filter(mean(gene_strand==replication_strand) %in% c(0, 1)) %>%
+    dplyr::group_by(gene_chrom, gene_start, gene_end) %>%
+    dplyr::filter(mean(gene_strand==replication_strand) %in% c(0, 1)) %>%
+    dplyr::group_by(intersection_chrom, intersection_start, intersection_end, gene_strand, replication_strand, tlx_strand, intersection_width) %>%
+    dplyr::summarise(tlx_count=dplyr::n()) %>%
+    dplyr::mutate(direction=ifelse(gene_strand==replication_strand, "Co-directional", "Head-on")) %>%
+    dplyr::group_by(intersection_chrom, intersection_start, intersection_end, intersection_width, direction) %>%
+    dplyr::summarise(tlx_proportion=ifelse(replication_strand=="-", tlx_count[tlx_strand=="+"]/tlx_count[tlx_strand=="-"], tlx_count[tlx_strand=="-"]/tlx_count[tlx_strand=="+"])) %>%
+    dplyr::filter(intersection_width>=1e4)
+
+    # dplyr::group_by(intersection_chrom, intersection_start, intersection_end, gene_strand, replication_strand, tlx_strand, intersection_width) %>%
+    # dplyr::summarise(tlx_count=dplyr::n()) %>%
+    # dplyr::group_by(intersection_chrom, intersection_start, intersection_end, gene_strand, replication_strand, intersection_width) %>%
+    # dplyr::summarise(tlx_proportion=tlx_count[tlx_strand=="+"]/tlx_count[tlx_strand=="-"]) %>%
+    # dplyr::filter(intersection_width>=1e4)
+
+  ggplot(genes2replication_df) +
+    geom_hline(yintercept=0, linetype="dashed", size=1) +
+    geom_boxplot(aes(y=log2(tlx_proportion), fill=direction, x=direction)) +
+    # geom_jitter(aes(y=log2(tlx_proportion), group=direction, x=1), width=0.1) +
+    geom_point(aes(y=log2(tlx_proportion), group=direction, x=direction), shape=21, size=2, position=position_jitter(width=0.2)) +
+    labs(fill="Replication/transcription direction", y="Junction strand proportion, log2(op/co-dir)", x="") +
+    scale_fill_manual(values=c("Head-on"="#E28C8E", "Co-directional"="#6E97B2")) +
+    theme_classic(base_size=18) +
+    guides(fill=guide_legend(nrow=1, byrow=TRUE)) +
+    theme(legend.position="bottom", axis.title.x=element_blank(), axis.text.x=element_blank(), axis.ticks.x=element_blank())
+
+
+  ggplot(genes2replication_df) +
+    ggridges::stat_density_ridges(aes(x=log2(tlx_proportion), y=gene_strand, fill=replication_strand, height=..density..), geom="density_ridges", bandwidth=0.25, scale=1, from=-3, to=3, alpha=0.4) +
+    labs(fill="Replication direction", x="Junction strand proportion, log2(+/-)", y="Transcription direction") +
+    scale_fill_manual(values=c("+"="#E31A1C", "-"="#1F78B4"))
 
   #
-  # ANALYSIS
+  # Junctions strand proportion stratisfied by transcription direction
   #
   pdf("reports/tlx_transcription_prop.pdf", width=8.27, height=11.69)
   x = innerJoinByOverlaps(tlx_ranges, rdc_ranges) %>%
@@ -67,16 +113,14 @@ proportions = function()
   ggplot(x, aes(x=rdc_strand, y=prop, fill=treatment)) +
     geom_boxplot() +
     geom_jitter() +
-    labs(y="Junctions proprortion, log2(+/-)")
+    labs(y="Junctions proprortion, log2(+/-)", x="Transcription direction (RDC longest gene)", fill="Treatment")
   dev.off()
 
 
 
   pdf("reports/tlx_replication_prop.pdf", width=8.27, height=11.69)
-  x = as.data.frame(IRanges::mergeByOverlaps(tlx_ranges, rdc_ranges)) %>%
-    dplyr::select(-dplyr::matches("_ranges\\."))
-  x_ranges = x %>% df2ranges(Rname, Junction, Junction)
-  x = as.data.frame(IRanges::mergeByOverlaps(x_ranges, replication_ranges)) %>%
+  x_ranges = innerJoinByOverlaps(tlx_ranges, rdc_ranges) %>% df2ranges(Rname, Junction, Junction)
+  x = innerJoinByOverlaps(x_ranges, replication_ranges) %>%
     dplyr::select(-dplyr::matches("_ranges\\.")) %>%
     dplyr::filter(grepl(rdc_filter, rdc_cluster)) %>%
     dplyr::group_by(treatment, rdc_cluster_display, rdc_strand, rdc_cluster, tlx_strand, replication_strand) %>%
@@ -90,40 +134,34 @@ proportions = function()
   dev.off()
 
   pdf("reports/tlxcov_proportion_new.pdf", width=11.69, height=8.27)
-  x = as.data.frame(IRanges::mergeByOverlaps(tlxcov_ranges, rdc_ranges)) %>%
-    dplyr::select(-dplyr::matches("_ranges\\.")) %>%
-    dplyr::filter(grepl(rdc_filter, rdc_cluster)) %>%
-    dplyr::group_by(rdc_cluster_display, rdc_strand, rdc_cluster, tlx_strand) %>%
-    dplyr::summarise(tlxcov_pileup=max(tlxcov_pileup)) %>%
-    dplyr::group_by(rdc_cluster_display, rdc_strand, rdc_cluster) %>%
-    dplyr::summarise(prop=log2(tlxcov_pileup[tlx_strand=="+"]/tlxcov_pileup[tlx_strand=="-"]))
+    x = innerJoinByOverlaps(tlxcov_ranges, rdc_ranges) %>%
+      dplyr::filter(grepl(rdc_filter, rdc_cluster)) %>%
+      dplyr::group_by(rdc_cluster_display, rdc_strand, rdc_cluster, tlx_strand) %>%
+      dplyr::summarise(tlxcov_pileup=max(tlxcov_pileup)) %>%
+      dplyr::group_by(rdc_cluster_display, rdc_strand, rdc_cluster) %>%
+      dplyr::summarise(prop=log2(tlxcov_pileup[tlx_strand=="+"]/tlxcov_pileup[tlx_strand=="-"]))
 
-
-
-  ggplot(x, aes(x=rdc_strand, y=prop)) +
-    geom_boxplot() +
-    labs(y="Junctions density peaks proportion, log2(+/-)", y="log2( pileup(junctions[+]) / pileup(junctions[-]) )", x="Transcription") +
-    geom_jitter() +
-    geom_label(aes(label=paste0("log2(", round(2^prop, 2) ,")=", round(prop, 2))), data=x %>% dplyr::group_by(rdc_strand) %>% dplyr::summarise(prop=median(prop)))
+    ggplot(x, aes(x=rdc_strand, y=prop)) +
+      geom_boxplot() +
+      labs(y="Junctions density peaks proportion, log2(+/-)", y="log2( pileup(junctions[+]) / pileup(junctions[-]) )", x="Transcription") +
+      geom_jitter() +
+      geom_label(aes(label=paste0("log2(", round(2^prop, 2) ,")=", round(prop, 2))), data=x %>% dplyr::group_by(rdc_strand) %>% dplyr::summarise(prop=median(prop)))
   dev.off()
 
 
   pdf("reports/tlxcov_replication_prop.pdf", width=11.69, height=8.27)
-  x = as.data.frame(IRanges::mergeByOverlaps(tlxcov_ranges, rdc_ranges)) %>%
-    dplyr::select(-dplyr::matches("_ranges\\."))
-  x_ranges = x %>% df2ranges(tlxcov_chrom, tlxcov_start, tlxcov_end)
-  x = as.data.frame(IRanges::mergeByOverlaps(x_ranges, replication_ranges)) %>%
-    dplyr::select(-dplyr::matches("_ranges\\.")) %>%
-    dplyr::filter(grepl(rdc_filter, rdc_cluster)) %>%
-    dplyr::group_by(rdc_cluster_display, rdc_strand, rdc_cluster, replication_strand, tlx_strand) %>%
-    dplyr::summarise(tlxcov_pileup=max(tlxcov_pileup)) %>%
-    dplyr::group_by(rdc_cluster_display, rdc_strand, rdc_cluster, replication_strand) %>%
-    dplyr::summarise(prop=log2(tlxcov_pileup[tlx_strand=="+"]/tlxcov_pileup[tlx_strand=="-"]))
+    x_ranges = innerJoinByOverlaps(tlxcov_ranges, rdc_ranges) %>%
+      df2ranges(tlxcov_chrom, tlxcov_start, tlxcov_end)
+    x = innerJoinByOverlaps(x_ranges, replication_ranges) %>%
+      dplyr::filter(grepl(rdc_filter, rdc_cluster)) %>%
+      dplyr::group_by(rdc_cluster_display, rdc_strand, rdc_cluster, replication_strand, tlx_strand) %>%
+      dplyr::summarise(tlxcov_pileup=max(tlxcov_pileup)) %>%
+      dplyr::group_by(rdc_cluster_display, rdc_strand, rdc_cluster, replication_strand) %>%
+      dplyr::summarise(prop=log2(tlxcov_pileup[tlx_strand=="+"]/tlxcov_pileup[tlx_strand=="-"]))
 
-
-  ggplot(x, aes(x=replication_strand, y=prop)) +
-    geom_boxplot() +
-    geom_jitter() +
-    labs(y="Junctions density peaks proportion, log2(+/-)")
+    ggplot(x, aes(x=replication_strand, y=prop)) +
+      geom_boxplot() +
+      geom_jitter() +
+      labs(y="Junctions density peaks proportion, log2(+/-)")
   dev.off()
 }
