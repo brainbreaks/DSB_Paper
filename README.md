@@ -27,11 +27,13 @@ We want to prove that one of the reasons for RDC formation is head-on collission
 
 ```mermaid
   graph TD;
-      id1[(HTGTS<br/>0.5 Aph)]-->id2{{RDC}};
-      repliseq_zhao[(RepliSeq<br>Zhao)]--data ESC-->tts_model[TTS prediction];
-      okseq_petric[(OK-seq<br>Petric)]--labels ESC-->tts_model[TTS model];
+      repliseq_zhao[(RepliSeq<br>Zhao)]--data ESC-->tts_model;
+      okseq_petric[(OK-seq<br>Petric)]--labels ESC-->tts_model;
       tts_model[TTS model]--predict-->tts_prediction[TTS prediction];
-      repliseq_2[RepliSeq<br>Vivien]--data-->tts_prediction[TTS prediction];
+      repliseq_vivien2[RepliSeq<br>Vivien]--data-->tts_prediction[TTS prediction];
+      htgts[(HTGTS<br/>0.5 Aph)]--Compare breaks:<br>head-on vs chasing-->collision[Head-on<br>collision];
+      tts_prediction-->collision{Head-on<br>collision};
+      
       
 ```
 #repliseq_zhao[(RepliSeq<br>Zhao)]--data NPC-->repliseq_zhao[(RepliSeq<br>Zhao)];
