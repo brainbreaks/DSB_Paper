@@ -1,4 +1,4 @@
-setwd("~/Workspace/Everything")
+setwd("~/Workspace/DSB_paper")
 
 library(readr)
 library(dplyr)
@@ -85,7 +85,7 @@ repliseqClustering = function()
   #
   # Load TLX
   #
-  samples_df = tlx_read_samples("~/Workspace/Datasets/HTGTS/samples/All_samples.tsv", "~/Workspace/Datasets/HTGTS/TLX") %>%
+  samples_df = tlx_read_samples("~/Workspace/Datasets/HTGTS/samples/All_samples.tsv", "~/Workspace/Datasets/HTGTS") %>%
     dplyr::filter(!control & (grepl("promoter/enhancer", experiment) & alleles==2 | grepl("concentration", experiment) & concentration==0.4)) %>%
     dplyr::mutate(group=paste0("All (", bait_chrom, ")"))
 

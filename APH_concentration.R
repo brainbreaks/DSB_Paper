@@ -1,4 +1,4 @@
-setwd("~/Workspace/Everything")
+setwd("~/Workspace/DSB_Paper")
 
 library(readr)
 library(dplyr)
@@ -12,8 +12,8 @@ APH_concentration = function()
   #
   # Read TLX
   #
-  params = macs2_params(extsize=1e5, exttype="symmetrical", llocal=1e7, minqvalue=0.01, effective_size=1.87e9, maxgap=2e5, minlen=1e5)
-  samples_df = tlx_read_samples("~/Workspace/Datasets/HTGTS/samples/All_samples.tsv", "~/Workspace/Datasets/HTGTS/TLX") %>%
+  params = macs2_params(extsize=5e4, exttype="symmetrical", llocal=1e7, minqvalue=0.01, effective_size=1.87e9, maxgap=2e5, minlen=1e5)
+  samples_df = tlx_read_samples("~/Workspace/Datasets/HTGTS/samples/All_samples.tsv", "~/Workspace/Datasets/HTGTS") %>%
     dplyr::filter(!control & grepl("concentration", experiment)) %>%
     dplyr::mutate(group=paste0(group_short, " (", bait_chrom, ")"))
 
@@ -30,9 +30,9 @@ APH_concentration = function()
   #
   # All coverages separately
   #
-  libfactors_df = tlx_libfactors(tlx_df, group="group", normalize_within="group", normalize_between="group", normalization_target="smallest")
+  libfactors_df = tlx_libfactors(tlx_df%>% dplyr::filter(tlx_is_bait_chrom & !tlx_is_bait_junction), group="group", normalize_within="group", normalize_between="group", normalization_target="smallest")
   tlxcov_all_df = tlx_df %>%
-    dplyr::filter(B_Rname==bait_chrom & tlx_is_bait_chrom & !tlx_is_bait_junction) %>%
+    dplyr::filter(tlx_is_bait_chrom & !tlx_is_bait_junction) %>%
     tlx_coverage(group="all", extsize=params$extsize, exttype=params$exttype, libfactors_df=libfactors_df, ignore.strand=T)
   tlxcov_all_ranges = tlxcov_all_df %>% df2ranges(tlxcov_chrom, tlxcov_start, tlxcov_end)
 
@@ -54,10 +54,11 @@ APH_concentration = function()
   #
   # Each sample separately
   #
-  libfactors_df = tlx_libfactors(tlx_df, group="group", normalize_within="group", normalize_between="group", normalization_target="smallest")
+  libfactors_df = tlx_libfactors(tlx_df, group="group", normalize_within="group", normalize_between="all", normalization_target="smallest")
   tlxcov_strand_df = tlx_df %>%
-    dplyr::filter(B_Rname==bait_chrom & tlx_is_bait_chrom & !tlx_is_bait_junction) %>%
+    dplyr::filter(tlx_is_bait_chrom & !tlx_is_bait_junction) %>%
     tlx_coverage(group="group", extsize=params$extsize, exttype=params$exttype, libfactors_df=libfactors_df, ignore.strand=F)
+  tlxcov_write_bedgraph(tlxcov_strand_df %>% dplyr::mutate(tlx_group=gsub(" \\(.*", "", tlx_group)), path="treatment_allnorm", group="group")
   tlxcov_strand_ranges = tlxcov_strand_df %>% df2ranges(tlxcov_chrom, tlxcov_start, tlxcov_end)
 
 
@@ -75,7 +76,6 @@ APH_concentration = function()
     geom_jitter()
 
 
-  tlxcov_write_bedgraph(tlxcov_df %>% dplyr::mutate(tlx_group=gsub(" \\(.*", "", tlx_group)), path="reports", group="group")
 
   tlx_df.f = tlx_df %>%
     dplyr::filter(tlx_is_bait_chrom & !tlx_is_bait_junction) %>%
