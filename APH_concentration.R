@@ -15,49 +15,58 @@ APH_concentration = function()
   # Find and mark offtargets
   #
   offtargets_df = readr::read_tsv("~/Workspace/Datasets/HTGTS/offtargets_pnas_mm10.tsv")
-  offtargets_df %>% df2ranges(offtarget_chrom, offtarget_start, offtarget_end) %>%
-  rtracklayer::export.bed( con="reports/APH_concentration_allnorm/islands.bed")
+  offtargets_df %>%
+    dplyr::select(offtarget_chrom, offtarget_start, offtarget_end, offtarget_bait_name, offtarget_is_primary, offtarget_strand) %>%
+    readr::write_tsv("~/Workspace/Datasets/HTGTS/offtargets_pnas_mm10.bed", col_names=F)
 
   #
   # Read TLX
   #
   samples_df = tlx_read_samples("~/Workspace/Datasets/HTGTS/samples/All_samples.tsv", "~/Workspace/Datasets/HTGTS") %>%
-    dplyr::filter(!control & grepl("concentration", experiment)) %>%
-    dplyr::mutate(group=paste0(group_short, " (", bait_chrom, ")"))
+    dplyr::filter(!control & grepl("concentration", experiment))
 
   tlx_all_df = tlx_read_many(samples_df, threads=30)
   tlx_df = tlx_all_df %>%
     tlx_extract_bait(bait_size=19, bait_region=12e6) %>%
     tlx_remove_rand_chromosomes() %>%
-    tlx_mark_dust()
-  tlx_df = tlx_df %>% tlx_mark_offtargets(offtargets_df, offtarget_region=1e5, bait_region=1000) %>%
+    tlx_mark_dust() %>%
+    tlx_mark_offtargets(offtargets_df, offtarget_region=1e4, bait_region=1e4)
+  tlx_big_df = tlx_df %>%
     dplyr::group_by(tlx_sample) %>%
-    dplyr::filter(dplyr::n()>2000) %>%
+    dplyr::filter(dplyr::n()>5000) %>%
     dplyr::ungroup()
 
 
   #
   # All coverages separately
   #
-  libfactors_df = tlx_libfactors(tlx_all_df, group="group", normalize_within="group", normalize_between="all", normalization_target="smallest")
-  tlxcov_all_df = tlx_df %>%
-    dplyr::filter(tlx_is_bait_chrom & !tlx_is_bait_junction & !tlx_is_offtarget) %>%
-    tlx_coverage(group="all", extsize=params$extsize, exttype=params$exttype, libfactors_df=libfactors_df, ignore.strand=T)
-  tlxcov_all_ranges = tlxcov_all_df %>% df2ranges(tlxcov_chrom, tlxcov_start, tlxcov_end)
+  libfactors_df = tlx_libfactors(tlx_big_df %>% dplyr::mutate(tlx_group=bait_chrom) , group="group", normalize_within="group", normalize_between="group", normalization_target="smallest")
+  tlxcov_all_df = tlx_big_df %>%
+    dplyr::mutate(tlx_group=bait_chrom) %>%
+    dplyr::filter(tlx_is_bait_chrom & !tlx_is_bait_junction) %>%
+    tlx_coverage(group="group", extsize=params$extsize, exttype=params$exttype, libfactors_df=libfactors_df, ignore.strand=T)
+  macs_results = tlxcov_macs2(tlxcov_all_df, group="group", params)
+  table(macs_results[["islands"]]$island_chrom, macs_results[["islands"]]$tlx_group)
+
 
   #
   # Find clusters using MACS3
   #
   macs_results = tlxcov_macs2(tlxcov_all_df, group="all", params)
   islands_ranges = macs_results[["islands"]] %>% df2ranges(island_chrom, island_start, island_end)
+  macs_results[["qvalues"]] %>%
+    dplyr::filter(qvalue_chrom=="chr5") %>%
+    dplyr::select(qvalue_chrom, qvalue_start, qvalue_end, qvalue_score) %>%
+    readr::write_tsv("reports/APH_concentration_allnorm/islands.bedgraph", col_names = F)
   rdc_df = macs_results[["islands"]] %>%
-    dplyr::filter(island_snr>=10) %>%
+    # dplyr::filter(island_snr>=10) %>%
     dplyr::arrange(as.numeric(gsub("chr", "", island_chrom)), island_start) %>%
     dplyr::mutate(island_name=stringr::str_glue("MACS_{stringr::str_pad(i, 3, pad='0')}", i=1:dplyr::n())) %>%
     dplyr::select(rdc_chrom=island_chrom, rdc_start=island_start, rdc_end=island_end, rdc_cluster=island_name)
   rtracklayer::export.bed(islands_ranges, con="reports/APH_concentration_allnorm/islands.bed")
 
-
+ # %>%
+ #    dplyr::mutate(group=paste0(group_short, " (", bait_chrom, ")"))
   #
   # Load RDC
   #
@@ -83,7 +92,7 @@ APH_concentration = function()
   libfactors_df = tlx_libfactors(tlx_df, group="group", normalize_within="group", normalize_between="all", normalization_target="smallest")
   tlxcov_strand_df = tlx_df %>%
     dplyr::filter(tlx_is_bait_chrom & !tlx_is_bait_junction) %>%
-    tlx_coverage(group="group", extsize=params$extsize, exttype=params$exttype, libfactors_df=libfactors_df, ignore.strand=F)
+    tlx_coverage(group="group", extsize=5, exttype=params$exttype, libfactors_df=libfactors_df, ignore.strand=F)
   tlxcov_strand_ranges = tlxcov_strand_df %>% df2ranges(tlxcov_chrom, tlxcov_start, tlxcov_end)
 
   #
