@@ -148,35 +148,39 @@ APH_concentration = function()
     dplyr::mutate(tlx_group_int=as.numeric(factor(tlx_group))) %>%
     dplyr::filter(!is.na(crosscorrelation_lag) & crosscorrelation_value>0.5 & pmin(n_sense, n_anti)>5)
 
-  ggplot(rdc_junctions_df, aes(y=log2(n_sense/(n_sense+n_anti)), x=rdc_tlx_group)) +
-    geom_hline(yintercept=0, linetype="dashed") +
-    geom_boxplot(aes(fill=rdc_tlx_group), outlier.shape = NA, outlier.alpha = 0) +
-    geom_text(aes(x=rdc_tlx_group, label=gsub("MACS3_", "", rdc_cluster), size=n_sense+n_anti), color="#FF0000", position=position_jitter(width=0.2)) +
-    labs(y="Proportion of right-moving fork breaks", size="# junctions") +
-    scale_fill_manual(values=group_palette) +
-    theme(axis.title.x=element_blank(), axis.text.x=element_text(angle=45, vjust=1, hjust=1))
-
-  ggplot(ccs_df, aes(y=crosscorrelation_rellag, x=tlx_group)) +
-    geom_hline(yintercept=0, linetype="dashed") +
-    geom_boxplot(aes(fill=tlx_group), outlier.shape = NA, outlier.alpha = 0) +
-    geom_text(aes(x=tlx_group, label=gsub("MACS3_", "", rdc_cluster), size=n_sense+n_anti), color="#FF0000", position=position_jitter(width=0.2)) +
-    labs(y="Cross-correlation lag between sense and antisense junctions", size="# junctions") +
-    scale_fill_manual(values=group_palette) +
-    theme(axis.title.x=element_blank(), axis.text.x=element_text(angle=45, vjust=1, hjust=1))
-
   tlx_shift_df = rdc_junctions_df %>%
     df2ranges(rdc_chrom, rdc_start, rdc_end) %>%
     innerJoinByOverlaps(tlx_baitconcentration_ranges) %>%
     dplyr::filter(rdc_tlx_group==tlx_group) %>%
     dplyr::group_by(rdc_cluster, rdc_chrom, tlx_group, n_sense, n_anti) %>%
-    dplyr::summarize(tlx_strand_shift=mean(Junction[tlx_strand=="+"])-mean(Junction[tlx_strand=="-"])) %>%
-    dplyr::filter(pmin(n_sense, n_anti)>10)
+    dplyr::summarize(tlx_strand_shift=mean(Junction[tlx_strand=="+"])-mean(Junction[tlx_strand=="-"]), tlx_strand_relshift=tlx_strand_shift/(max(Junction)-min(Junction))) %>%
+    dplyr::filter(pmin(n_sense, n_anti)>5)
+
+  pdf("reports/APH_concentration.pdf", width=11.69, height=8.27, paper="a4r")
+  ggplot(rdc_junctions_df, aes(y=log2(n_sense/(n_sense+n_anti)), x=rdc_tlx_group)) +
+    geom_hline(yintercept=0, linetype="dashed") +
+    geom_boxplot(aes(fill=rdc_tlx_group), outlier.shape = NA, outlier.alpha = 0) +
+    geom_text(aes(x=rdc_tlx_group, label=gsub("MACS3_", "", rdc_cluster), size=n_sense+n_anti), color="#FF0000", position=position_jitter(width=0.2)) +
+    labs(y="Proportion of right-moving fork breaks", size="# junctions", fill="APH concentration") +
+    scale_fill_manual(values=group_palette) +
+    theme_bw(base_size=8) +
+    theme(axis.title.x=element_blank(), axis.text.x=element_text(angle=45, vjust=1, hjust=1))
+  ggplot(ccs_df, aes(y=crosscorrelation_rellag, x=tlx_group)) +
+    geom_hline(yintercept=0, linetype="dashed") +
+    geom_boxplot(aes(fill=tlx_group), outlier.shape = NA, outlier.alpha = 0) +
+    geom_text(aes(x=tlx_group, label=gsub("MACS3_", "", rdc_cluster), size=n_sense+n_anti), color="#FF0000", position=position_jitter(width=0.2)) +
+    labs(y="Cross-correlation lag between sense and antisense junctions", size="# junctions", fill="APH concentration") +
+    scale_fill_manual(values=group_palette) +
+    theme_bw(base_size=8) +
+    theme(axis.title.x=element_blank(), axis.text.x=element_text(angle=45, vjust=1, hjust=1))
   ggplot(tlx_shift_df, aes(y=tlx_strand_shift, x=tlx_group)) +
     geom_boxplot(aes(fill=tlx_group), outlier.shape = NA, outlier.alpha = 0) +
     geom_text(aes(x=tlx_group, label=gsub("MACS3_", "", rdc_cluster), size=n_sense+n_anti), color="#FF0000", position=position_jitter(width=0.2)) +
-    labs(y="Difference between sense and antisense mean junction position", size="# junctions") +
+    labs(y="Difference between sense and antisense mean junction position", size="# junctions", fill="APH concentration") +
     scale_fill_manual(values=group_palette) +
+    theme_bw(base_size=8) +
     theme(axis.title.x=element_blank(), axis.text.x=element_text(angle=45, vjust=1, hjust=1))
+  dev.off()
 
 
   rdc2tlxcov_weight_df = rdc_junctions_df %>%
@@ -187,7 +191,7 @@ APH_concentration = function()
     dplyr::summarize(tlxcov_strand_center=stats::weighted.mean(tlxcov_start/2+tlxcov_end/2, tlxcov_pileup*(tlxcov_end-tlxcov_start), na.rm=T)) %>%
     dplyr::group_by(rdc_cluster, rdc_chrom, tlx_group, n_sense, n_anti) %>%
     # dplyr::summarise(tlxcov_strand_shift=tlxcov_strand_center[tlx_strand=="+"]-tlxcov_strand_center[tlx_strand=="-"]) %>%
-    dplyr::summarise(tlxcov_strand_shift=abs(diff(tlxcov_strand_center)))
+    dplyr::summarise(tlxcov_strand_shift=abs(diff(tlxcov_strand_center))) %>%
     dplyr::group_by(rdc_cluster, rdc_chrom, n_sense, n_anti) %>%
     dplyr::mutate(tlxcov_strand_relshift=tlxcov_strand_shift/tlxcov_strand_shift[grepl("APH 0.2", tlx_group)]) %>%
     dplyr::mutate(concentration=gsub("APH ([0-9.]+) .*", "\\1", tlx_group), chrom=gsub(".*(chr[0-9]+).*", "\\1", tlx_group))
