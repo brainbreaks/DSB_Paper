@@ -106,8 +106,6 @@ APH_concentration = function()
   #
   # rdc_df = readr::read_tsv("~/Workspace/Datasets/HTGTS/rdc_macs2_mm10.tsv")
   rdc_df = macs_clean$islands %>%
-    # dplyr::filter(island_snr>=10) %>%
-    dplyr::filter(island_summit_abs>=10) %>%
     dplyr::select(rdc_chrom=island_chrom, rdc_start=island_start, rdc_end=island_end, rdc_cluster=island_name)
 
 
@@ -129,9 +127,6 @@ APH_concentration = function()
     dplyr::mutate(tlx_group=gsub(" \\(.*", "", tlx_group)) %>%
     tlxcov_write_bedgraph(path="reports/APH_concentration/concentration", group="group")
 
-  rdc_df %>%
-    df2ranges(rdc_chrom, rdc_start-(rdc_start+rdc_end)/4, (rdc_start+rdc_end))
-
   devtools::load_all('~/Workspace/breaktools/')
   rdc_junctions_df = rdc_df %>%
     df2ranges(rdc_chrom, rdc_start, rdc_end) %>%
@@ -146,8 +141,7 @@ APH_concentration = function()
     dplyr::group_by(rdc_cluster, rdc_chrom, tlx_group, n_sense, n_anti) %>%
     summarize(tlx_strand_crosscorrelation(dplyr::cur_data(), step=5000)) %>%
     dplyr::mutate(tlx_group_int=as.numeric(factor(tlx_group))) %>%
-    dplyr::filter(!is.na(crosscorrelation_lag) & crosscorrelation_value>0.5 & pmin(n_sense, n_anti)>5)
-
+    dplyr::filter(!is.na(crosscorrelation_lag) & crosscorrelation_value>0.5 & pmin(n_sense, n_anti)>5 & island_summit_abs>=10)
   tlx_shift_df = rdc_junctions_df %>%
     df2ranges(rdc_chrom, rdc_start, rdc_end) %>%
     innerJoinByOverlaps(tlx_baitconcentration_ranges) %>%
