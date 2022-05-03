@@ -19,8 +19,8 @@ ggplot_rdc_breaks = function(rdc2rdc_df, rdc2tlxcov_df, rdc2tlx_df, rdc2genes_df
   rdc2genes_dff = rdc2genes_dff %>% dplyr::mutate(segment_start=ifelse(gene_strand=="+", gene_start, gene_end), segment_end=ifelse(gene_strand=="+", gene_end, gene_start))
   rdc2genes_dff.long = rdc2genes_dff %>% dplyr::filter(gene_length>=2e5)
   rdc2genes_dff.short = rdc2genes_dff %>% dplyr::filter(gene_length<2e5)
-  g = ggplot()
 
+  g = ggplot()
   if(!is.null(rdc2replication_df)) {
     rdc2replication_dff = rdc2replication_df %>% dplyr::filter(grepl(rdc_filter, rdc_cluster))
     if(nrow(rdc2replication_dff)>0) {
@@ -70,57 +70,58 @@ ggplot_rdc_breaks = function(rdc2rdc_df, rdc2tlxcov_df, rdc2tlx_df, rdc2genes_df
   g
 }
 
-
-
-repliseqClustering = function()
+clustered_rdc_examples = function()
 {
   params = macs2_params(extsize=1e5, exttype="symmetrical", llocal=1e7, minqvalue=0.01, effective_size=1.87e9, maxgap=2e5, minlen=1e5)
 
   #
   # Load gene annotations
   #
-  genes_df = gtf_read('~/Workspace/genomes/mm10/annotation/mm10.ncbiRefSeq.gtf.gz')
+  genes_df = gtf_read('~/Workspace/genomes/mm10/annotation/mm10.refGene.gtf')
   genes_ranges = genes_df %>% df2ranges(gene_chrom, gene_start, gene_end)
 
   #
   # Load TLX
   #
   samples_df = tlx_read_samples("~/Workspace/Datasets/HTGTS/samples/All_samples.tsv", "~/Workspace/Datasets/HTGTS") %>%
-    dplyr::filter(!control & (grepl("promoter/enhancer", experiment) & alleles==2 | grepl("concentration", experiment) & concentration==0.4)) %>%
+    dplyr::filter(!control & (grepl("promoter/enhancer", experiment) & alleles==2 | "APH concentration"==experiment & concentration==0.4)) %>%
     dplyr::mutate(group=paste0("All (", bait_chrom, ")"))
 
-  tlx_df = tlx_read_many(samples_df, threads=30)
-  tlx_df = tlx_remove_rand_chromosomes(tlx_df)
-  tlx_df = tlx_extract_bait(tlx_df, bait_size=19, bait_region=2e6)
-  tlx_df = tlx_mark_dust(tlx_df)
-  libfactors_df = tlx_libfactors(tlx_df, group="group", normalize_within="group", normalize_between="none", normalization_target="smallest")
+  tlx_all_df = tlx_read_many(samples_df, threads=30) %>%
+    tlx_remove_rand_chromosomes() %>%
+    tlx_extract_bait(bait_size=19, bait_region=2e6) %>%
+    tlx_mark_dust() %>%
+    tlx_calc_copynumber(bowtie_index="~/Workspace/genomes/mm10/mm10", max_hits=100, threads=24)
+
+  tlx_df = tlx_all_df %>%
+    dplyr::filter(tlx_copynumber==1 & !tlx_duplicated) %>%
+    dplyr::group_by(tlx_sample) %>%
+    dplyr::filter(dplyr::n()>2000) %>%
+    dplyr::ungroup()
 
   #
   # Search for offtargets
   #
-  baits_df = readr::read_tsv("~/Workspace/Datasets/HTGTS/wei_pnas2018_baits.tsv")
   offtarget_df = readr::read_tsv("~/Workspace/Datasets/HTGTS/offtargets_pnas_mm10.tsv")
-  offtarget2bait_df = offtarget_df %>%
-    dplyr::filter(offtarget_is_primary==0) %>%
-    dplyr::select(bait_chrom, offtarget_chrom, offtarget_start, offtarget_end, offtarget_strand, offtarget_sequence) %>%
-    dplyr::inner_join(baits_df %>% dplyr::select(dplyr::matches("bait_")), by="bait_chrom")
-  tlx_df = tlx_mark_offtargets(tlx_df, offtarget2bait_df=offtarget2bait_df, offtarget_region=2e4)
-
-  #
-  # Calculate TLX coverage
-  #
-  tlxcov_df = tlx_df %>%
-    dplyr::filter(B_Rname==bait_chrom & tlx_is_bait_chrom & !tlx_is_bait_junction) %>%
-    dplyr::group_by(tlx_sample) %>%
-    dplyr::filter(dplyr::n() >= 2000) %>%
-    dplyr::ungroup() %>%
+  tlx_clean_df = tlx_df %>%
+    tlx_mark_offtargets(offtarget_df, offtarget_region=1e5, bait_region=1e4) %>%
+    dplyr::filter(!tlx_is_offtarget & tlx_is_bait_chrom) %>%
     dplyr::filter(!tlx_control) %>%
     dplyr::mutate(tlx_group="APH") %>%
     dplyr::group_by(Rname) %>%
     dplyr::mutate(dbscan_cluster=dbscan::dbscan(matrix(Junction), minPts=20, eps=100)$cluster) %>%
-    dplyr::mutate(tlx_strand=ifelse(dbscan_cluster==0, tlx_strand, "cluster")) %>%
-    # dplyr::filter(Rname==tlx_group) %>%
+    dplyr::mutate(tlx_strand=ifelse(dbscan_cluster==0, tlx_strand, "cluster"))
+
+  #
+  # Calculate TLX coverage
+  #
+  devtools::load_all("~/Workspace/breaktools/")
+  libfactors_df = tlx_libfactors(tlx_df, normalize_within="group", normalize_between="none", normalization_target="min")
+  tlxcov_strand_df = tlx_clean_df %>%
     tlx_coverage(group="group", exttype=params$exttype, extsize=params$extsize, libfactors_df=libfactors_df, ignore.strand=F)
+  tlxcov_df = tlx_clean_df %>%
+    tlx_coverage(group="group", exttype=params$exttype, extsize=params$extsize, libfactors_df=libfactors_df, ignore.strand=T)
+  macs_clean = tlxcov_macs2(tlxcov_clean_df, group="group", params)
 
   #
   # Write TLX coverage
@@ -131,32 +132,40 @@ repliseqClustering = function()
   }
 
 
+  # params_clean = macs2_params(extsize=5e4, exttype="symmetrical", llocal=1e7, minqvalue=0.01, effective_size=1.87e9, maxgap=2e5, minlen=1e5)
+  # tlxcov_clean_df = tlx_clean_df %>%
+  #   dplyr::filter(!tlx_control) %>%
+  #   tlx_coverage(group="group", extsize=params_clean$extsize, exttype=params_clean$exttype, libfactors_df=libfactors_bait_df, ignore.strand=T)
+  # macs_clean = tlxcov_macs2(tlxcov_clean_df, group="group", params_clean)
+
   #
   # Load RDC
   #
-  rdc_df = readr::read_tsv("~/Workspace/Datasets/HTGTS/rdc_macs2_mm10.tsv") %>%
-    dplyr::mutate(rdc_region_start=rdc_start-2e6, rdc_region_end=rdc_end+2e6)
+  # rdc_df = readr::read_tsv("~/Workspace/Datasets/HTGTS/rdc_macs2_mm10.tsv") %>%
+  #   dplyr::mutate(rdc_region_start=rdc_start-2e6, rdc_region_end=rdc_end+2e6)
+  rdc_df = macs_clean$islands %>%
+    dplyr::select(rdc_chrom=island_chrom, rdc_start=island_start, rdc_end=island_end, rdc_cluster=island_name) %>%
+    dplyr::mutate(rdc_cluster_display=paste0(rdc_chrom, ":", rdc_cluster)) %>%
+    dplyr::mutate(rdc_region_start=rdc_start-2e6, rdc_region_end=rdc_start+2e6)
+  rdc_ranges = rdc_df %>% df2ranges(rdc_chrom, rdc_region_start, rdc_region_end)
 
   #
   # Expand RDC displayed range to include other neighbouring RDC
   #
-
-  tlxcov_ranges = tlxcov_df %>% df2ranges(tlxcov_chrom, tlxcov_start, tlxcov_end)
-  rdc_wide_ranges = rdc_df %>% dplyr::mutate(rdc_original_start=rdc_start, rdc_original_end=rdc_end) %>% df2ranges(rdc_chrom, rdc_region_start, rdc_region_end)
-  rdc_narrow_ranges = rdc_df %>% dplyr::mutate(rdc_original_start=rdc_start, rdc_original_end=rdc_end) %>% df2ranges(rdc_chrom, rdc_start, rdc_end)
-  rdc2rdc_df = as.data.frame(IRanges::mergeByOverlaps(rdc_wide_ranges, rdc_narrow_ranges)) %>%
-    dplyr::select(-dplyr::matches("_ranges\\."))
-  rdc_df = rdc2rdc_df %>%
+  rdc_wide_ranges = rdc_df %>%
+    df2ranges(rdc_chrom, rdc_region_start, rdc_region_end) %>%
+    plyranges::select(-rdc_chrom, -rdc_start, -rdc_end)
+  rdc_narrow_ranges = rdc_df %>%
+    df2ranges(rdc_chrom, rdc_start, rdc_end) %>%
+    plyranges::select(rdc_chrom, rdc_start, rdc_end)
+  rdc2rdc_df = innerJoinByOverlaps(rdc_wide_ranges, rdc_narrow_ranges) %>%
     dplyr::group_by(rdc_cluster, rdc_cluster_display) %>%
     dplyr::mutate(rdc_region_start=min(c(rdc_start, rdc_region_start)), rdc_region_end=max(c(rdc_region_end, rdc_end))) %>%
-    dplyr::ungroup() %>%
-    dplyr::distinct(rdc_cluster, rdc_cluster_display, .keep_all=T) %>%
-    dplyr::mutate(rdc_start=rdc_original_start, rdc_end=rdc_original_end) %>%
-    dplyr::select(-rdc_original_start, -rdc_original_end)
-  rdc_ranges = rdc_df %>% df2ranges(rdc_chrom, rdc_region_start, rdc_region_end)
+    dplyr::ungroup()
 
-  rdc2tlxcov_df = as.data.frame(IRanges::mergeByOverlaps(rdc_ranges, tlxcov_ranges)) %>%
-    dplyr::select(-dplyr::matches("_ranges\\.")) %>%
+  rdc2tlxcov_strand_df = tlxcov_strand_df %>%
+    df2ranges(tlxcov_chrom, tlxcov_start, tlxcov_end) %>%
+    innerJoinByOverlaps(rdc_ranges) %>%
     dplyr::filter(!tlx_control & tlxcov_start>=rdc_region_start & tlxcov_end<=rdc_region_end) %>%
     dplyr::group_by(rdc_cluster, rdc_cluster_display) %>%
     dplyr::mutate(tlxcov_pileup=tlxcov_pileup/max(tlxcov_pileup[tlx_strand %in% c("+", "-")])) %>%
@@ -167,30 +176,29 @@ repliseqClustering = function()
   # Search for offtargets
   #
   offtargets_ranges = offtarget_df %>% df2ranges(offtarget_chrom, offtarget_start, offtarget_end, offtarget_strand)
-  rdc2offtargets_df = as.data.frame(IRanges::mergeByOverlaps(rdc_ranges, offtargets_ranges)) %>%
-    dplyr::select(-dplyr::matches("_ranges\\."))
+  rdc2offtargets_df = innerJoinByOverlaps(rdc_regions_ranges, offtargets_ranges) %>%
+    dplyr::filter(rdc_chrom==offtarget_bait_chrom)
 
-  rdc2genes_df = as.data.frame(IRanges::mergeByOverlaps(rdc_ranges, genes_ranges)) %>%
+  rdc2genes_df = innerJoinByOverlaps(rdc_regions_ranges, genes_ranges) %>%
     dplyr::select(-dplyr::matches("_ranges\\.")) %>%
     dplyr::filter(gene_cluster_i<=3) %>%
     dplyr::mutate(gene_start=pmax(rdc_region_start, gene_start), gene_end=pmin(rdc_region_end, gene_end))
-  tlx_ranges = tlx_df %>% df2ranges(Rname, Junction, Junction, tlx_strand)
 
-  rdc2tlx_df = as.data.frame(IRanges::mergeByOverlaps(rdc_ranges, tlx_ranges)) %>%
-    dplyr::select(-dplyr::matches("_ranges\\.")) %>%
+  rdc2tlx_df = tlx_df %>%
+    df2ranges(Rname, Junction, Junction) %>%
+    innerJoinByOverlaps(rdc_regions_ranges) %>%
     dplyr::filter(!tlx_control)
 
   # Load Repli-SEQ data
   replication_df = readr::read_tsv("data/replication_reduced_subsets.tsv")
-  replication_ranges = replication_df %>%
-    dplyr::mutate(seqnames=replication_chrom, start=pmin(replication_start, replication_end), end=pmax(replication_start, replication_end)) %>%
-    GenomicRanges::makeGRangesFromDataFrame(keep.extra.columns=T)
-  rdc2replication_df = as.data.frame(IRanges::mergeByOverlaps(rdc_ranges, replication_ranges))  %>%
-    dplyr::select(-dplyr::matches("_ranges\\."))
+  rdc2replication_df = replication_df %>%
+    df2ranges(replication_chrom, pmin(replication_start, replication_end), pmax(replication_start, replication_end)) %>%
+    innerJoinByOverlaps(rdc_regions_ranges)
 
   repliseq_df = readr::read_tsv("~/Workspace/Datasets/zhao_bmc_repliseq_2020/preprocessed/repliseq_NPC.tsv")
   repliseq_ranges = repliseq_df %>% df2ranges(repliseq_chrom, repliseq_start, repliseq_end)
-  rdc2repliseq_df = as.data.frame(IRanges::mergeByOverlaps(rdc_ranges, repliseq_ranges))  %>%
+  rdc2repliseq_df = rdc_ranges %>%
+    innerJoinByOverlaps(repliseq_ranges)  %>%
     dplyr::select(-dplyr::matches("_ranges\\.")) %>%
     dplyr::group_by(rdc_cluster, rdc_cluster_display, repliseq_start) %>%
     dplyr::mutate(repliseq_value=repliseq_value-min(repliseq_value)+0.01) %>%
@@ -201,7 +209,7 @@ repliseqClustering = function()
   #
   # Plot specific RDC examples
   #
-  rdc_samples_df = rdc2tlxcov_df %>%
+  rdc_samples_df = rdc2tlxcov_strand_df %>%
     dplyr::arrange(as.numeric(gsub(".*([0-9]).*", "\\1", rdc_cluster))) %>%
     # dplyr::filter(grepl("MACS_002", rdc_cluster)) %>%
     dplyr::group_by(rdc_cluster, rdc_cluster_display) %>%
@@ -217,9 +225,8 @@ repliseqClustering = function()
 
   plist = lapply(split(rdc_samples_df, f=rdc_samples_df$rdc_repliseq_type), FUN=function(df) {
     dff<<-df
-    # df = data.frame(rdc_filter="MACS_014", rdc_examples_mislength=0, rdc_examples_length=100)
-    # df = rdc_samples_df %>% dplyr::slice(1)  %>% dplyr::mutate(rdc_filter="MACS_001")
-    ggplot_rdc_breaks(rdc2rdc_df=rdc2rdc_df, rdc2tlxcov_df=rdc2tlxcov_df, rdc2tlx_df=rdc2tlx_df, rdc2genes_df=rdc2genes_df, rdc2repliseq_df=rdc2repliseq_df, rdc2offtargets_df=rdc2offtargets_df, rdc2replication_df=rdc2replication_df, rdc_filter=df$rdc_filter) +
+    # df = rdc_samples_df %>% dplyr::slice(2)
+    ggplot_rdc_breaks(rdc2rdc_df=rdc2rdc_df, rdc2tlxcov_df=rdc2tlxcov_strand_df, rdc2tlx_df=rdc2tlx_df, rdc2genes_df=rdc2genes_df, rdc2repliseq_df=rdc2repliseq_df, rdc2offtargets_df=rdc2offtargets_df, rdc2replication_df=rdc2replication_df, rdc_filter=df$rdc_filter) +
       ggtitle(df$rdc_repliseq_type) +
       geom_segment(aes(x=0, xend=rdc_examples_mislength, y=-0.2, yend=-0.2), data=df %>% dplyr::mutate(rdc_cluster_display="X"), size=1, color="#FFFFFF") +
       facet_grid(.~rdc_cluster_display, scales="free_x", space="free_x") +
@@ -227,7 +234,7 @@ repliseqClustering = function()
       ggpubr::theme_pubclean(base_size=5) +
       theme(axis.text.x=element_text(angle=45, hjust=1))
   })
-  pdf("reports/tlx2repliseq_samples_baitchrom_macs6.pdf", width=5*8.27, height=1*11.6)
+  pdf("reports/tlx2repliseq_samples_baitchrom_macs8.pdf", width=5*8.27, height=1*11.6)
   g_legend = get_legend(plist[[1]] + theme(legend.box.margin=margin(0, 0, 0, 12)))
   g_plots = cowplot::plot_grid(plotlist=lapply(plist, function(p) p+theme(legend.position="none")), align="v", axis="t", ncol=1)
   cowplot::plot_grid(g_plots, g_legend, ncol=1, rel_heights=c(19, 1))
