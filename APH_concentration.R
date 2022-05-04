@@ -22,13 +22,13 @@ APH_concentration = function()
     tlx_extract_bait(bait_size=19, bait_region=12e6) %>%
     tlx_remove_rand_chromosomes() %>%
     tlx_mark_dust() %>%
-    tlx_calc_copynumber(bowtie_index="~/Workspace/genomes/mm10/mm10", max_hits=100, threads=24) %>%
+    tlx_calc_copynumber(bowtie2_index="~/Workspace/genomes/mm10/mm10", max_hits=100, threads=24) %>%
     dplyr::filter(tlx_copynumber==1 & !tlx_duplicated) %>%
     dplyr::group_by(tlx_sample) %>%
     dplyr::filter(dplyr::n()>5000) %>%
     dplyr::ungroup()
 
-  libfactors_bait_df = tlx_libfactors(tlx_df %>% dplyr::mutate(tlx_group=bait_chrom), group="group", normalize_within="group", normalize_between="none", normalization_target="smallest")
+  libfactors_bait_df = tlx_libfactors(tlx_df %>% dplyr::mutate(tlx_group=bait_chrom), normalize_within="group", normalize_between="none", normalization_target="min")
 
   #
   # Indentify offtarget candidates
@@ -40,12 +40,6 @@ APH_concentration = function()
   tlxcov_offtargets_df = tlx_offtarget_df %>%
     tlx_coverage(group="group", extsize=offtargets_params$extsize, exttype=offtargets_params$exttype, libfactors_df=libfactors_bait_df, ignore.strand=T)
   macs_offtargets = tlxcov_macs2(tlxcov_offtargets_df, group="group", offtargets_params)
-  #
-  # tlx_offtarget_df %>% dplyr::filter(Qname=="M00269:570:000000000-K5FJ5:1:1112:12514:26420") %>% dplyr::select(Rname, B_Rname)
-  # table(junc=x$Rname, bait=x$B_Rname)
-  # x = tlx_offtarget_df %>%
-  #   # dplyr::filter(tlx_is_bait_chrom & !tlx_is_bait_junction) %>%
-  #   dplyr::filter(Rname=="chr6" & Junction>=32875899 & Junction<=32877008)
 
   # Export debuging info
   tlx_write_bed(tlx_offtarget_df, "reports/APH_concentration/offtargets", "all", mode="alignment")
@@ -106,7 +100,7 @@ APH_concentration = function()
   #
   # rdc_df = readr::read_tsv("~/Workspace/Datasets/HTGTS/rdc_macs2_mm10.tsv")
   rdc_df = macs_clean$islands %>%
-    dplyr::select(rdc_chrom=island_chrom, rdc_start=island_start, rdc_end=island_end, rdc_cluster=island_name)
+    dplyr::select(rdc_chrom=island_chrom, rdc_start=island_start, rdc_end=island_end, rdc_cluster=island_name, island_summit_abs)
 
 
   #
@@ -115,7 +109,7 @@ APH_concentration = function()
   params_baitconcentration = macs2_params(extsize=100e3, exttype="symmetrical", llocal=1e7, minqvalue=0.01, effective_size=1.87e9, maxgap=2e5, minlen=1e5)
   tlx_baitconcentration_df = tlx_clean_df %>% dplyr::mutate(tlx_group=paste0(tlx_group, " (", bait_chrom, ")"))
   tlx_baitconcentration_ranges = tlx_clean_df %>% df2ranges(Rname, Junction, Junction)
-  libfactors_baitconcentration_df = tlx_libfactors(tlx_baitconcentration_df, group="group", normalize_within="group", normalize_between="none", normalization_target="smallest")
+  libfactors_baitconcentration_df = tlx_libfactors(tlx_baitconcentration_df, normalize_within="none", normalize_between="none", normalization_target="min")
   tlxcov_baitconcentration_strand_df = tlx_clean_df %>%
     tlx_coverage(group="group", extsize=params_baitconcentration$extsize, exttype=params_baitconcentration$exttype, libfactors_df=libfactors_baitconcentration_df, ignore.strand=F)
   tlxcov_baitconcentration_strand_ranges = tlxcov_baitconcentration_strand_df %>% df2ranges(tlxcov_chrom, tlxcov_start, tlxcov_end)
@@ -127,21 +121,20 @@ APH_concentration = function()
     dplyr::mutate(tlx_group=gsub(" \\(.*", "", tlx_group)) %>%
     tlxcov_write_bedgraph(path="reports/APH_concentration/concentration", group="group")
 
-  devtools::load_all('~/Workspace/breaktools/')
   rdc_junctions_df = rdc_df %>%
     df2ranges(rdc_chrom, rdc_start, rdc_end) %>%
     innerJoinByOverlaps(tlx_baitconcentration_ranges) %>%
-    dplyr::group_by(rdc_cluster, rdc_chrom, rdc_start, rdc_end, rdc_tlx_group=tlx_group) %>%
+    dplyr::group_by(rdc_cluster, rdc_chrom, rdc_start, rdc_end, rdc_tlx_group=tlx_group, island_summit_abs) %>%
     dplyr::summarize(n_sense=sum(tlx_strand=="+"), n_anti=sum(tlx_strand=="-")) %>%
     dplyr::ungroup()
   ccs_df = rdc_junctions_df %>%
     df2ranges(rdc_chrom, rdc_start, rdc_end) %>%
     innerJoinByOverlaps(tlxcov_baitconcentration_strand_ranges) %>%
     dplyr::filter(rdc_tlx_group==tlx_group) %>%
-    dplyr::group_by(rdc_cluster, rdc_chrom, tlx_group, n_sense, n_anti) %>%
+    dplyr::group_by(rdc_cluster, rdc_chrom, tlx_group, n_sense, n_anti, island_summit_abs) %>%
     summarize(tlx_strand_crosscorrelation(dplyr::cur_data(), step=5000)) %>%
     dplyr::mutate(tlx_group_int=as.numeric(factor(tlx_group))) %>%
-    dplyr::filter(!is.na(crosscorrelation_lag) & crosscorrelation_value>0.5 & pmin(n_sense, n_anti)>5 & island_summit_abs>=10)
+    dplyr::filter(!is.na(crosscorrelation_lag) & crosscorrelation_value>0.5 & pmin(n_sense, n_anti)>10 & island_summit_abs>=10)
   tlx_shift_df = rdc_junctions_df %>%
     df2ranges(rdc_chrom, rdc_start, rdc_end) %>%
     innerJoinByOverlaps(tlx_baitconcentration_ranges) %>%
@@ -150,7 +143,7 @@ APH_concentration = function()
     dplyr::summarize(tlx_strand_shift=mean(Junction[tlx_strand=="+"])-mean(Junction[tlx_strand=="-"]), tlx_strand_relshift=tlx_strand_shift/(max(Junction)-min(Junction))) %>%
     dplyr::filter(pmin(n_sense, n_anti)>5)
 
-  pdf("reports/APH_concentration.pdf", width=11.69, height=8.27, paper="a4r")
+  pdf("reports/APH_concentration3.pdf", width=11.69, height=8.27, paper="a4r")
   ggplot(rdc_junctions_df, aes(y=log2(n_sense/(n_sense+n_anti)), x=rdc_tlx_group)) +
     geom_hline(yintercept=0, linetype="dashed") +
     geom_boxplot(aes(fill=rdc_tlx_group), outlier.shape = NA, outlier.alpha = 0) +
@@ -162,7 +155,8 @@ APH_concentration = function()
   ggplot(ccs_df, aes(y=crosscorrelation_rellag, x=tlx_group)) +
     geom_hline(yintercept=0, linetype="dashed") +
     geom_boxplot(aes(fill=tlx_group), outlier.shape = NA, outlier.alpha = 0) +
-    geom_text(aes(x=tlx_group, label=gsub("MACS3_", "", rdc_cluster), size=n_sense+n_anti), color="#FF0000", position=position_jitter(width=0.2)) +
+    # geom_text(aes(x=tlx_group, label=gsub("MACS3_", "", rdc_cluster), size=n_sense+n_anti), color="#FF0000", position=position_jitter(width=0.2)) +
+    geom_point(aes(x=tlx_group, size=n_sense+n_anti), color="#000000", position=position_jitter(width=0.2), alpha=0.3) +
     labs(y="Cross-correlation lag between sense and antisense junctions", size="# junctions", fill="APH concentration") +
     scale_fill_manual(values=group_palette) +
     theme_bw(base_size=8) +

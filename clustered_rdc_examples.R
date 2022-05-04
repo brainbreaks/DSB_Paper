@@ -85,7 +85,7 @@ clustered_rdc_examples = function()
   #
   samples_df = tlx_read_samples("~/Workspace/Datasets/HTGTS/samples/All_samples.tsv", "~/Workspace/Datasets/HTGTS") %>%
     dplyr::filter(!control & (grepl("promoter/enhancer", experiment) & alleles==2 | "APH concentration"==experiment & concentration==0.4)) %>%
-    dplyr::mutate(group=paste0("All (", bait_chrom, ")"))
+    dplyr::mutate(group=ifelse(control, "DMSO", paste0("All (", bait_chrom, ")")))
 
   tlx_all_df = tlx_read_many(samples_df, threads=30) %>%
     tlx_remove_rand_chromosomes() %>%
