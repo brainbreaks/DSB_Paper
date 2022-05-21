@@ -105,7 +105,8 @@ clustered_rdc_examples = function()
   offtarget_df = readr::read_tsv("~/Workspace/Datasets/HTGTS/offtargets_pnas_mm10.tsv")
   tlx_clean_df = tlx_df %>%
     tlx_mark_offtargets(offtarget_df, offtarget_region=1e5, bait_region=1e4) %>%
-    dplyr::filter(!tlx_is_offtarget & tlx_is_bait_chrom) %>%
+    dplyr::filter(!tlx_is_offtarget) %>%
+    dplyr::filter(tlx_is_bait_chrom) %>%
     dplyr::filter(!tlx_control) %>%
     dplyr::mutate(tlx_group="APH") %>%
     dplyr::group_by(Rname) %>%

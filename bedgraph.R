@@ -58,13 +58,6 @@ bedgraph = function()
     tlx_mark_offtargets(offtargets_df, offtarget_region=1e5, bait_region=1e5) %>%
     dplyr::filter(!tlx_is_offtarget & !tlx_is_bait_junction & tlx_is_bait_chrom)
 
-
-  table(tlx_clean_df %>% dplyr::filter(tlx_is_offtarget & Junction>=138172000 & Junction<=138178000) %>% .$tlx_control, tlx_clean_df %>% dplyr::filter(tlx_is_offtarget & Junction>=138172000 & Junction<=138178000) %>% .$tlx_strand)
-  # offtargets_df = offtargets_df %>% dplyr::filter(offtarget_bait_chrom=="chr5")
-  # tlx_df = tlx_clean_df %>% dplyr::filter(Rname=="chr5")
-  tlx_write_bed(tlx_clean_df, path="reports/all/all", group="all", mode="alignment", ignore.strand=T)
-  tlx_clean_df %>% dplyr::filter(Rname=="chr5" & tlx_is_offtarget & !tlx_is_bait_junction & tlx_is_bait_chrom)
-
   params_clean = macs2_params(extsize=5e4, exttype="symmetrical", llocal=1e7, minqvalue=0.01, effective_size=1.87e9, maxgap=2e5, minlen=1e5)
   tlxcov_clean_df = tlx_clean_df %>%
     tlx_coverage(group="group", extsize=params_clean$extsize, exttype=params_clean$exttype, libfactors_df=libfactors_df, ignore.strand=F)
