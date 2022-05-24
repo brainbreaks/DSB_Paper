@@ -26,8 +26,7 @@ main = function()
   samples_df = tlx_read_samples("~/Workspace/Datasets/HTGTS/samples/All_samples.tsv", "~/Workspace/Datasets/HTGTS") %>%
     dplyr::filter(grepl("promoter/enhancer", experiment)) %>%
     dplyr::mutate(group=dplyr::case_when(
-      group=="Perental cell (NXP010)"~"NXP010",
-      group=="Perental cell (NXP047)"~"NXP047",
+      grepl("NXP010|NXP047", group)~"WT",
       grepl("Ctnna2", experiment) & grepl("Allelic deletion", group) ~ "fndr (47/5 + 71/3)",
       grepl("Ctnna2", experiment) & grepl(".*promoter deletion", group) ~ "fndr-prom (18/4)",
       grepl("Csmd1", experiment) & grepl("Allelic deletion", group) ~ "fndr (73/16 + 73/7)",
@@ -47,42 +46,74 @@ main = function()
     tlx_calc_copynumber(bowtie2_index="~/Workspace/genomes/mm10/mm10", max_hits=100, threads=24) %>%
     dplyr::filter(tlx_copynumber==1 & !tlx_duplicated) %>%
     dplyr::group_by(run, tlx_sample) %>%
-    dplyr::filter(dplyr::n()>3000) %>%
+    dplyr::filter(dplyr::n()>1000) %>%
     dplyr::ungroup()
+
+  tlx_clean_df = tlx_df
+    # dplyr::filter(tlx_is_bait_chrom & !tlx_is_bait_junction)
 
   #
   # Normalization
   #
-  # effective_size = 1.87e9
-  # sgRNA_length = 20
-  # extsize = 1e5
-  # maxgap = extsize*2
-  # exttype = "symetrical"
-  # threshold_qvalue = 1e-2
-  # threshold_pileup = 1
-  # slocal = 1e7
-  # llocal = 1e7
-  # bait_region=6e6
-  params = macs2_params(extsize=100e3, exttype="symmetrical")
-  libfactors_df = tlx_libfactors(tlx_df, normalize_within="group", normalize_between="none", normalization_target="min")
+  libfactors_df = tlx_clean_df %>%
+    dplyr::mutate(tlx_group=experiment) %>%
+    tlx_libfactors(normalize_within="group", normalize_between="none", normalization_target="max")
+  x = libfactors_df %>% dplyr::arrange(tlx_group, tlx_control, library_size)
+  View(x)
 
+  #
+  # Export bedgraph
+  #
+  if(F) {
+    params = macs2_params(extsize=5e4, exttype="symmetrical")
+    tlxcov_df = tlx_df %>%
+      dplyr::filter(tlx_is_bait_chrom & !tlx_is_bait_junction) %>%
+      dplyr::mutate(tlx_group=group_short) %>%
+      tlx_coverage(group="group", extsize=params$extsize, exttype=params$exttype, libfactors_df=libfactors_df, ignore.strand=T)
+    tlxcov_df %>%
+      tlxcov_write_bedgraph(path="reports/promoter-enhancer_deletion/bedgraph", group="group")
+  }
+
+  #
+  # Plots
+  #
   roi_df = readr::read_tsv("data/promoter-enhancer_deletion_roi.tsv")
   roi_ranges = roi_df %>% df2ranges(roi_chrom, roi_start, roi_end)
   tlx_ranges = tlx_df %>% df2ranges(Rname, Junction, Junction)
   tlx2roi_df = innerJoinByOverlaps(roi_ranges, tlx_ranges) %>%
-    dplyr::group_by(experiment, group, group_short, treatment, tlx_sample, roi_gene) %>%
+    dplyr::filter(roi_experiment==experiment) %>%
+    dplyr::group_by(experiment, group, group_short, treatment, tlx_sample, tlx_control, roi_gene) %>%
     dplyr::summarize(breaks_count=n()) %>%
-    dplyr::inner_join(libfactors_df, by="tlx_sample") %>%
+    dplyr::inner_join(libfactors_df %>% dplyr::select(tlx_sample, library_factor), by="tlx_sample") %>%
     dplyr::mutate(breaks_norm_count=breaks_count*library_factor) %>%
-    dplyr::group_by(experiment, group, roi_gene) %>%
-    dplyr::mutate(breaks_norm=breaks_norm_count/max(breaks_norm_count)) %>%
-    dplyr::ungroup() %>%
-    dplyr::mutate(group_short=factor(group_short, unique(samples_df$group_short))) %>%
+    dplyr::mutate(group_short=dplyr::case_when(
+      tlx_control~"DMSO",
+      T ~ as.character(group_short))) %>%
+    dplyr::group_by(experiment, roi_gene) %>%
+    dplyr::mutate(breaks_norm_rel=breaks_norm_count/max(breaks_norm_count)) %>%
+    dplyr::ungroup()  %>%
+    dplyr::mutate(group_short=factor(group_short, c("WT", "fndr", "fndr-prom", "DMSO"))) %>%
     dplyr::arrange(group_short)
 
+
+  pList = lapply(split(tlx2roi_df, tlx2roi_df$experiment), function(df) {
+    ggplot(df, aes(x=roi_gene, fill=group_short, color=group_short, y=breaks_norm_rel)) +
+      geom_boxplot(outlier.shape=NA) +
+      # geom_point(color="#000000", size=3, position=position_jitterdodge(jitter.width=0.1), show.legend=F, alpha=0.2) +
+      geom_text(aes(label=tlx_sample), color="#000000", size=3, position=position_jitterdodge(jitter.width=0.1), show.legend=F, alpha=0.6) +
+      # facet_wrap(~experiment, scales="free") +
+      facet_grid(experiment~roi_gene, scales="free")
+  })
+  cowplot::plot_grid(plotlist=pList, ncol = 1, align = 'v')
+
+
+
+  print("done")
   pdf("reports/difference_in_breaks.pdf", width=11.69, height=8.27, paper="a4r")
+
+
   set.seed(123)
-  p1 = ggplot(tlx2roi_df %>% dplyr::filter(grepl("Ccser1|Ctnna2|Grid2", roi_gene)), aes(x=group_short, y=breaks_norm_count, fill=treatment, group=paste(group_short, treatment))) +
+  p1 = ggplot(tlx2roi_df, aes(x=group_short, y=breaks_norm_count, fill=treatment, group=paste(group_short, treatment))) +
     geom_boxplot(outlier.shape=NA) +
     geom_point(color="#000000", size=4, position=position_jitterdodge(jitter.width=0.1), show.legend=F) +
     facet_wrap(~experiment, scales="free")

@@ -1,0 +1,23 @@
+roi_experiment	roi_gene	roi_is_effected	roi_chrom	roi_start	roi_end	roi_peak	roi_description
+Ctnna2 promoter/enhancer	Ccser1	F	chr6	61180325	62382863	75	longest transcript
+Ctnna2 promoter/enhancer	Grid2	F	chr6	63255903	64704322	55	longest transcript
+Ctnna2 promoter/enhancer	Ctnna2	T	chr6	76881637	77979703	220	longest transcript
+Ctnna2 promoter/enhancer	Magi1	F	chr6	93675453	94283920	90	longest transcript
+Ctnna2 promoter/enhancer	Sox5	F	chr6	143828425	144781989	36	longest transcript
+Ctnna2 promoter/enhancer	Cacna1c	F	chr6	118587240	119197493	15	longest transcript
+Ctnna2 promoter/enhancer	Foxp1	F	chr6	98923261	99031296	100	A rather short transcript close to the gene end
+Ctnna2 promoter/enhancer	Tpk1	F	chr6	43344999	43666486	10	longest transcript
+Csmd1 promoter/enhancer	Csmnd1	T	chr8	15892545	17535385		longest transcript
+Csmd1 promoter/enhancer	Sgcz	F	chr8	37517840	38662638		longest transcript
+Csmd1 promoter/enhancer	Tenm3	F	chr8	48225673	48935162		longest transcript
+Csmd1 promoter/enhancer	Cdh13	F	chr8	118140017	119324929		longest transcript
+Csmd1 promoter/enhancer	Nr3c2+, Arhgap10-	F	chr8	76900183	77517801		longest transcript
+Csmd1 promoter/enhancer	Wwox+	F	chr8	114439652	115352712		longest transcript
+Csmd1 promoter/enhancer	March1+	F	chr8	65617922	66471634		longest transcript
+Nrxn1 promoter/enhancer	Nrxn1-	T	chr17	90033644	91092802		longest transcript
+Nrxn1 promoter/enhancer	Ptprm	F	chr17	66666848	67354459		longest transcript
+Nrxn1 promoter/enhancer	Zfand3	F	chr17	30005039	30210020		longest transcript
+Nrxn1 promoter/enhancer	Mllt4	F	chr17	13760544	13905798		longest transcript
+Nrxn1 promoter/enhancer	Park2	F	chr17	10840359	12063366		longest transcript
+
+
