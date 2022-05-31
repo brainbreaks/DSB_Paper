@@ -7,7 +7,7 @@ library(stringr)
 library(dplyr)
 library(scico)
 devtools::load_all('~/Workspace/breaktools/')
-setwd("~/Workspace/DSB_paper")
+
 
 #
 # Load data
