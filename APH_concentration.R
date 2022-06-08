@@ -9,8 +9,8 @@ devtools::load_all('~/Workspace/breaktools/')
 
 APH_concentration = function()
 {
+  debug = F
   group_palette = c("APH 0.2 uM 96h"="#C6DBEF", "APH 0.3 uM 96h"="#6DAACE", "APH 0.4 uM 96h"="#317BA5", "APH 0.6 uM 96h"="#335E9D", "DMSO"="#CCCCCC")
-  group_alpha = c("APH 0.2 uM 96h"=0.7, "APH 0.3 uM 96h"=0.8, "APH 0.4 uM 96h"=0.9, "APH 0.6 uM 96h"=1, "DMSO"=0.6)
 
   baits_df = readr::read_tsv("~/Workspace/Datasets/HTGTS/wei_pnas2018_baits.tsv")
 
@@ -21,6 +21,12 @@ APH_concentration = function()
     dplyr::filter(grepl("concentration", experiment))
 
   tlx_all_df = tlx_read_many(samples_df, threads=30)
+  if(debug) {
+    tlx_all_df %>%
+      dplyr::mutate(tlx_group=paste0(tlx_group, " (", bait_chrom, ")")) %>%
+      tlx_write_bed("reports/APH_concentration/bed/", "group", mode="junction", ignore.strand=T)
+  }
+
   tlx_df = tlx_all_df %>%
     tlx_extract_bait(bait_size=19, bait_region=12e6) %>%
     tlx_remove_rand_chromosomes() %>%
