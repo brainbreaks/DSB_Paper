@@ -24,7 +24,7 @@ APH_concentration = function()
   if(debug) {
     tlx_all_df %>%
       dplyr::mutate(tlx_group=paste0(tlx_group, " (", bait_chrom, ")")) %>%
-      tlx_write_bed("reports/APH_concentration/bed/", "group", mode="junction", ignore.strand=T)
+      tlx_write_bed("reports/APH_concentration/bed-strand/", "group", mode="junction", ignore.strand=F)
   }
 
   tlx_df = tlx_all_df %>%

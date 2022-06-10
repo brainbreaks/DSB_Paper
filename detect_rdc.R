@@ -25,8 +25,8 @@ detect_rdc = function()
   #
   # Load RDC
   #
-  samples_df = tlx_read_samples("~/Workspace/Datasets/HTGTS/samples/All_samples.tsv", "~/Workspace/Datasets/HTGTS/TLX") %>%
-    dplyr::filter(!control & (grepl("promoter/enhancer", experiment) & alleles==2 | grepl("concentration", experiment) & concentration==0.4)) %>%
+  samples_df = tlx_read_samples("~/Workspace/Datasets/HTGTS/samples/All_samples.tsv", "~/Workspace/Datasets/HTGTS") %>%
+    dplyr::filter(!control & (grepl("(Ctnna2|Nrxn1) promoter/enhancer", experiment) | grepl("concentration", experiment) & concentration==0.4)) %>%
     dplyr::mutate(group=paste0("All (", bait_chrom, ")"))
 
   # samples_df = tlx_read_samples("~/Workspace/Datasets/HTGTS/samples/All_samples.tsv", "~/Workspace/Datasets/HTGTS/TLX") %>%
@@ -35,13 +35,14 @@ detect_rdc = function()
 
 
 
-  tlx_df = tlx_read_many(samples_df, threads=30)
-  tlx_df = tlx_remove_rand_chromosomes(tlx_df)
-  tlx_df = tlx_extract_bait(tlx_df, bait_size=19, bait_region=12e6)
-  tlx_df = tlx_mark_dust(tlx_df)
-  tlx_df = tlx_df %>%
+  tlx_all_df = tlx_read_many(samples_df, threads=30)
+  tlx_df = tlx_all_df %>%
+    tlx_extract_bait(bait_size=19, bait_region=12e6) %>%
+    tlx_remove_rand_chromosomes() %>%
+    tlx_calc_copynumber(bowtie2_index="~/Workspace/genomes/mm10/mm10", max_hits=100, threads=24) %>%
+    dplyr::filter(tlx_copynumber==1 & !tlx_duplicated) %>%
     dplyr::group_by(tlx_sample) %>%
-    dplyr::filter(dplyr::n()>2000) %>%
+    dplyr::filter(dplyr::n()>5000) %>%
     dplyr::ungroup()
   libfactors_df = tlx_libfactors(tlx_df, group="group", normalize_within="group", normalize_between="none", normalization_target="smallest")
 

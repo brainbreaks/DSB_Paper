@@ -1,3 +1,5 @@
+setwd("~/Workspace/DSB_Paper")
+
 library(readr)
 library(dplyr)
 library(ggplot2)
@@ -8,6 +10,7 @@ devtools::load_all('~/Workspace/breaktools/')
 
 main = function()
 {
+  debug = F
   genes_df = gtf_read('~/Workspace/genomes/mm10/annotation/mm10.refGene.gtf.gz')
   baits_df = readr::read_tsv("~/Workspace/Datasets/HTGTS/wei_pnas2018_baits.tsv")
 
@@ -23,58 +26,115 @@ main = function()
       grepl("Allelic deletion", group) ~ gsub("Allelic deletion", "fndr", group),
       grepl("Allelic\\+promoter deletion", group) ~ gsub("Allelic\\+promoter deletion", "fndr-prom", group)
     )) %>%
-    # dplyr::mutate(group=dplyr::case_when(
-    #   grepl("NXP010|NXP047", group)~"WT",
-    #   grepl("Ctnna2", experiment) & grepl("Allelic deletion", group) ~ "fndr (47/5 + 71/3)",
-    #   grepl("Ctnna2", experiment) & grepl(".*promoter deletion", group) ~ "fndr-prom (18/4)",
-    #   grepl("Csmd1", experiment) & grepl("Allelic deletion", group) ~ "fndr (73/16 + 73/7)",
-    #   grepl("Csmd1", experiment) & grepl(".*promoter deletion", group) ~ "fndr-prom (13/12 + 37/8)",
-    #   grepl("Nrxn1", experiment) & grepl("Allelic deletion", group) ~ "fndr (22)",
-    #   grepl("Nrxn1", experiment) & grepl(".*promoter deletion", group) ~ "fndr-prom (22/1 + 22/39 + 22/37 +22/5)"
-    # )) %>%
     dplyr::mutate(group_short=gsub("(fndr|prom) .*$", "\\1", group)) %>%
     dplyr::mutate(sample_number=gsub("^[^0-9]+0*(\\d+).*", "\\1", basename(path))) %>%
     dplyr::mutate(treatment=ifelse(control, "DMSO", "APH"))
 
-  tlx_all_df = tlx_read_many(samples_df, threads=10) %>% tlx_extract_bait(bait_size=19, bait_region=12e6)
+  tlx_all_df = tlx_read_many(samples_df, threads=10) %>%
+    tlx_extract_bait(bait_size=19, bait_region=12e6) %>%
+    tlx_calc_copynumber(bowtie2_index="~/Workspace/genomes/mm10/mm10", max_hits=100, threads=24)
   tlx_df = tlx_all_df %>%
-    tlx_remove_rand_chromosomes() %>%
-    tlx_calc_copynumber(bowtie2_index="~/Workspace/genomes/mm10/mm10", max_hits=100, threads=24) %>%
+    tlx_remove_rand_chromosomes()%>%
     dplyr::filter(tlx_copynumber==1 & !tlx_duplicated & Rname!="chrY") %>%
     dplyr::group_by(run, tlx_sample) %>%
-    dplyr::filter(dplyr::n()>1000) %>%
+    dplyr::filter(dplyr::n()>5000) %>%
     dplyr::ungroup()
-
 
   #
   # Automatically find RDC
   #
-  params_rdc = macs2_params(extsize=5e4, exttype="symmetrical", llocal=1e7, minqvalue=0.01, effective_size=1.87e9, maxgap=1e6, minlen=1e5)
+devtools::load_all('~/Workspace/breaktools/')
+  params_rdc = macs2_params(extsize=5e4, exttype="symmetrical", llocal=1e7, minpvalue=0.01, effective_size=1.87e9, maxgap=2e5, minlen=2e5, baseline=2)
+  params_rdc = macs2_params(extsize=5e4, exttype="symmetrical", llocal=1e7, minpvalue=0.01, effective_size=1.87e9, maxgap=0, minlen=1e3, baseline=2)
   tlx_rdc_df = tlx_df %>% dplyr::filter(!tlx_control)
+  # libfactors_rdc_df = tlx_rdc_df %>%
+  #   dplyr::mutate(tlx_group="all") %>%
+  #   tlx_libfactors(normalize_within="group", normalize_between="none", normalization_target="min")
   libfactors_rdc_df = tlx_rdc_df %>%
-    dplyr::mutate(tlx_group="all") %>%
-    tlx_libfactors(normalize_within="group", normalize_between="none", normalization_target="min")
+    tlx_libsizes() %>%
+    tlx_libfactors_within(min(library_size)/library_size)
   tlxcov_rdc_df = tlx_rdc_df %>%
-    dplyr::filter(!tlx_is_bait_junction) %>%
+    dplyr::filter(!tlx_is_bait_junction & !grepl("prom", group)) %>%
     dplyr::mutate(tlx_group=tlx_is_bait_chrom) %>%
     tlx_coverage(group="group", extsize=params_rdc$extsize, exttype=params_rdc$exttype, libfactors_df=libfactors_rdc_df, ignore.strand=T)
-  macs_rdc = tlxcov_macs2(tlxcov_rdc_df, group="group", params_rdc)
-  tlxcov_write_bedgraph(tlxcov_rdc_df, path="reports/promoter-enhancer_deletion/pool", group="all")
-  macs_rdc$islands %>% dplyr::mutate(strand="*") %>% dplyr::select(island_chrom, island_start, island_end, island_name, island_baseline, strand) %>%
-    readr::write_tsv("reports/promoter-enhancer_deletion/pool_macs.bed", col_names=F)
+  macs_rdc = tlxcov_macs2(tlxcov_rdc_df, group="group", params=params_rdc)
+  macs_rdc$islands %>%
+    dplyr::mutate(strand="*") %>%
+    dplyr::group_by(tlx_group) %>%
+    dplyr::do((function(df){
+      df %>%
+        dplyr::select(island_chrom, island_extended_start, island_extended_end, island_name, island_baseline, strand) %>%
+        readr::write_tsv(paste0("reports/promoter-enhancer_deletion/new_extislands-", df$tlx_group[1], ".bed"), col_names=F)
+      df %>%
+        dplyr::select(island_chrom, island_start, island_end, island_name, island_baseline, strand) %>%
+        readr::write_tsv(paste0("reports/promoter-enhancer_deletion/new_islands-", df$tlx_group[1], ".bed"), col_names=F)
+    })(.))
+  table(macs_rdc$islands$tlx_group, macs_rdc$islands$island_chrom)
 
-  #
-  # Export bedgraph
-  #
-  if(F) {
-    params = macs2_params(extsize=5e4, exttype="symmetrical")
-    tlxcov_df = tlx_df %>%
-      dplyr::filter(tlx_is_bait_chrom & !tlx_is_bait_junction) %>%
-      dplyr::mutate(tlx_group=group_short) %>%
-      tlx_coverage(group="group", extsize=params$extsize, exttype=params$exttype, libfactors_df=libfactors_df, ignore.strand=T)
-    tlxcov_df %>%
-      tlxcov_write_bedgraph(path="reports/promoter-enhancer_deletion/bedgraph", group="group")
+  # Q-value
+  #         chr1 chr10 chr11 chr12 chr13 chr14 chr15 chr16 chr17 chr18 chr19 chr2 chr3 chr4 chr5 chr6 chr7 chr8 chr9 chrX
+  # FALSE    9    10    10     9    10    10     7     8     8     5     1   14   10   14    8    3    9   18   10    7
+  # TRUE     0     0     0     0     0     0     0     0    16     0     0    0    0    0    0   25    0    0    0    0
+
+  # P-value
+  #         chr1 chr10 chr11 chr12 chr13 chr14 chr15 chr16 chr17 chr18 chr19 chr2 chr3 chr4 chr5 chr6 chr7 chr8 chr9 chrX
+  # FALSE   20    15    16    17    21    13    13    16    15     8     8   20   16   26   22    3   11   27   21    8
+  # TRUE     0     0     0     0     0     0     0     0    22     0     0    0    0    0    0   27    0    0    0    0
+
+  if(debug)
+  {
+    macs_rdc$qvalues %>%
+      dplyr::group_by(tlx_group) %>%
+      dplyr::do((function(df){
+        df %>%
+          dplyr::select(qvalue_chrom, qvalue_start, qvalue_end, qvalue_score) %>%
+          readr::write_tsv(paste0("reports/promoter-enhancer_deletion/new_qvalues-", df$tlx_group[1], ".bedgraph"), col_names = F)
+      })(.))
+    macs_rdc$islands %>%
+      dplyr::mutate(strand="*") %>%
+      dplyr::group_by(tlx_group) %>%
+      dplyr::do((function(df){
+        df %>%
+          dplyr::select(island_chrom, island_extended_start, island_extended_end, island_name, island_baseline, strand) %>%
+          readr::write_tsv(paste0("reports/promoter-enhancer_deletion/new_extislands-", df$tlx_group[1], ".bed"), col_names=F)
+        df %>%
+          dplyr::select(island_chrom, island_start, island_end, island_name, island_baseline, strand) %>%
+          readr::write_tsv(paste0("reports/promoter-enhancer_deletion/new_islands-", df$tlx_group[1], ".bed"), col_names=F)
+      })(.))
+
+    tlx_rdc_df %>%
+      dplyr::mutate(tlx_group=tlx_is_bait_chrom)  %>%
+      tlx_write_bed(path="reports/promoter-enhancer_deletion/new_bed", group="group")
+    tlx_rdc_df %>%
+      dplyr::mutate(tlx_group=tlx_is_bait_chrom) %>%
+      tlx_write_bed(path="reports/promoter-enhancer_deletion/new_bed", group="all")
+    tlxcov_rdc_df %>% tlxcov_write_bedgraph(path="reports/promoter-enhancer_deletion/new_bedgraph", group="all")
+    tlxcov_rdc_df %>% tlxcov_write_bedgraph(path="reports/promoter-enhancer_deletion/new_bedgraph", group="group")
+    tlx_rdc_df %>%
+      dplyr::filter(!tlx_is_bait_junction) %>%
+      dplyr::mutate(tlx_group=tlx_is_bait_chrom) %>%
+      tlx_coverage(group="group", extsize=params_rdc$extsize, exttype=params_rdc$exttype, libfactors_df=libfactors_rdc_df, ignore.strand=F) %>%
+      tlxcov_write_bedgraph(path="reports/promoter-enhancer_deletion/new_bedgraph", group="group")
   }
+
+  # qvalues_all = macs_rdc$qvalues %>%
+  #   dplyr::group_by(tlx_group) %>%
+  #   dplyr::do((function(df){
+  #     dff<<-df
+  #     df = macs_rdc$qvalues %>% dplyr::filter(tlx_group=="TRUE")
+  #     asdasd()
+  #     df_ranges = df2ranges(df, qvalue_chrom, qvalue_start, qvalue_end)
+  #     # df_score = GenomicRanges::mcolAsRleList(df_ranges, "qvalue_score")
+  #     df_score = GenomicRanges::coverage(df_ranges, weight=df_ranges$qvalue_score)
+  #     df_bins = df_ranges %>%
+  #       GenomicRanges::slidingWindows(width=1000, step=1000) %>%
+  #       unlist()
+  #     y = GenomicRanges::binnedAverage(df_bins, df_score, "qvalue_score")
+  #     q = qvalue::qvalue(10^-y$qvalue_score)
+  #     hist(10^-y$qvalue_score)
+  #     hist(q$qvalues)
+  #   })(.))
+
 
   #
   # Plots
