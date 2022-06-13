@@ -6,6 +6,7 @@ library(ggplot2)
 library(cowplot)
 library(stringr)
 library(randomcoloR)
+library(ComplexHeatmap)
 devtools::load_all("~/Workspace/breaktools/")
 
 
@@ -13,7 +14,7 @@ devtools::load_all("~/Workspace/breaktools/")
 detect_rdc = function()
 {
   debug=T
-  dir.create("reports/detect_rdc/offtargets", recursive=T)
+  dir.create("reports/detect_rdc", recursive=T)
   # params = macs2_params(extsize=1e5, exttype="symmetrical", llocal=1e7, minqvalue=0.01, effective_size=1.87e9, maxgap=2e5, minlen=1e5)
   #
   #
@@ -33,8 +34,7 @@ detect_rdc = function()
   samples_df = tlx_read_samples("~/Workspace/Datasets/HTGTS/samples/All_samples.tsv", "~/Workspace/Datasets/HTGTS") %>%
     dplyr::filter(tlx_exists & celltype=="NPC" & organism=="mouse" & sample!="VI035" & (
       grepl("(Csmd1|Ctnna2|Nrxn1) promoter/enhancer", experiment) |
-      grepl("concentration", experiment) & concentration==0.4 |
-      grepl("Wei|Tena", experiment))
+      grepl("concentration", experiment) & concentration==0.4)
     )
 
   tlx_all_df = tlx_read_many(samples_df, threads=10) %>%
@@ -49,7 +49,7 @@ detect_rdc = function()
   #
   # Detect offtargets
   #
-  offtargets_params = macs2_params(extsize=20, exttype="opposite", llocal=1e7, minqvalue=0.01, baseline=2, effective_size=1.87e9, maxgap=10e3, minlen=4)
+  offtargets_params = macs2_params(extsize=50, exttype="opposite", llocal=1e7, minqvalue=0.01, baseline=2, effective_size=1.87e9, maxgap=10e3, minlen=2)
   tlx_offtarget_df = tlx_all_df %>%
     tlx_remove_rand_chromosomes() %>%
     dplyr::mutate(Qname=bait_name, tlx_group=bait_name, tlx_control=F) %>%
@@ -60,6 +60,23 @@ detect_rdc = function()
     tlx_coverage(group="group", extsize=offtargets_params$extsize, exttype=offtargets_params$exttype, libfactors_df=libfactors_df, ignore.strand=T, min_sample_pileup=0)
   macs_offtargets = tlxcov_macs2(tlxcov_df=tlxcov_offtargets_df, group="group", params=offtargets_params)
 
+# What happened to
+#   chr15 -> chr1:79Mb - All <-
+#   chr15 -> chr2:27Mb - Extend 23/2
+#   chr5  -> chr3:96Mb - Extend 34/2
+#   chr4  -> chr6:53M  - Extend 90/2
+#   chr4  -> chr6:116M  - Extend 45/2
+#   chr3  -> chr8:24M  - Extend 208/2
+#   chr6  -> chr9:35Mb - Strands oriented wrong direction (doesn't look like off-target)
+#   chr15 -> chr10:84Mb - Extend 22/2, also too little reads
+#   chr17 -> chr11:112Mb - Extend 60/2
+#   chr7  -> chr13:42Mb  - Extend 43/2
+#   chr8  -> chr13:81Mb  - Extend 48/2
+#   chr10 -> chr13:104Mb  - Extend 94/2
+#   chr10 -> chr14:33Mb  - Extend 95/2
+#   chr5 -> chr14:64Mb  - Extend 95/2
+#   chr10 and chr11 -> chr15:61Mb  - Only + junctions
+  # cgr14 -> chr19:29Mb - Extend 32/2
 
   if(debug) {
     chrom_names = unique(macs_offtargets$islands$tlx_group)
@@ -76,9 +93,9 @@ detect_rdc = function()
       dplyr::mutate(thickStart=island_start, thickEnd=island_end, score=1, rgb=chrom_colors[tlx_group]) %>%
       dplyr::select(island_chrom, island_start, island_end, island_name, score, strand, thickStart, thickEnd, rgb) %>%
       readr::write_tsv("reports/detect_rdc/offtargets/offtargets.bed", col_names=F)
-    macs_offtargets$qvalues %>%
-      dplyr::select(qvalue_chrom, qvalue_start, qvalue_end, qvalue_score) %>%
-      readr::write_tsv("reports/detect_rdc/offtargets/offtargets2-qvalues.bedgraph", col_names=F)
+    # macs_offtargets$qvalues %>%
+    #   dplyr::select(qvalue_chrom, qvalue_start, qvalue_end, qvalue_score) %>%
+    #   readr::write_tsv("reports/detect_rdc/offtargets/offtargets2-qvalues.bedgraph", col_names=F)
   }
 
   offtargets_df = macs_offtargets$islands %>%
@@ -104,27 +121,17 @@ detect_rdc = function()
     dplyr::ungroup() %>%
     dplyr::rename(offtarget_bait_name="tlx_group")
   table(offtargets_df$offtarget_bait_name)
-  readr::write_tsv(offtargets_df, path="data/offtargets_dkfz.tsv")
-
-  #
-  # Merge all off-targets
-  #
-  offtargets_all_df = macs_offtargets$islands %>%
-    df2ranges(island_chrom, island_start, island_end) %>%
-    GenomicRanges::reduce(min.gapwidth=1e4) %>%
-    as.data.frame() %>%
-    dplyr::select(offtarget_chrom=seqnames, offtargets_extended_start=start, offtargets_extended_end=end) %>%
-    df2ranges(offtarget_chrom, offtargets_extended_start, offtargets_extended_end) %>%
-    innerJoinByOverlaps(macs_offtargets$islands %>% df2ranges(island_chrom, island_start, island_end)) %>%
-    dplyr::arrange(offtargets_extended_end-offtargets_extended_start) %>%
-    dplyr::distinct(offtarget_chrom, offtargets_extended_start, offtargets_extended_end, .keep_all=T) %>%
-    dplyr::mutate(offtarget_start=island_summit_pos-1e5, offtarget_end=island_summit_pos+1e5) %>%
-    dplyr::select(dplyr::starts_with("offtarget_")) %>%
-    dplyr::mutate(offtarget_name=paste0(offtarget_chrom, ":", offtarget_start))
+  readr::write_tsv(offtargets_df, file="data/offtargets_dkfz.tsv")
 
   #
   # Plot heatmap with all off-targets
   #
+  offtargets_ranges = offtargets_df %>% df2ranges(offtarget_chrom, offtarget_start, offtarget_end)
+  offtargets_all_df = offtargets_ranges %>%
+    GenomicRanges::reduce(min.gapwidth=1e4) %>%
+    as.data.frame() %>%
+    dplyr::mutate(offtarget_extended_chrom=seqnames, offtarget_extended_start=start-1e5, offtarget_extended_end=end+1e5, offtarget_name=paste0(offtarget_extended_chrom, ":", offtarget_extended_start)) %>%
+    dplyr::select(dplyr::starts_with("offtarget_"))
   tlx_offtarget_ranges = tlx_offtarget_df %>%
     dplyr::group_by(tlx_sample) %>%
     dplyr::mutate(tlx_sample_size=dplyr::n()) %>%
@@ -132,36 +139,39 @@ detect_rdc = function()
     dplyr::filter(!tlx_is_bait_junction) %>%
     df2ranges(Rname, Junction, Junction)
   offtargets_map = offtargets_all_df %>%
-    df2ranges(offtarget_chrom, offtarget_start, offtarget_end) %>%
+    df2ranges(offtarget_extended_chrom, offtarget_extended_start, offtarget_extended_end) %>%
     innerJoinByOverlaps(tlx_offtarget_ranges) %>%
-    dplyr::group_by(tlx_group, tlx_sample, offtarget_name, tlx_sample_size) %>%
-    dplyr::summarize(tlx_count=pmin(sum(tlx_strand=="+"), sum(tlx_strand=="-")), tlx_prop=tlx_count/tlx_sample_size[1], tlx_present=tlx_prop>0.0001)
-  offtargets_ann = offtargets_map %>%
-    dplyr::group_by(offtarget_name, tlx_group) %>%
-    dplyr::summarize(tlx_group_count=sum(tlx_count>0), tlx_group_present=sum(tlx_present), tlx_group_present=factor(ifelse(tlx_group_present>=2, "Yes", "No"))) %>%
-    reshape2::dcast(offtarget_name~tlx_group, value.var="tlx_group_present") %>%
-    tibble::column_to_rownames("offtarget_name") %>%
-    replace(is.na(.), "No")
-  offtargets_ann_colors = sapply(colnames(offtargets_ann), simplify=F, FUN=function(z) c("No"="#FFFFFF", "Yes"="#666666"))
-  samples_ann = samples_df %>%
-    tibble::column_to_rownames("sample") %>%
-    dplyr::select(bait_name, experiment)
+    dplyr::group_by(tlx_group, tlx_sample, offtarget_name, offtarget_extended_chrom, offtarget_extended_start, offtarget_extended_end, tlx_sample_size) %>%
+    dplyr::summarize(tlx_count=pmin(sum(tlx_strand=="+"), sum(tlx_strand=="-")), tlx_prop=tlx_count/tlx_sample_size[1], tlx_present=tlx_prop>0.0001) %>%
+    dplyr::group_by(tlx_group, offtarget_name) %>%
+    dplyr::filter(sum(tlx_present) > 3) %>%
+    dplyr::ungroup()
   offtargets_pheatmap = offtargets_map %>%
     reshape2::dcast(offtarget_name ~ tlx_sample, value.var="tlx_present") %>%
     tibble::column_to_rownames("offtarget_name") %>%
     replace(is.na(.), 0) %>%
     as.matrix()
+  offtargets_ann = offtargets_map %>%
+    df2ranges(offtarget_extended_chrom, offtarget_extended_start, offtarget_extended_end) %>%
+    innerJoinByOverlaps(offtargets_ranges) %>%
+    dplyr::mutate(has_bait=T) %>%
+    reshape2::dcast(offtarget_name~offtarget_bait_name, value.var="has_bait", fun.aggregate=any) %>%
+    replace(is.na(.), 0) %>%
+    tibble::column_to_rownames("offtarget_name")
+  samples_ann = samples_df %>%
+    dplyr::mutate(order=match(sample, colnames(offtargets_pheatmap)), bait_name=gsub("_.*", "", bait_name)) %>%
+    dplyr::filter(!is.na(order)) %>%
+    dplyr::arrange(order) %>%
+    tibble::column_to_rownames("sample") %>%
+    dplyr::select(bait_name, experiment)
   pdf("reports/offtargets_map.pdf", width=11.69, height=8.27, paper="a4r")
-  pheatmap::pheatmap(
-    offtargets_pheatmap,
-    annotation_col=samples_ann,
-    annotation_row=offtargets_ann,
-    annotation_colors =offtargets_ann_colors,
-    cutree_cols=6,
-    fontsize=5)
+  offtargets_anncol = sapply(colnames(offtargets_ann), function(z) c("FALSE"="#FFFFFF", "TRUE"="#666666"), simplify=F)
+  ComplexHeatmap::Heatmap(offtargets_pheatmap, row_names_gp = gpar(fontsize = 6), column_names_gp = gpar(fontsize = 6),
+    top_annotation = ComplexHeatmap::HeatmapAnnotation(bait=ComplexHeatmap::anno_text(samples_ann$bait_name, gp=gpar(fontsize = 6)), experiment=samples_ann$experiment),
+    right_annotation = do.call(ComplexHeatmap::rowAnnotation, c(as.list(offtargets_ann), list(col=offtargets_anncol, show_legend=F)))
+  )
   dev.off()
-  
-  
+
 
   #
   # Detect RDC
