@@ -6,6 +6,7 @@ library(ggplot2)
 library(cowplot)
 library(stringr)
 library(randomcoloR)
+library(Biostrings)
 library(ComplexHeatmap)
 devtools::load_all("~/Workspace/breaktools/")
 
@@ -14,6 +15,11 @@ detect_rdc = function()
 {
   debug=T
   dir.create("reports/detect_offtargets", recursive=T)
+
+  #
+  # Load baits
+  #
+  baits_df = readr::read_tsv("~/Workspace/Datasets/HTGTS/dkfz_baits.tsv")
 
   #
   # Load samples
@@ -81,13 +87,29 @@ detect_rdc = function()
         innerJoinByOverlaps(tlx_group_ranges) %>%
         dplyr::group_by(offtarget_chrom, offtarget_start, offtarget_end) %>%
         dplyr::summarize(offtarget_center=round(mean(Junction))) %>%
-        dplyr::mutate(offtarget_start=offtarget_center-50, offtarget_end=offtarget_center+50) %>%
-        dplyr::select(offtarget_chrom, offtarget_start, offtarget_end)
+        dplyr::mutate(offtarget_region_start=offtarget_center-50, offtarget_region_end=offtarget_center+50) %>%
+        dplyr::select(offtarget_chrom, offtarget_region_start, offtarget_region_end)
     })(.)) %>%
     dplyr::ungroup() %>%
     dplyr::rename(offtarget_bait_name="tlx_group")
-  table(offtargets_df$offtarget_bait_name)
-  readr::write_tsv(offtargets_df, file="data/offtargets_dkfz.tsv")
+
+  #
+  # Export offtargets
+  #
+  offtargets_exported_df = offtargets_df %>%
+    dplyr::inner_join(baits_df, by=c("offtarget_bait_name"="bait_name")) %>%
+    dplyr::mutate(sgRNA_sign=ifelse(bait_strand_sgRNA=="+", 1, -1)) %>%
+    dplyr::mutate(offtarget_bait_sequence_sgRNA=bait_sequence_sgRNA, coord_begin=ifelse(bait_strand=="+", bait_end-16*sgRNA_sign, bait_start-16*sgRNA_sign), coord_end=ifelse(bait_strand=="+", bait_end+3*sgRNA_sign, bait_start+3*sgRNA_sign), offtarget_bait_start=pmin(coord_begin, coord_end), offtarget_bait_end=pmax(coord_begin, coord_end)) %>%
+    dplyr::rename(offtarget_bait_chrom="bait_chrom", offtarget_bait_strand="bait_strand_sgRNA") %>%
+    dplyr::do(as.data.frame(get_seq("~/Workspace/genomes/mm10/mm10.fa", df2ranges(., offtarget_chrom, offtarget_region_start, offtarget_region_end))) %>% dplyr::rename(offtarget_region_sequence="sequence")) %>%
+    dplyr::mutate(offtarget_region_sequence=toupper(offtarget_region_sequence)) %>%
+    dplyr::select(dplyr::starts_with("offtarget_")) %>%
+    dplyr::bind_cols(get_pairwise_alignment(paste0(.$offtarget_bait_sequence_sgRNA, "NGG"), .$offtarget_region_sequence, gapOpening=2, gapExtension=0.5)) %>%
+    dplyr::mutate(offtarget_start=offtarget_region_start+start-1, offtarget_end=offtarget_region_start+end-3) %>%
+    dplyr::select(offtarget_bait_name, offtarget_bait_chrom, offtarget_bait_start, offtarget_bait_end, offtarget_bait_strand, offtarget_chrom, offtarget_start, offtarget_end)
+
+  table(offtargets_exported_df$offtarget_bait_name)
+  readr::write_tsv(offtargets_exported_df, file="data/offtargets_dkfz.tsv")
 
   #
   # Plot heatmap with all off-targets
