@@ -14,7 +14,7 @@ devtools::load_all("~/Workspace/breaktools/")
 detect_rdc = function()
 {
   debug=F
-  dir.create("reports/detect_rdc", recursive=T)
+  dir.create("reports/detect_rdc", recursive=T, showWarnings=F)
 
   #
   # Load offtargets
@@ -48,10 +48,23 @@ detect_rdc = function()
     tlx_libsizes()
 
   #
+  # Select junctions suitable for analysis
+  #
+  tlx_rdc_df = tlx_all_df %>%
+    tlx_remove_rand_chromosomes() %>%
+    dplyr::filter(tlx_copynumber==1 & !tlx_duplicated & !tlx_is_bait_junction & !tlx_is_offtarget & (!grepl("prom", group) | !tlx_is_bait_chrom)) %>%
+    dplyr::mutate(tlx_group=dplyr::case_when(
+      !tlx_control & tlx_is_bait_chrom ~ "APH-Intra",
+      !tlx_control & !tlx_is_bait_chrom ~ "APH-Inter",
+      tlx_control & tlx_is_bait_chrom ~ "DMSO-Intra",
+      tlx_control & !tlx_is_bait_chrom ~ "DMSO-Inter",
+    ), tlx_control=F)
+
+
+  #
   # Evaluate extsize
   #
   if(F) {
-    pdf("reports/extsize_selection.pdf", width=11.69, height=8.27, paper="a4r")
     extsize_df = data.frame(extsize=c(seq(100, 500, 100), seq(1000, 9000, 1000), seq(10000, 90000, 10000), seq(1e5, 3e5, 5e5))) %>%
       dplyr::rowwise() %>%
       dplyr::do((function(z){
@@ -59,7 +72,7 @@ detect_rdc = function()
         params_extsize = macs2_params(extsize=z$extsize, exttype="symmetrical", llocal=1e7, minqvalue=0.01, effective_size=1.87e9, maxgap=2e5, minlen=2e5, baseline=2)
         tlxcov_rdc_df = tlx_rdc_df %>%
           dplyr::filter(!tlx_is_bait_junction & (!grepl("prom", group) | !tlx_is_bait_chrom)) %>%
-          tlx_coverage(group="group", extsize=params_extsize$extsize, exttype=params_extsizec$exttype, libfactors_df=libfactors_df, ignore.strand=T)
+          tlx_coverage(group="group", extsize=params_extsize$extsize, exttype=params_extsize$exttype, libfactors_df=libfactors_df, ignore.strand=T)
         macs_rdc = tlxcov_macs2(tlxcov_rdc_df, group="group", params=params_extsize)
         macs_rdc$islands %>%
           tidyr::crossing(as.data.frame(z))
@@ -68,6 +81,7 @@ detect_rdc = function()
     extsize_sumdf = extsize_df %>%
       dplyr::group_by(extsize, tlx_group) %>%
       dplyr::summarize(count=dplyr::n(), width=mean(island_end-island_start))
+    pdf("reports/extsize_selection.pdf", width=11.69, height=8.27, paper="a4r")
     ggplot(extsize_sumdf) +
       geom_line(aes(x=extsize, y=count)) +
       geom_vline(xintercept=5e4, color="#FF0000") +
@@ -88,10 +102,6 @@ detect_rdc = function()
   # Detect RDC
   #
   params_rdc = macs2_params(extsize=5e4, exttype="symmetrical", llocal=1e7, minqvalue=0.01, effective_size=1.87e9, maxgap=250e3, minlen=200e3, baseline=2)
-  tlx_rdc_df = tlx_all_df %>%
-    tlx_remove_rand_chromosomes() %>%
-    dplyr::filter(tlx_control & tlx_copynumber==1 & !tlx_duplicated & !tlx_is_bait_junction & !tlx_is_offtarget & (!grepl("prom", group) | !tlx_is_bait_chrom)) %>%
-    dplyr::mutate(tlx_control=F, tlx_group=ifelse(tlx_is_bait_chrom, "Intra", "Inter"))
   tlxcov_rdc_df = tlx_rdc_df %>%
     tlx_coverage(group="group", extsize=params_rdc$extsize, exttype=params_rdc$exttype, libfactors_df=libfactors_df, ignore.strand=T)
   macs_rdc = tlxcov_macs2(tlxcov_rdc_df, group="group", params=params_rdc)
@@ -166,12 +176,17 @@ detect_rdc = function()
   # Overlap with published datasets
   #
   pubrdc_df = readr::read_tsv("data/pubrdc.tsv") %>%
-    dplyr::filter(pubrdc_source %in% c("Wei2018", "Tena2020") & pubrdc_celline %in% c("NPC", "NSPC")) %>%
+    dplyr::filter(pubrdc_source %in% c("Wei2018", "Wei2018_DMSO", "Tena2020") & pubrdc_celline %in% c("NPC", "NSPC")) %>%
     tidyr::separate_rows(rdcpub_bait_chrom, rdcpub_bait_chrom, sep=", ?") %>%
-    dplyr::mutate(tlx_group=ifelse(rdcpub_bait_chrom==pubrdc_chrom, "Intra", "Inter")) %>%
+    dplyr::mutate(tlx_group=dplyr::case_when(
+      pubrdc_source=="Wei2018_DMSO" & rdcpub_bait_chrom==pubrdc_chrom ~ "DMSO-Intra",
+      pubrdc_source=="Wei2018_DMSO" & rdcpub_bait_chrom!=pubrdc_chrom ~ "DMSO-Inter",
+      rdcpub_bait_chrom==pubrdc_chrom ~ "APH-Intra",
+      rdcpub_bait_chrom!=pubrdc_chrom ~ "APH-Inter")) %>%
     dplyr::filter(!is.na(pubrdc_start))
+  table(pubrdc_df$tlx_group)
 
-  pubrdc_reduced_df = pubrdc_df%>%
+  pubrdc_reduced_df = pubrdc_df %>%
     dplyr::group_by(pubrdc_source, pubrdc_celline, tlx_group) %>%
     dplyr::do(GenomicRanges::reduce(df2ranges(., pubrdc_chrom, pubrdc_start, pubrdc_end)) %>% as.data.frame()) %>%
     dplyr::ungroup() %>%
@@ -208,13 +223,19 @@ detect_rdc = function()
   overlaps_df = allrdc_reduced_df %>%
     df2ranges(rdc_reduced_chrom, rdc_reduced_start, rdc_reduced_end) %>%
     innerJoinByOverlaps(allrdc_ranges) %>%
-    reshape2::dcast(rdc_chrom+rdc_reduced_start+rdc_reduced_end+rdc_reduced_id+tlx_group ~ rdc_source, value.var="rdc_source", fun.aggregate=function(z) pmin(1, length(z)))
+    reshape2::dcast(rdc_chrom+rdc_reduced_start+rdc_reduced_end+rdc_reduced_id+tlx_group ~ rdc_source_location, value.var="rdc_source_location", fun.aggregate=function(z) pmin(1, length(z)))
 
 
   pdf("reports/rdc_compare_with_published.pdf", width=8.27, height=8.27)
-  overlaps_inter_df = overlaps_df %>% dplyr::filter(tlx_group=="Inter")
-  UpSetR::upset(overlaps_inter_df, sets=colnames(overlaps_inter_df)[colSums(overlaps_inter_df==1)>0], order.by=c("freq", "degree"), decreasing=c(T,F))
-  grid::grid.text("RDC (Inter-chromosomal)", x=0.65, y=0.95, gp=grid::gpar(fontsize=20))
+  overlaps_upset = split(overlaps_df, overlaps_df$tlx_group) %>%
+    lapply(FUN=function(odf) {
+      ooo <<- odf
+      odf_datasets = colnames(odf)[colSums(odf==1)>0]
+      UpSetR::upset(as.data.frame(odf), sets=odf_datasets, order.by=c("freq", "degree"), decreasing=c(T,F))
+      # grid::grid.text(paste0("RDC (", odf$tlx_group[1], "-chromosomal)"), x=0.65, y=0.95, gp=grid::gpar(fontsize=20))
+    })
+  gridExtra::grid.arrange(grobs=overlaps_upset, ncol = 2)
+
 
   plot.new()
   p = VennDiagram::venn.diagram(
