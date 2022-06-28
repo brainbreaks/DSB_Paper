@@ -104,14 +104,19 @@ detect_rdc = function()
   }
 
 
+  # save(tlx_rdc_df, tlxcov_rdc_df, params_rdc, genes_df, libfactors_df, libfactors_df, offtargets_df, file="backup.rda")
+  # load("backup.rda")
+
   #
   # Detect RDC
   #
+  devtools::load_all("~/Workspace/breaktools/")
   params_rdc = macs2_params(extsize=5e4, exttype="symmetrical", llocal=1e7, minqvalue=1e-2, effective_size=1.87e9, maxgap=250e3, minlen=200e3, baseline=2)
   tlxcov_rdc_df = tlx_rdc_df %>%
-    tlx_coverage(group="group", extsize=params_rdc$extsize, exttype=params_rdc$exttype, libfactors_df=libfactors_df, ignore.strand=T)
-  devtools::load_all("~/Workspace/breaktools/")
+    tlx_coverage(group="group", extsize=params_rdc$extsize, exttype=params_rdc$exttype, libfactors_df=libfactors_df, ignore.strand=T, recalculate_duplicate_samples=F)
   macs_rdc = tlxcov_macs2(tlxcov_df=tlxcov_rdc_df, group="group", params=params_rdc)
+
+  # table(macs_rdc$islands$tlx_group)
 
   #
   # Write debugging information from RDC calling
@@ -136,9 +141,9 @@ detect_rdc = function()
     macs_rdc$qvalues %>%
       dplyr::group_by(tlx_group) %>%
       dplyr::do((function(df){
-        df %>%
-          dplyr::select(qvalue_chrom, qvalue_start, qvalue_end, qvalue_score) %>%
-          readr::write_tsv(paste0("reports/detect_rdc/qvalues-", df$tlx_group[1], ".bedgraph"), col_names = F)
+        # df %>%
+        #   dplyr::select(qvalue_chrom, qvalue_start, qvalue_end, qvalue_score) %>%
+        #   readr::write_tsv(paste0("reports/detect_rdc/qvalues-", df$tlx_group[1], ".bedgraph"), col_names = F)
         df %>%
           dplyr::select(qvalue_chrom, qvalue_start, qvalue_end, bgmodel_signal) %>%
           readr::write_tsv(paste0("reports/detect_rdc/baseline-", df$tlx_group[1], ".bedgraph"), col_names = F)
