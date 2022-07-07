@@ -222,8 +222,13 @@ detect_rdc = function()
     })(.)) %>%
     dplyr::ungroup()
 
+rdc_df %>%
+  dplyr::filter(grepl("Intra|Inter", tlx_group) & rdc_significant_nminus==0 & rdc_significant_nplus==0) %>%
+  data.frame() %>%
+  head()
+
 ggplot(rdc_df) +
-  geom_density(aes(x=rdc_significant_area, color=tlx_group))
+  geom_density(aes(x=rdc_significant_area, color=rdc_significant_ncombined>0))
 
     # dplyr::filter(island_score_mean >= 0.6) %>%
 table(rdc_df$rdc_significant_strands)
