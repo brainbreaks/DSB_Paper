@@ -462,8 +462,8 @@ Wei2018	NPC	1	RDC_044	1	chr16	chr7, chr11, chr15, chr16	27269914	29939913			Fgf1
 Wei2018	NPC	1	RDC_045	1	chr16	chr3, chr4, chr5, chr7, chr8, chr9, chr10, chr12, chr13, chr14, chr15, chr17, chr18, chr19, chrX	39984370	42176292			Lsamp	+
 Wei2018	NPC	1	RDC_046	1	chr16	chr6, chr7	43499887	43649886			Zbtb20	+
 Wei2018	NPC	1	RDC_047	1	chr16	chr2, chr4, chr7, chr8, chr12, chr16, chrX	66479755	67619754			Cadm2	-
-Wei2018	NPC	1	RDC_048	1	chr17	chr17, chrX	8567135	8987134			Pde10a	+
-Wei2018	NPC	1	RDC_049	2	chr17	chr4, chr7, chr13, chr17, chr18, chr19, chrX	9107135	10395567			Park2, Pacrg, Qk, Agpat4, Map3k4, Slc22a3, Igf2r	.
+Wei2018	NPC	1	RDC_048	1	chr17	chr17, chrX	10164852	10345638			Pde10a	+
+Wei2018	NPC	1	RDC_049	2	chr17	chr4, chr7, chr13, chr17, chr18, chr19, chrX	10692613	11474285			Park2, Pacrg, Qk, Agpat4, Map3k4, Slc22a3, Igf2r	.
 Wei2018	NPC	1	RDC_050	1	chr17	chr8, chr11, chr17	66400660	67450659			Ptprm	-
 Wei2018	NPC	1	RDC_051	1	chr17	chr3, chr12, chr17	70150660	71050659			Dlgap1	+
 Wei2018	NPC	1	RDC_052	1	chr17	chr13, chr17	86240660	86570659			Prkce	+
