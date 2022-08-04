@@ -103,7 +103,7 @@ detect_offtargets = function()
         dplyr::mutate(tlxcov_pileup=pmin(`+`, `-`)*2) %>%
         dplyr::select(tlx_group, tlx_control, tlxcov_chrom=tlxcov_sum_chrom, tlxcov_start=tlxcov_sum_start, tlxcov_end=tlxcov_sum_end, tlxcov_pileup)
       res_df
-    })(.)) %>%ucs
+    })(.)) %>%
     dplyr::mutate(tlx_strand="*") %>%
     dplyr::ungroup()
 
@@ -208,7 +208,7 @@ detect_offtargets = function()
   offtargets_exported_sequences_df %>%
     dplyr::select(
       offtarget_bait_name, offtarget_bait_chrom, offtarget_bait_start, offtarget_bait_end, offtarget_bait_strand, offtarget_chrom,
-      offtarget_island_start, offtarget_island_end, offtarget_strand_pvalue, offtarget_strand_odds,
+      offtarget_start=offtarget_island_start, offtarget_end=offtarget_island_end, offtarget_strand_pvalue, offtarget_strand_odds,
       offtarget_sequence_start, offtarget_sequence_end, offtarget_alignment_score, offtarget_alignment_pid) %>%
       readr::write_tsv(file="data/offtargets_dkfz.tsv")
 
