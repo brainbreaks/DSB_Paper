@@ -43,7 +43,7 @@ detect_offtargets = function()
   #
   # Set-up parameters
   #
-  offtargets_params = macs2_params(extsize=150, exttype="opposite", llocal=1e7, minpvalue=0.01, effective_size=1.87e9, seedlen=2, seedgap=10, minlen=2, baseline=2)
+  offtargets_params = macs2_params(extsize=150, exttype="opposite", llocal=1e7, minpvalue=0.01, effective_size=1.87e9, seedlen=2, seedgap=10, maxgap=10, minlen=2, baseline=2)
 
   #
   # Filter out data suitable for analysis
@@ -52,7 +52,7 @@ detect_offtargets = function()
     tlx_remove_rand_chromosomes() %>%
     dplyr::mutate(tlx_group=bait_name, tlx_control=F) %>%
     dplyr::filter(tlx_copynumber==1 & !tlx_duplicated & !tlx_is_bait_junction)
-  tlx_offtarget_ranges = tlx_offtarget_df %>% df2ranges(Rname, Junction, Junction)
+  # tlx_offtarget_ranges = tlx_offtarget_df %>% df2ranges(Rname, Junction, Junction)
 
   #
   # Use maximal matching to connect allreads to reads with a single reads of opposite direction. Reads without a match are discarded
@@ -85,34 +85,41 @@ detect_offtargets = function()
     dplyr::mutate(tlx_group_i=1, tlx_control=F) %>%
     tlx_coverage(group="group", extsize=offtargets_params$extsize, exttype="opposite", libfactors_df=libfactors_df, ignore.strand=F, min_sample_pileup=0)
   tlxcov_offtargets_paired_corrected_df = tlxcov_offtargets_paired_df %>%
-    dplyr::group_by(tlx_group) %>%
-    dplyr::do((function(tlx_g, tlx_control) {
+    dplyr::group_by(tlx_group, tlx_control) %>%
+    dplyr::do((function(tlx_g) {
       tlx_gg <<- tlx_g
-      tlx_g_ranges = tlx_g %>% df2ranges(tlxcov_chrom, tlxcov_start, tlxcov_end)
-      res_df = tlx_g %>%
-        reshape2::melt(measure.vars=c("tlxcov_start", "tlxcov_end"), value.name="tlxcov_pos") %>%
-        dplyr::distinct(tlxcov_sum_chrom=tlxcov_chrom, tlx_sum_control=tlx_control, tlxcov_pos) %>%
-        dplyr::arrange(tlxcov_sum_chrom, tlxcov_pos) %>%
-        dplyr::mutate(tlxcov_sum_start=dplyr::lag(tlxcov_pos), tlxcov_sum_end=tlxcov_pos-1, tlxcov_sum_start=ifelse(tlxcov_sum_start>tlxcov_sum_end, 1, tlxcov_sum_start)) %>%
-        dplyr::filter(!is.na(tlxcov_sum_start)) %>%
-        dplyr::select(tlxcov_sum_chrom, tlxcov_sum_start, tlxcov_sum_end) %>%
-        df2ranges(tlxcov_sum_chrom, tlxcov_sum_start, tlxcov_sum_end) %>%
-        innerJoinByOverlaps(tlx_g_ranges) %>%
-        reshape2::dcast(tlx_group+tlx_control+tlxcov_sum_chrom+tlxcov_sum_start+tlxcov_sum_end ~ tlx_strand, value.var="tlxcov_pileup") %>%
-        dplyr::mutate(`+`=tidyr::replace_na(`+`,0), `-`=tidyr::replace_na(`-`,0)) %>%
-        dplyr::mutate(tlxcov_pileup=pmin(`+`, `-`)*2) %>%
-        dplyr::select(tlx_group, tlx_control, tlxcov_chrom=tlxcov_sum_chrom, tlxcov_start=tlxcov_sum_start, tlxcov_end=tlxcov_sum_end, tlxcov_pileup)
+      # adasd()
+      # tlx_g_ranges = tlx_g %>% df2ranges(tlxcov_chrom, tlxcov_start, tlxcov_end)
+      # res_df = tlx_g %>%
+      #   reshape2::melt(measure.vars=c("tlxcov_start", "tlxcov_end"), value.name="tlxcov_pos") %>%
+      #   dplyr::distinct(tlxcov_sum_chrom=tlxcov_chrom, tlx_sum_control=tlx_control, tlxcov_pos) %>%
+      #   dplyr::arrange(tlxcov_sum_chrom, tlxcov_pos) %>%
+      #   dplyr::mutate(tlxcov_sum_start=dplyr::lag(tlxcov_pos), tlxcov_sum_end=tlxcov_pos-1, tlxcov_sum_start=ifelse(tlxcov_sum_start>tlxcov_sum_end, 1, tlxcov_sum_start)) %>%
+      #   dplyr::filter(!is.na(tlxcov_sum_start)) %>%
+      #   dplyr::select(tlxcov_sum_chrom, tlxcov_sum_start, tlxcov_sum_end) %>%
+      #   df2ranges(tlxcov_sum_chrom, tlxcov_sum_start, tlxcov_sum_end) %>%
+      #   innerJoinByOverlaps(tlx_g_ranges) %>%
+      #   reshape2::dcast(tlx_group+tlx_control+tlxcov_sum_chrom+tlxcov_sum_start+tlxcov_sum_end ~ tlx_strand, value.var="tlxcov_pileup") %>%
+      #   dplyr::mutate(`+`=tidyr::replace_na(`+`,0), `-`=tidyr::replace_na(`-`,0)) %>%
+      #   dplyr::mutate(tlxcov_pileup=pmin(`+`, `-`)*2) %>%
+      #   dplyr::select(tlx_group, tlx_control, tlxcov_chrom=tlxcov_sum_chrom, tlxcov_start=tlxcov_sum_start, tlxcov_end=tlxcov_sum_end, tlxcov_pileup)
+
+      coverage_ranges = tlx_g %>% df2ranges(tlxcov_chrom, tlxcov_start, tlxcov_end, tlx_strand)
+      res_df = coverage_ranges %>%
+        coverage_merge_strands(aggregate_fun=min, score_column="tlxcov_pileup") %>%
+        as.data.frame() %>%
+        dplyr::select(tlxcov_chrom=seqnames, tlxcov_start=start, tlxcov_end=end, tlxcov_pileup=score) %>%
+        dplyr::mutate(tlxcov_pileup=tlxcov_pileup*2)
       res_df
     })(.)) %>%
     dplyr::mutate(tlx_strand="*") %>%
     dplyr::ungroup()
 
-
   #
   # Detect peaks (from now on islands) in prepared pileups
   #
-  bgmodel_df = data.frame(bgmodel_distr="pois", bgmodel_lambda=2) %>% tidyr::crossing(tlx_offtarget_df %>% dplyr::distinct(tlx_group, bgmodel_chrom=Rname, bgmodel_strand="*"))
-  macs_offtargets = tlxcov_macs2(tlxcov_df=tlxcov_offtargets_paired_corrected_df, bgmodel_df=bgmodel_df, group="group", extended_islands=F, params=offtargets_params)
+  bgmodel_offtargets_df = data.frame(bgmodel_distr="pois", bgmodel_lambda=2) %>% tidyr::crossing(tlx_offtarget_df %>% dplyr::distinct(tlx_group, bgmodel_chrom=Rname, bgmodel_strand="*"))
+  macs_offtargets = tlxcov_macs2(tlxcov_df=tlxcov_offtargets_paired_corrected_df, bgmodel_df=bgmodel_offtargets_df, group="group", extended_islands=F, params=offtargets_params)
 
   #
   # For each island perform fisher test to detect off-ballance in centromeric and telomeric reads.
@@ -144,28 +151,28 @@ detect_offtargets = function()
   macs_offtargets$islands = macs_offtargets$islands %>%
     dplyr::select(-dplyr::matches("island_strand_pvalue|island_strand_odds|island_strand_ks_pvalue|island_is_offtarget")) %>%
     dplyr::inner_join(islands_strand_test_df, by=c("tlx_group", "island_name")) %>%
-    dplyr::mutate(island_is_offtarget=island_strand_pvalue<=0.01 & island_strand_odds>=2 & island_strand_ks_pvalue<=0.01)
-  table(macs_offtargets$islands$tlx_group, macs_offtargets$islands$island_strand_pvalue<=0.01 & macs_offtargets$islands$island_strand_odds>=2 & macs_offtargets$islands$island_strand_ks_pvalue<=0.01)
-  table(macs_offtargets$islands$island_strand_pvalue<=0.01 & macs_offtargets$islands$island_strand_odds>=2 & macs_offtargets$islands$island_strand_ks_pvalue<=0.01)
+    dplyr::mutate(island_is_offtarget=island_strand_pvalue<=0.01 & island_strand_odds>1 & island_strand_ks_pvalue<=0.01)
+
+
+  # Generate different colors for each bait
+  chrom_names = unique(macs_offtargets$islands$tlx_group)
+  chrom_colors = apply(col2rgb(randomcoloR::distinctColorPalette(length(chrom_names))), 2, paste, collapse=",")
+  names(chrom_colors) = chrom_names
 
   #
   # Write debugging information
   #
   if(debug) {
-    chrom_names = unique(macs_offtargets$islands$tlx_group)
-    chrom_colors = apply(col2rgb(randomcoloR::distinctColorPalette(length(chrom_names))), 2, paste, collapse=",")
-    names(chrom_colors) = chrom_names
-
     tlx_write_bed(tlx_offtarget_df, "reports/detect_offtargets/off-raw", group="group", mode="alignment", ignore.strand=T, ignore.treatment=T)
     tlx_write_bed(tlx_offtarget_paired_df, "reports/detect_offtargets/off-paired", group="group", mode="alignment", ignore.strand=T, ignore.treatment=T)
-    tlxcov_write_bedgraph(tlxcov_df=tlxcov_offtargets_paired_corrected_df, path="reports/detect_offtargets/off-paired", group="group")
+    tlxcov_write_bedgraph(tlxcov_df=tlxcov_offtargets_paired_corrected_df, path="reports/detect_offtargets/off-paired2", group="group")
 
     macs_offtargets$islands %>%
       dplyr::filter(island_is_offtarget) %>%
       dplyr::mutate(score=1, strand="*", island_name=paste0(island_name, " (", tlx_group, ")")) %>%
-      dplyr::mutate(thickStart=island_start, thickEnd=island_end, score=1, rgb=chrom_colors[tlx_group]) %>%
+      dplyr::mutate(thickStart=island_summit_pos-1, thickEnd=island_summit_pos+1, score=1, rgb=chrom_colors[tlx_group]) %>%
       dplyr::select(island_chrom, island_start, island_end, island_name, score, strand, thickStart, thickEnd, rgb) %>%
-      readr::write_tsv(paste0("reports/detect_offtargets/offt-islands.bed"), col_names=F)
+      readr::write_tsv(paste0("reports/detect_offtargets/off-islands2.bed"), col_names=F)
     macs_offtargets$qvalues %>%
       dplyr::select(qvalue_chrom, qvalue_start, qvalue_end, qvalue_score) %>%
       readr::write_tsv("reports/detect_offtargets/off-qvalues.bedgraph", col_names=F)
@@ -187,18 +194,6 @@ detect_offtargets = function()
     dplyr::select(offtarget_alignment_score=score, offtarget_alignment_pid=pid, offtarget_alignment_start=start, offtarget_alignment_end=end) %>%
     dplyr::bind_cols(offtargets_exported_df) %>%
     dplyr::mutate(offtarget_sequence_start=island_region_start+offtarget_alignment_start-1, offtarget_sequence_end=island_region_start+offtarget_alignment_end-3)
-
-  # offtargets_exported_sequences_df = dplyr::bind_rows(offtargets_exported_df %>% dplyr::mutate(subset="signal"), offtargets_exported_df %>% tidyr::crossing(i=1:100, subset="random")) %>%
-  #   dplyr::summarize(cbind(subset=subset, island_region_sequence=island_region_sequence, get_pairwise_alignment(paste0(offtarget_bait_sequence_sgRNA, "NGG"), stringi::stri_rand_shuffle(island_region_sequence), gapOpening=2, gapExtension=0.5))) %>%
-  #   dplyr::select(subset, island_region_sequence, offtarget_alignment_score=score, offtarget_alignment_pid=pid, offtarget_alignment_start=start, offtarget_alignment_end=end) %>%
-  #   dplyr::inner_join(offtargets_exported_df, by="island_region_sequence") %>%
-  #   dplyr::mutate(offtarget_sequence_start=island_region_start+offtarget_alignment_start-1, offtarget_sequence_end=island_region_start+offtarget_alignment_end-3)
-  # ggplot(offtargets_exported_sequences_df) +
-  #   geom_density(aes(x=offtarget_alignment_score, fill=subset), alpha=0.5, data=offtargets_exported_sequences_df)
-  # ggplot(offtargets_exported_sequences_df) +
-  #   geom_point(aes(x=offtarget_alignment_score, y=offtarget_id, fill=subset), data=offtargets_exported_sequences_df %>% dplyr::filter(subset=="signal")) +
-  #   ggridges::geom_density_ridges(aes(x=offtarget_alignment_score, y=offtarget_id, fill=subset), alpha=0.2, data=offtargets_exported_sequences_df %>% dplyr::filter(subset=="random"))
-  #   facet_grid(offtarget_bait_name~., scales="free")
 
   offtargets_exported_sequences_df %>%
     dplyr::mutate(score=1, strand="*", thickStart=offtarget_island_start, thickEnd=offtarget_island_end, score=1, rgb=chrom_colors[offtarget_bait_name]) %>%
@@ -264,7 +259,7 @@ detect_offtargets = function()
     dplyr::select(bait_name, experiment, bait_name, size)
 
   # bait=ComplexHeatmap::anno_text(samples_ann$bait_name, gp=gpar(fontsize = 6)),
-  pdf("reports/offtargets_map_new.pdf", width=2*11.69, height=2*8.27)
+  pdf("reports/offtargets_map.pdf", width=2*11.69, height=2*8.27)
   ComplexHeatmap::Heatmap(offtargets_pheatmap, row_names_gp=gpar(fontsize=6), column_names_gp=gpar(fontsize = 6),
     cluster_columns=F, cluster_rows=F, column_split=samples_ann$bait_name,
     top_annotation = ComplexHeatmap::HeatmapAnnotation(experiment=samples_ann$experiment, sample_size=samples_ann$size)
