@@ -1,5 +1,8 @@
 ## Setup
 
+Large files with experimental data used in this project are hosted on GitHUB LFS server. To be able to pull this project 
+you must follow [the instructions](https://docs.github.com/en/repositories/working-with-files/managing-large-files/installing-git-large-file-storage) to install LFS extension for git.
+
 ```console
 git pull git@github.com:brainbreaks/DSB_Paper.git
 cd DSB_Paper
