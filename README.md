@@ -1,4 +1,14 @@
-Datasets
+## Setup
+
+```console
+git pull git@github.com:brainbreaks/DSB_Paper.git
+cd DSB_Paper
+wget https://raw.githubusercontent.com/brainbreaks/genome_downloader/master/download.py
+git pull git@github.com:brainbreaks/breaktools.git
+RScript 01-setup.R
+```
+
+# Related to Repli-SEQ -> OK-Seq termination zones (ignore for now)
 ## Tables
 
 | Data     | Source            | Celltype           | Treatment                    | Organism | Processed |

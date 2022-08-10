@@ -1,44 +1,39 @@
-setwd("~/Workspace/DSB_Paper")
-
 library(readr)
 library(dplyr)
 library(ggplot2)
-library(cowplot)
-library(stringr)
 library(randomcoloR)
-library(Biostrings)
 library(ComplexHeatmap)
 library(igraph)
-devtools::load_all("~/Workspace/breaktools/")
+devtools::load_all("breaktools/")
 
 
 detect_offtargets = function()
 {
-  debug=T
-  dir.create("reports/detect_offtargets", recursive=T)
+  debug=F
+  dir.create("reports/01-detect_offtargets", recursive=T, showWarnings=F)
 
   #
   # Load baits
   #
-  baits_df = readr::read_tsv("~/Workspace/Datasets/HTGTS/dkfz_baits.tsv")
+  baits_df = readr::read_tsv("data/dkfz_baits.tsv")
 
   #
   # Load samples ()
   #
-  samples_df = tlx_read_samples("~/Workspace/Datasets/HTGTS/samples/All_samples.tsv", "~/Workspace/Datasets/HTGTS") %>%
+  samples_df = tlx_read_samples(annotation_path="data/htgts_samples.tsv", samples_path="data") %>%
     dplyr::filter(tlx_exists & celltype=="NPC" & organism=="mouse" & sample!="VI035" & (
       grepl("(Csmd1|Ctnna2|Nrxn1) promoter/enhancer", experiment) |
       grepl("concentration", experiment) & concentration==0.4 |
       grepl("Wei|Tena", experiment))
     )
 
-  tlx_all_df = tlx_read_many(samples_df, threads=10) %>%
+  tlx_all_df = tlx_read_many(samples_df, threads=6) %>%
     tlx_extract_bait(bait_size=19, bait_region=12e6) %>%
-    tlx_calc_copynumber(bowtie2_index="~/Workspace/genomes/mm10/mm10", max_hits=100, threads=24)
+    tlx_calc_copynumber(bowtie2_index="genomes/mm10/mm10", max_hits=100, threads=6)
 
   libfactors_df = tlx_all_df %>% tlx_libsizes()
-  # save(tlx_all_df, samples_df, baits_df, libfactors_df, file="detect_offtargets.rda")
-  # load("detect_offtargets.rda")
+  # save(tlx_all_df, samples_df, baits_df, libfactors_df, file="01-detect_offtargets.rda")
+  # load("01-detect_offtargets.rda")
 
   #
   # Set-up parameters
@@ -71,7 +66,7 @@ detect_offtargets = function()
     dplyr::filter(tlx_group_minus==tlx_group_plus) %>%
     dplyr::distinct(Qname_minus, Qname_plus) %>%
     igraph::graph_from_data_frame(directed=T)
-  igraph::V(tlx_offtarget_connected_graph)$type = table(tlx_offtarget_df$tlx_strand[match(igraph::V(tlx_offtarget_connected_graph)$name, tlx_offtarget_df$Qname)])
+  igraph::V(tlx_offtarget_connected_graph)$type = tlx_offtarget_df$tlx_strand[match(igraph::V(tlx_offtarget_connected_graph)$name, tlx_offtarget_df$Qname)]=="+"
   tlx_offtarget_matching = igraph::max_bipartite_match(tlx_offtarget_connected_graph)$matching
   qnames_paired = unique(unname(c(names(tlx_offtarget_matching), tlx_offtarget_matching))[!is.na(tlx_offtarget_matching)])
   tlx_offtarget_paired_df = tlx_offtarget_df %>%
@@ -87,23 +82,6 @@ detect_offtargets = function()
   tlxcov_offtargets_paired_corrected_df = tlxcov_offtargets_paired_df %>%
     dplyr::group_by(tlx_group, tlx_control) %>%
     dplyr::do((function(tlx_g) {
-      tlx_gg <<- tlx_g
-      # adasd()
-      # tlx_g_ranges = tlx_g %>% df2ranges(tlxcov_chrom, tlxcov_start, tlxcov_end)
-      # res_df = tlx_g %>%
-      #   reshape2::melt(measure.vars=c("tlxcov_start", "tlxcov_end"), value.name="tlxcov_pos") %>%
-      #   dplyr::distinct(tlxcov_sum_chrom=tlxcov_chrom, tlx_sum_control=tlx_control, tlxcov_pos) %>%
-      #   dplyr::arrange(tlxcov_sum_chrom, tlxcov_pos) %>%
-      #   dplyr::mutate(tlxcov_sum_start=dplyr::lag(tlxcov_pos), tlxcov_sum_end=tlxcov_pos-1, tlxcov_sum_start=ifelse(tlxcov_sum_start>tlxcov_sum_end, 1, tlxcov_sum_start)) %>%
-      #   dplyr::filter(!is.na(tlxcov_sum_start)) %>%
-      #   dplyr::select(tlxcov_sum_chrom, tlxcov_sum_start, tlxcov_sum_end) %>%
-      #   df2ranges(tlxcov_sum_chrom, tlxcov_sum_start, tlxcov_sum_end) %>%
-      #   innerJoinByOverlaps(tlx_g_ranges) %>%
-      #   reshape2::dcast(tlx_group+tlx_control+tlxcov_sum_chrom+tlxcov_sum_start+tlxcov_sum_end ~ tlx_strand, value.var="tlxcov_pileup") %>%
-      #   dplyr::mutate(`+`=tidyr::replace_na(`+`,0), `-`=tidyr::replace_na(`-`,0)) %>%
-      #   dplyr::mutate(tlxcov_pileup=pmin(`+`, `-`)*2) %>%
-      #   dplyr::select(tlx_group, tlx_control, tlxcov_chrom=tlxcov_sum_chrom, tlxcov_start=tlxcov_sum_start, tlxcov_end=tlxcov_sum_end, tlxcov_pileup)
-
       coverage_ranges = tlx_g %>% df2ranges(tlxcov_chrom, tlxcov_start, tlxcov_end, tlx_strand)
       res_df = coverage_ranges %>%
         coverage_merge_strands(aggregate_fun=min, score_column="tlxcov_pileup") %>%
@@ -163,19 +141,19 @@ detect_offtargets = function()
   # Write debugging information
   #
   if(debug) {
-    tlx_write_bed(tlx_offtarget_df, "reports/detect_offtargets/off-raw", group="group", mode="alignment", ignore.strand=T, ignore.treatment=T)
-    tlx_write_bed(tlx_offtarget_paired_df, "reports/detect_offtargets/off-paired", group="group", mode="alignment", ignore.strand=T, ignore.treatment=T)
-    tlxcov_write_bedgraph(tlxcov_df=tlxcov_offtargets_paired_corrected_df, path="reports/detect_offtargets/off-paired2", group="group")
+    tlx_write_bed(tlx_offtarget_df, "reports/01-detect_offtargets/off-raw", group="group", mode="alignment", ignore.strand=T, ignore.treatment=T)
+    tlx_write_bed(tlx_offtarget_paired_df, "reports/01-detect_offtargets/off-paired", group="group", mode="alignment", ignore.strand=T, ignore.treatment=T)
+    tlxcov_write_bedgraph(tlxcov_df=tlxcov_offtargets_paired_corrected_df, path="reports/01-detect_offtargets/off-paired2", group="group")
 
     macs_offtargets$islands %>%
       dplyr::filter(island_is_offtarget) %>%
       dplyr::mutate(score=1, strand="*", island_name=paste0(island_name, " (", tlx_group, ")")) %>%
       dplyr::mutate(thickStart=island_summit_pos-1, thickEnd=island_summit_pos+1, score=1, rgb=chrom_colors[tlx_group]) %>%
       dplyr::select(island_chrom, island_start, island_end, island_name, score, strand, thickStart, thickEnd, rgb) %>%
-      readr::write_tsv(paste0("reports/detect_offtargets/off-islands2.bed"), col_names=F)
+      readr::write_tsv(paste0("reports/01-detect_offtargets/off-islands2.bed"), col_names=F)
     macs_offtargets$qvalues %>%
       dplyr::select(qvalue_chrom, qvalue_start, qvalue_end, qvalue_score) %>%
-      readr::write_tsv("reports/detect_offtargets/off-qvalues.bedgraph", col_names=F)
+      readr::write_tsv("reports/01-detect_offtargets/off-qvalues.bedgraph", col_names=F)
   }
 
 
@@ -190,7 +168,7 @@ detect_offtargets = function()
     dplyr::mutate(offtarget_id=paste0(offtarget_chrom, ":", offtarget_center), offtarget_bait_sequence_sgRNA=bait_sequence_sgRNA, coord_begin=ifelse(bait_strand=="+", bait_end-16*sgRNA_sign, bait_start-16*sgRNA_sign), coord_end=ifelse(bait_strand=="+", bait_end+3*sgRNA_sign, bait_start+3*sgRNA_sign), offtarget_bait_start=pmin(coord_begin, coord_end), offtarget_bait_end=pmax(coord_begin, coord_end)) %>%
     dplyr::rename(offtarget_bait_chrom="bait_chrom", offtarget_bait_strand="bait_strand_sgRNA")
   offtargets_exported_df$island_region_sequence = toupper(get_seq("~/Workspace/genomes/mm10/mm10.fa", df2ranges(offtargets_exported_df, offtarget_chrom, island_region_start, island_region_end))$sequence)
-  offtargets_exported_sequences_df = get_pairwise_alignment(paste0(offtargets_exported_df$offtarget_bait_sequence_sgRNA, "NGG"), offtargets_exported_df$island_region_sequence, gapOpening=2, gapExtension=0.5) %>%
+  offtargets_exported_sequences_df = get_pairwise_alignment(seq1=paste0(offtargets_exported_df$offtarget_bait_sequence_sgRNA, "NGG"), seq2=offtargets_exported_df$island_region_sequence, gapOpening=2, gapExtension=0.5) %>%
     dplyr::select(offtarget_alignment_score=score, offtarget_alignment_pid=pid, offtarget_alignment_start=start, offtarget_alignment_end=end) %>%
     dplyr::bind_cols(offtargets_exported_df) %>%
     dplyr::mutate(offtarget_sequence_start=island_region_start+offtarget_alignment_start-1, offtarget_sequence_end=island_region_start+offtarget_alignment_end-3)
@@ -258,7 +236,6 @@ detect_offtargets = function()
     tibble::column_to_rownames("sample") %>%
     dplyr::select(bait_name, experiment, bait_name, size)
 
-  # bait=ComplexHeatmap::anno_text(samples_ann$bait_name, gp=gpar(fontsize = 6)),
   pdf("reports/offtargets_map.pdf", width=2*11.69, height=2*8.27)
   ComplexHeatmap::Heatmap(offtargets_pheatmap, row_names_gp=gpar(fontsize=6), column_names_gp=gpar(fontsize = 6),
     cluster_columns=F, cluster_rows=F, column_split=samples_ann$bait_name,

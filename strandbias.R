@@ -18,7 +18,7 @@ main = function()
   tlx_df = tlx_read_many(samples_df, threads=20) %>%
     tlx_extract_bait(bait_size=19, bait_region=12e6) %>%
     tlx_remove_rand_chromosomes() %>%
-    tlx_calc_copynumber(bowtie2_index="~/Workspace/genomes/mm10/mm10", max_hits=100, threads=24) %>%
+    tlx_calc_copynumber(bowtie2_index="genomes/mm10/mm10", max_hits=100, threads=24) %>%
     dplyr::filter(tlx_copynumber==1 & !tlx_duplicated & Rname!="chrY") %>%
     dplyr::group_by(experiment, run, tlx_sample) %>%
     dplyr::filter(dplyr::n()>1000) %>%

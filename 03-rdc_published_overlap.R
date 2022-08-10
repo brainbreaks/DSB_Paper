@@ -1,10 +1,8 @@
-setwd("~/Workspace/DSB_Paper")
-
 library(readr)
 library(dplyr)
 library(ggplot2)
 library(grid)
-devtools::load_all("~/Workspace/breaktools/")
+devtools::load_all("breaktools/")
 
 rdc_published_overlap = function()
 {
@@ -135,6 +133,7 @@ rdc_published_overlap = function()
   overlaps_venn1 = overlaps_df %>%
     dplyr::filter(rdc_subset=="Wei+DKFZ") %>%
     dplyr::filter(rdc_is_significant) %>%
+    # dplyr::filter(rdc_significant_sumarea>=100e3 & rdc_bootstrap_pvalue<=0.01) %>%
     # dplyr::filter(rdc_maxscore>=2 & rdc_extended_length>=300e3 & rdc_significant_sumarea>=100e3) %>%
     dplyr::filter(rdc_bait_chrom %in% c("chr5", "chr6", "chr8", "Other chromosome")) %>%
     dplyr::filter(grepl("APH-", tlx_group) & grepl("^(Wei2018-NPC|DKFZ|Wei)$", rdc_source) | grepl("DMSO-", tlx_group) & grepl("^(Wei2018_DMSO-NPC|Wei2018-NPC|DKFZ|Wei)$", rdc_source))  %>%

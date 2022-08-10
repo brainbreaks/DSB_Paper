@@ -1,20 +1,16 @@
-setwd("~/Workspace/DSB_Paper")
-
 library(readr)
 library(dplyr)
 library(ggplot2)
-library(cowplot)
 library(stringr)
-library(UpSetR)
 library(grid)
-devtools::load_all("~/Workspace/breaktools/")
+devtools::load_all("breaktools/")
 
 
 
 detect_rdc = function()
 {
   debug=F
-  dir.create("reports/detect_rdc", recursive=T, showWarnings=F)
+  dir.create("reports/02-detect_rdc", recursive=T, showWarnings=F)
 
   #
   # Load offtargets
@@ -24,21 +20,15 @@ detect_rdc = function()
   #
   # Load gene annotations
   #
-  genes_cache = "tmp/genes.rda"
-  if(file.exists(genes_cache)) {
-    load(genes_cache)
-  } else {
-    genes_df = gtf_read('~/Workspace/genomes/mm10/annotation/mm10.ncbiRefSeq.gtf.gz')
-    genes_ranges = genes_df %>%
-      dplyr::filter(gene_length>=1e5) %>%
-      df2ranges(gene_chrom, gene_start, gene_end)
-    save(genes_df, genes_ranges, file=genes_cache)
-  }
+  genes_df = gtf_read('genomes/mm10/annotation/mm10.ncbiRefSeq.gtf.gz')
+  genes_ranges = genes_df %>%
+    dplyr::filter(gene_length>=1e5) %>%
+    df2ranges(gene_chrom, gene_start, gene_end)
 
   #
   # Load samples data
   #
-  samples_df = tlx_read_samples("~/Workspace/Datasets/HTGTS/samples/All_samples.tsv", "~/Workspace/Datasets/HTGTS") %>%
+  samples_df = tlx_read_samples(annotation_path="data/htgts_samples.tsv", samples_path="data") %>%
     dplyr::filter(tlx_exists & celltype=="NPC" & organism=="mouse" & sample!="VI035" & (
       grepl("(Csmd1|Ctnna2|Nrxn1) promoter/enhancer", experiment) |
       grepl("concentration", experiment) & concentration==0.4 |
@@ -48,9 +38,9 @@ detect_rdc = function()
   #
   # Load TLX
   #
-  tlx_all_df = tlx_read_many(samples_df, threads=10) %>%
+  tlx_all_df = tlx_read_many(samples_df, threads=6) %>%
     tlx_extract_bait(bait_size=19, bait_region=12e6) %>%
-    tlx_calc_copynumber(bowtie2_index="~/Workspace/genomes/mm10/mm10", max_hits=100, threads=24) %>%
+    tlx_calc_copynumber(bowtie2_index="genomes/mm10/mm10", max_hits=100, threads=6) %>%
     tlx_mark_offtargets(offtargets_df, offtarget_region=1e5, bait_region=1e4)
   libfactors_df = tlx_all_df %>% tlx_libsizes()
 
@@ -108,11 +98,11 @@ detect_rdc = function()
   }
 
 
-  # save(tlx_rdc_df, tlxcov_rdc_df, tlxcov_rdc_strand_df, tlxcov_rdc_combined_df, params_rdc, genes_df, libfactors_df, libfactors_df, offtargets_df, bgmodel_df, macs_combined_rdc, params_rdc,  file="backup2.rda")
-  # load("backup2.rda")
+  # save(tlx_rdc_df, tlxcov_rdc_df, tlxcov_rdc_strand_df, tlxcov_rdc_combined_df, params_rdc, genes_df, libfactors_df, libfactors_df, offtargets_df, bgmodel_combned_df, macs_combined_rdc, params_rdc,  file="02-detect_rdc.rda")
+  # load("02-detect_rdc.rda")
 
   #
-  # Detect RDC
+  # Detect RDC. Split coverage into telomeric, centromeric and combined and detect islands for each of the 3 subsets
   #
   params_rdc = macs2_params(extsize=5e4, exttype="symmetrical", llocal=1e7, minpvalue=0.01, maxgap=100e3, minlen=100e3, seedlen=50e3, seedgap=10e3, baseline=2)
   tlxcov_rdc_df = tlx_rdc_df %>% tlx_coverage(group="group", extsize=params_rdc$extsize, exttype=params_rdc$exttype, libfactors_df=libfactors_df, ignore.strand=T, recalculate_duplicate_samples=F)
@@ -121,7 +111,6 @@ detect_rdc = function()
   bgmodel_combned_df = tlxcov_rdc_combined_df %>%
     dplyr::group_by(tlx_group) %>%
     dplyr::do((function(z) {
-      zz<<-z
       z.ranges = df2ranges(z, tlxcov_chrom, tlxcov_start, tlxcov_end, tlx_strand)
       z.mask = coverage_find_empty_intervals(coverage_ranges=z.ranges, coverage_column="tlxcov_pileup", minlen=1e3, mincoverage=0)
       z.bgmodel_df = macs2_coverage_bgmodel(coverage_ranges=z.ranges, distr="nbinom", coverage_column="tlxcov_pileup", mask_ranges=z.mask, debug_plots=F)
@@ -161,7 +150,6 @@ detect_rdc = function()
   # Find overlap between stranded and non-stranded peak detection and reduce
   #
   rdc_genes_df = islands_combined_reduced_df %>%
-    # dplyr::filter(island_combined_extended_end-island_combined_extended_start>=rdc_minlen) %>%
     df2ranges(island_combined_chrom, island_combined_extended_start, island_combined_extended_end) %>%
     leftJoinByOverlaps(macs_combined_rdc$islands %>% df2ranges(island_chrom, island_extended_start, island_extended_end)) %>%
     dplyr::filter(island_combined_group==tlx_group) %>%
@@ -169,11 +157,14 @@ detect_rdc = function()
     dplyr::summarize(
       rdc_start=min(island_start),
       rdc_end=max(island_end),
-      n=dplyr::n(),
-      rdc_significant_nplus=sum(island_strand=="+"),
-      rdc_significant_nminus=sum(island_strand=="-"),
-      rdc_significant_ncombined=sum(island_strand=="*"),
-      rdc_significant_strands=paste0(rdc_significant_nplus, "+", rdc_significant_nminus, "-", rdc_significant_ncombined, "*")) %>%
+      rdc_significant_orientation = dplyr::case_when(
+        any(island_strand=="+") & any(island_strand=="-") ~ "bidirectional",
+        any(island_strand=="+") ~ "telomeric",
+        any(island_strand=="-") ~ "centromeric",
+        any(island_strand=="*") ~ "combined",
+        T ~ "none"
+      ),
+      rdc_significant_orientation_count=paste0(sum(island_strand=="+"), "+", sum(island_strand=="-"), "-", sum(island_strand=="*"), "*")) %>%
     df2ranges(rdc_chrom, rdc_extended_start, rdc_extended_end) %>%
     leftJoinByOverlaps(qvalues_corrected_df %>% dplyr::rename(qvalue_tlx_group="tlx_group") %>% df2ranges(qvalue_chrom, qvalue_start, qvalue_end)) %>%
     dplyr::filter(tlx_group==qvalue_tlx_group) %>%
@@ -182,14 +173,12 @@ detect_rdc = function()
     dplyr::do((function(z){
       z %>%
         dplyr::filter(qvalue_score>=-log10(params_rdc$minsignif)) %>%
-        dplyr::summarize(rdc_sumscore=sum(qvalue_score*(qvalue_end-qvalue_start), na.rm=T), rdc_maxscore=max(qvalue_score, na.rm=T), rdc_significant_sumarea=sum(qvalue_end-qvalue_start, na.rm=T)) %>%
+        dplyr::summarize(rdc_significant_maxscore=max(qvalue_score, na.rm=T), rdc_significant_length=sum(qvalue_end-qvalue_start, na.rm=T)-params_rdc$extsize) %>%
         dplyr::bind_cols(z %>% dplyr::select(dplyr::starts_with("rdc_")) %>% dplyr::slice(1))
     })(.)) %>%
+    dplyr::filter(rdc_significant_length>10e3) %>%
     dplyr::ungroup() %>%
     dplyr::mutate(rdc_subset=gsub(".*\\((.*)\\)", "\\1", tlx_group), tlx_group=gsub(" ?\\(.*", "", tlx_group)) %>%
-    dplyr::group_by(tlx_group) %>%
-    dplyr::mutate(rdc_maxscore.adjusted=-log10(p.adjust(10^-rdc_maxscore))) %>%
-    dplyr::ungroup() %>%
     df2ranges(rdc_chrom, rdc_extended_start, rdc_extended_end) %>%
     leftJoinByOverlaps(genes_ranges) %>%
     dplyr::arrange(dplyr::desc(gene_length)) %>%
@@ -199,6 +188,8 @@ detect_rdc = function()
     dplyr::mutate(rdc_name=paste0("RDC_", stringr::str_pad((0:(dplyr::n()))[-1], 3, pad="0")), rdc_length=rdc_end-rdc_start, rdc_extended_length=rdc_extended_end-rdc_extended_start) %>%
     dplyr::ungroup() %>%
     dplyr::select(tlx_group, dplyr::starts_with("rdc_"))
+
+  # rdc_maxscore, rdc_sumscore, rdc_significant_sumarea
 
   #
   # Bootstrap background to find exact probability and signal-to-noise fold change
@@ -211,8 +202,6 @@ detect_rdc = function()
   rdc_bootstrap_df = rdc_genes_df %>%
     dplyr::group_by(tlx_group, rdc_subset) %>%
     dplyr::do((function(z){
-      zz<<-z
-      # asd()
       z = z %>% dplyr::mutate(rdc_tile_count=ceiling(rdc_extended_length / genome_tiles_width))
       z_ranges = z %>% df2ranges(rdc_chrom, rdc_extended_start, rdc_extended_end)
       z_tiles =  genome_tiles %>% leftJoinByOverlaps(z_ranges) %>% dplyr::filter(is.na(rdc_extended_start)) %>% dplyr::select(dplyr::starts_with("tile_"))
@@ -220,7 +209,7 @@ detect_rdc = function()
       bg_df = z_tiles %>%
         dplyr::inner_join(z, by=c("tile_chrom"="rdc_chrom")) %>%
         dplyr::group_by(rdc_name) %>%
-        dplyr::sample_n(rdc_tile_count*n_samples, replace=T) %>%
+        dplyr::sample_n(rdc_tile_count[1]*n_samples, replace=T) %>%
         dplyr::group_by(rdc_name) %>%
         dplyr::mutate(bootstrap_sample_num=floor((1:dplyr::n()-1)/rdc_tile_count)+1) %>%
         dplyr::ungroup()
@@ -234,7 +223,7 @@ detect_rdc = function()
         dplyr::ungroup()
       sg_df = data.frame(rdc_name=z$rdc_name, bootstrap_sample_num=1, bootstrap_type="signal", bootstrap_junctions_count=z_ranges %>% GenomicRanges::countOverlaps(tlx_rdc_ranges.f)) %>%
         dplyr::mutate(bootstrap_junctions_mean=bootstrap_junctions_count)
-      z_res = dplyr::bind_rows(bg_df, sg_df)
+      dplyr::bind_rows(bg_df, sg_df)
     })(.))
 
   rdc_bootstrap_sumdf = rdc_genes_df %>%
@@ -242,27 +231,31 @@ detect_rdc = function()
     dplyr::group_by(tlx_group, rdc_subset, rdc_name) %>%
     dplyr::do((function(z){
       zz<<-z
-      sg = z %>% dplyr::filter(bootstrap_type=="signal") %>% .$bootstrap_junctions_count
-      bg = z %>% dplyr::filter(bootstrap_type=="background") %>% .$bootstrap_junctions_count
-      # fit_gamma = fitdistrplus::fitdist(bg, distr="norm", method="qme", probs=c(0.1, 0.9))
-      # pvalue = pnorm(sg, mean=fit_gamma$estimate["mean"], sd=fit_gamma$estimate["sd"], lower.tail=F)
-      # fc = sg/fit_gamma$estimate["mean"]
-      # zscore = (sg-fit_gamma$estimate["mean"])/fit_gamma$estimate["sd"]
-      fit_gamma = fitdistrplus::fitdist(bg, distr="nbinom", method="qme", probs=c(0.1, 0.9))
+      sg = z$bootstrap_junctions_count[z$bootstrap_type=="signal"]
+      z %>% dplyr::filter(bootstrap_type=="signal") %>% .$bootstrap_junctions_count
+      fit_gamma = fitdistrplus::fitdist(z$bootstrap_junctions_count[z$bootstrap_type=="background"], distr="nbinom", method="qme", probs=c(0.1, 0.9))
       fc = sg/fit_gamma$estimate["mu"]
       pvalue = pnbinom(sg, mu=fit_gamma$estimate["mu"], size=fit_gamma$estimate["size"], lower.tail=F)
-      zscore = (sg-fit_gamma$estimate["mu"])/fit_gamma$estimate["size"]
-      data.frame(rdc_bootstrap_pvalue=pvalue, rdc_bootstrap_fc=fc, rdc_bootstrap_zscore=zscore)
+      data.frame(rdc_bootstrap_pvalue=pvalue, rdc_bootstrap_fc=fc)
     })(.))
 
+  #
+  # Export RDC
+  #
+  rdc_df = rdc_genes_df %>%
+    dplyr::inner_join(rdc_bootstrap_sumdf, by=c("tlx_group", "rdc_subset", "rdc_name")) %>%
+    dplyr::mutate(rdc_is_significant=rdc_significant_sumarea>=100e3 & rdc_bootstrap_pvalue<=0.01)
+
+  #
+  # Plot bootstrap boxplots
+  #
   if(F) {
-    pdf("reports/rdc_bootstrap_boxplots.pdf", width=8.27, height=11.69, paper="a4")
-    rdc_genes_df %>%
+  pdf("reports/rdc_bootstrap_boxplots.pdf", width=8.27, height=11.69, paper="a4")
+    rdc_df %>%
       dplyr::inner_join(rdc_bootstrap_df, by=c("tlx_group", "rdc_subset", "rdc_name")) %>%
       dplyr::filter(rdc_is_significant) %>%
       dplyr::group_by(tlx_group, rdc_subset) %>%
       dplyr::group_split() %>%
-      # dplyr::filter(tlx_group=="APH-Inter" & rdc_subset=="Wei+DKFZ")) %>% %>%
       lapply(function(z)
         ggplot(z) +
           geom_boxplot(aes(x=reorder(rdc_name, bootstrap_junctions_mean/rdc_extended_length), y=1e6*bootstrap_junctions_count/rdc_extended_length, color=bootstrap_type), outlier.shape=NA, position=position_identity()) +
@@ -273,107 +266,34 @@ detect_rdc = function()
           guides(fill="none", color="none") +
           theme_bw(base_size=8) +
           theme(axis.text.x=element_text(size=3), axis.title.x=element_text(size=16), strip.text.y.left=element_text(angle=0)) +
-          coord_flip()
-      )
-    dev.off()
+          coord_flip())
   }
-
-  rdc_df = rdc_genes_df %>%
-    dplyr::inner_join(rdc_bootstrap_sumdf, by=c("tlx_group", "rdc_subset", "rdc_name")) %>%
-    # dplyr::mutate(rdc_is_significant=rdc_maxscore>=2 & rdc_extended_length>=300e3 & rdc_significant_sumarea>=100e3) %>%
-    dplyr::mutate(rdc_is_significant=rdc_significant_sumarea>=100e3+params_rdc$extsize & rdc_bootstrap_pvalue<=0.01)
-  readr::write_tsv(rdc_df, "data/rdc.tsv")
-
-
-  #
-  # Look at second junctions
-  #
-  if(F) {
-    # baits_df = readr::read_tsv("~/Workspace/Datasets/HTGTS/dkfz_baits.tsv") %>%
-    #   dplyr::mutate(cut_expected=ifelse(bait_strand=="+", bait_end, bait_start))
-    # tlx_resected_df = tlx_rdc_df %>%
-    #   dplyr::filter(bait_name %in% c("Chr17_41Mb", "Chr5_101Mb", "Chr6_70Mb") & tlx_group %in% c("APH-Inter (DKFZ)", "DMSO-Inter (DKFZ)")) %>%
-    #   dplyr::filter(Rend-Rstart>=50) %>%
-    #   dplyr::inner_join(baits_df, by=c("bait_name"="bait_name")) %>%
-    #   dplyr::filter(bait_strand==bait_strand_sgRNA) %>%
-    #   dplyr::mutate(cut_effective=ifelse(bait_strand=="+", B_Rend, B_Rstart)) %>%
-    #   dplyr::mutate(cut_resection=ifelse(bait_strand_sgRNA=="+", cut_expected-cut_effective, cut_effective-cut_expected))
-    #
-    # ggplot(tlx_resected_df) +
-    #   geom_histogram(aes(x=cut_resection, fill=bait_name), binwidth = 1) +
-    #   geom_vline(xintercept=3+0:6*8, linetype="dotted") +
-    #   facet_wrap(bait_name~tlx_group, scales="free", ncol=2)
-    #
-    # tlx_resected_ranges = tlx_resected_df %>%
-    #   dplyr::filter(grepl("Chr6", bait_name)) %>%
-    #   df2ranges(Rname, Junction, Junction)
-    # x = rdc_df %>%
-    #   dplyr::filter(rdc_is_significant & tlx_group=="APH-Inter" & rdc_subset=="DKFZ") %>%
-    #   df2ranges(rdc_chrom, rdc_extended_start, rdc_extended_end) %>%
-    #   innerJoinByOverlaps(tlx_resected_ranges) %>%
-    #   dplyr::mutate(cut_resection_raw=cut_resection, cut_resection=cut_resection) %>%
-    #   dplyr::group_by(cut_resection) %>%
-    #   dplyr::mutate(cut_resection.min=min(cut_resection_raw)) %>%
-    #   dplyr::group_by(rdc_chrom, rdc_extended_start, rdc_extended_end, cut_resection, cut_resection.min) %>%
-    #   dplyr::summarize(count=dplyr::n()) %>%
-    #   dplyr::group_by(rdc_chrom, rdc_extended_start, rdc_extended_end) %>%
-    #   dplyr::mutate(count.sum=sum(count, na.rm=T), count.max=max(count, na.rm=T), rank=length(count) - rank(count) + 1) %>%
-    #   dplyr::arrange(cut_resection) %>%
-    #   dplyr::group_by(rdc_chrom, rdc_extended_start, rdc_extended_end, cut_resection) %>%
-    #   dplyr::mutate(prop=count/count.sum) %>%
-    #   dplyr::ungroup() %>%
-    #   # dplyr::mutate(rdc_id=paste0(rdc_chrom, ":", rdc_start, "-", rdc_end)) %>%
-    #   df2ranges(rdc_chrom, rdc_extended_start, rdc_extended_end) %>%
-    #   innerJoinByOverlaps(genes_ranges) %>%
-    #   dplyr::arrange(dplyr::desc(gene_length)) %>%
-    #   dplyr::distinct(rdc_chrom, rdc_extended_start, rdc_extended_end, cut_resection, .keep_all=T) %>%
-    #   dplyr::mutate(rdc_id=gene_id)
-    # xa = x %>% dplyr::group_by(rdc_id) %>% dplyr::summarize(n=sum(count, na.rm=T)) %>% dplyr::mutate(x=as.numeric(grepl("Grid|Ctnna", rdc_id))) %>% tibble::column_to_rownames("rdc_id")
-    # xx = x %>%
-    #   reshape2::dcast(rdc_id~cut_resection, value.var="prop") %>%
-    #   replace(is.na(.),0) %>%
-    #   reshape2::melt(id.vars="rdc_id", variable.name="cut_resection", value.name="value") %>%
-    #   dplyr::mutate(cut_resection=as.numeric(as.character(cut_resection))) %>%
-    #   dplyr::group_by(rdc_id) %>%
-    #   dplyr::mutate(value=zoo::rollmean(value, 5, align = "left", na.pad = T)) %>%
-    #   dplyr::ungroup() %>%
-    #   dplyr::filter(cut_resection>=0 & cut_resection<=60) %>%
-    #   # dplyr::filter(count>=2) %>%
-    #   reshape2::dcast(rdc_id~cut_resection, value.var="value") %>%
-    #   tibble::column_to_rownames("rdc_id") %>%
-    #   replace(is.na(.),0)
-    #
-    # pheatmap::pheatmap(xx, cluster_cols=F, cluster_rows=T, annotation_row=xa)
-  }
+  dev.off()
 
   #
   # Write debugging information from RDC calling
   #
   if(debug)
   {
-    tlx_rdc_df %>% tlx_write_bed(path="reports/detect_rdc/bed", group="group", ignore.strand=T)
-    tlxcov_rdc_combined_df %>% tlxcov_write_bedgraph(path="reports/detect_rdc/bedgraph", group="group", ignore.strand=F)
+    tlx_rdc_df %>% tlx_write_bed(path="reports/02-detect_rdc/bed", group="group", ignore.strand=T)
+    tlxcov_rdc_combined_df %>% tlxcov_write_bedgraph(path="reports/02-detect_rdc/bedgraph", group="group", ignore.strand=F)
 
     macs_combined_rdc$islands %>%
       dplyr::group_by(tlx_group, island_strand) %>%
       dplyr::do((function(df){
-        dff<<-df
         df %>%
           dplyr::select(island_chrom, island_extended_start, island_extended_end, island_name, island_score, island_strand, island_start, island_end) %>%
-          readr::write_tsv(paste0("reports/detect_rdc/islands-", df$tlx_group[1], "_", df$island_strand[1], ".bed"), col_names=F)
+          readr::write_tsv(paste0("reports/02-detect_rdc/islands-", df$tlx_group[1], "_", df$island_strand[1], ".bed"), col_names=F)
       })(.))
 
     islands_combined_reduced_df %>%
       dplyr::group_by(island_combined_group) %>%
       dplyr::do((function(df){
-        dff<<-df
-        # df = islands_combined_reduced_df %>% dplyr::filter(island_combined_group=="APH-Inter (DKFZ)")
         df %>%
           dplyr::mutate(l=island_combined_extended_end-island_combined_extended_start, thickStart=island_combined_extended_start, thickEnd=island_combined_extended_end) %>%
           dplyr::mutate(i=tidyr::replace_na(findInterval(l, seq(rdc_minlen, max(l), length.out=1000))+1, 1), score=1, strand="*", rgb=dplyr::case_when(l<=rdc_minlen~"#BBBBFF", T~colorRampPalette(c("#0000B2", "#FA00FF"))(1000)[i])) %>%
-          # dplyr::filter(island_combined_name=="ISLAND_159") %>%
           dplyr::select(island_combined_chrom, island_combined_extended_start, island_combined_extended_end, island_combined_name, score, strand, thickStart, thickEnd, rgb) %>%
-          readr::write_tsv(paste0("reports/detect_rdc/islands-reduced-", df$island_combined_group[1], ".bed"), col_names=F)
+          readr::write_tsv(paste0("reports/02-detect_rdc/islands-reduced-", df$island_combined_group[1], ".bed"), col_names=F)
       })(.))
 
     rdc_df %>%
@@ -384,20 +304,20 @@ detect_rdc = function()
         df %>%
           dplyr::mutate(rdc_strand="*") %>%
           dplyr::select(rdc_chrom, rdc_extended_start, rdc_extended_end, rdc_name, rdc_significant_sumarea, rdc_strand, rdc_start, rdc_end) %>%
-          readr::write_tsv(paste0("reports/detect_rdc/rdc-", df$tlx_group[1], " (", df$rdc_subset[1], ").bed"), col_names=F)
+          readr::write_tsv(paste0("reports/02-detect_rdc/rdc-", df$tlx_group[1], " (", df$rdc_subset[1], ").bed"), col_names=F)
       })(.))
 
     macs_combined_rdc$qvalues %>%
       dplyr::group_by(tlx_group, qvalue_strand) %>%
       dplyr::do((function(df){
-        writeLines('track color="255,102,102" altColor="255,0,0"', con=paste0("reports/detect_rdc/qvalues-", df$tlx_group[1], "_", df$qvalue_strand[1], ".bedgraph"))
+        writeLines('track color="255,102,102" altColor="255,0,0"', con=paste0("reports/02-detect_rdc/qvalues-", df$tlx_group[1], "_", df$qvalue_strand[1], ".bedgraph"))
         df %>%
           dplyr::select(qvalue_chrom, qvalue_start, qvalue_end, qvalue_score) %>%
-          readr::write_tsv(paste0("reports/detect_rdc/qvalues-", df$tlx_group[1], "_", df$qvalue_strand[1], ".bedgraph"), col_names=F, append=T)
-        writeLines('track color="255,153,51" altColor="255,0,0"', con=paste0("reports/detect_rdc/qvalue-", df$tlx_group[1], ".bedgraph"))
+          readr::write_tsv(paste0("reports/02-detect_rdc/qvalues-", df$tlx_group[1], "_", df$qvalue_strand[1], ".bedgraph"), col_names=F, append=T)
+        writeLines('track color="255,153,51" altColor="255,0,0"', con=paste0("reports/02-detect_rdc/qvalue-", df$tlx_group[1], ".bedgraph"))
         df %>%
           dplyr::select(qvalue_chrom, qvalue_start, qvalue_end, bgmodel_signal) %>%
-          readr::write_tsv(paste0("reports/detect_rdc/baseline-", df$tlx_group[1], "_", df$qvalue_strand[1], ".bedgraph"), col_names=F, append=T)
+          readr::write_tsv(paste0("reports/02-detect_rdc/baseline-", df$tlx_group[1], "_", df$qvalue_strand[1], ".bedgraph"), col_names=F, append=T)
       })(.))
   }
 }
