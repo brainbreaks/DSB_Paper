@@ -3,7 +3,7 @@
 ```console
 git pull git@github.com:brainbreaks/DSB_Paper.git
 cd DSB_Paper
-wget https://raw.githubusercontent.com/brainbreaks/genome_downloader/master/download.py
+wget https://raw.githubusercontent.com/brainbreaks/genome_downloader/v0.0.2/download.py
 git pull git@github.com:brainbreaks/breaktools.git
 RScript 01-setup.R
 ```
