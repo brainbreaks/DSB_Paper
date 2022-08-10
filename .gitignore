@@ -1,26 +1,26 @@
 ### R template
 # History files
-.Rhistory
-.Rapp.history
+/.Rhistory
+/.Rapp.history
 
 # Session Data files
-.RData
+/.RData
 /.idea
 
 # User-specific files
-.Ruserdata
+/.Ruserdata
 
 # RStudio files
-.Rproj.user/
+/.Rproj.user
 
 # Temporary folder
 /tmp/
 
 # R Environment Variables
-.Renviron
+/.Renviron
 
-/data/TLX/
-/breaktools/
-/genomes/
-/reports/
-/tmp*/
+/data/TLX
+/breaktools
+/genomes
+/reports
+/tmp*
