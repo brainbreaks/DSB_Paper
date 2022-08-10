@@ -49,7 +49,8 @@ detect_rdc = function()
   #
   tlx_rdc_df = tlx_all_df %>%
     tlx_remove_rand_chromosomes() %>%
-    dplyr::filter(tlx_copynumber==1 & !tlx_duplicated & !tlx_is_bait_junction & !tlx_is_offtarget & (!grepl("prom", group) | !tlx_is_bait_chrom)) %>%
+    dplyr::filter(tlx_copynumber==1) %>%
+    dplyr::filter(!tlx_duplicated & !tlx_is_bait_junction & !tlx_is_offtarget & (!grepl("prom", group) | !tlx_is_bait_chrom)) %>%
     dplyr::mutate(tlx_group=dplyr::case_when(
       !tlx_control & tlx_is_bait_chrom ~ "APH-Intra",
       !tlx_control & !tlx_is_bait_chrom ~ "APH-Inter",
@@ -189,8 +190,6 @@ detect_rdc = function()
     dplyr::ungroup() %>%
     dplyr::select(tlx_group, dplyr::starts_with("rdc_"))
 
-  # rdc_maxscore, rdc_sumscore, rdc_significant_sumarea
-
   #
   # Bootstrap background to find exact probability and signal-to-noise fold change
   #
@@ -244,7 +243,8 @@ detect_rdc = function()
   #
   rdc_df = rdc_genes_df %>%
     dplyr::inner_join(rdc_bootstrap_sumdf, by=c("tlx_group", "rdc_subset", "rdc_name")) %>%
-    dplyr::mutate(rdc_is_significant=rdc_significant_sumarea>=100e3 & rdc_bootstrap_pvalue<=0.01)
+    dplyr::mutate(rdc_is_significant=rdc_significant_length>=100e3 & rdc_bootstrap_pvalue<=0.01)
+  readr::write_tsv(rdc_df, file="data/rdc.tsv")
 
   #
   # Plot bootstrap boxplots

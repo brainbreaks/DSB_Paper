@@ -46,11 +46,11 @@ rdc_published_overlap = function()
   allrdc_df = dplyr::bind_rows(
     pubrdc_df %>%
       dplyr::mutate(rdc_chrom=pubrdc_chrom, rdc_start=pubrdc_start, rdc_end=pubrdc_end, rdc_extended_start=pubrdc_start, rdc_extended_end=pubrdc_end, rdc_is_significant=T) %>%
-      dplyr::mutate(rdc_source=paste0(pubrdc_source, "-", pubrdc_celline), rdc_significant_sumarea=1e7, rdc_bootstrap_pvalue=min(rdc_combined_df$rdc_bootstrap_pvalue), rdc_bootstrap_zscore=max(rdc_combined_df$rdc_bootstrap_zscore), rdc_bootstrap_fc=max(rdc_combined_df$rdc_bootstrap_fc), rdc_maxscore=max(rdc_combined_df$rdc_maxscore), rdc_sumscore=max(rdc_combined_df$rdc_sumscore), rdc_length=max(rdc_combined_df$rdc_length), rdc_extended_length=max(rdc_combined_df$rdc_extended_length), rdc_maxscore.adjusted=max(rdc_combined_df$rdc_maxscore.adjusted)) %>%
+      dplyr::mutate(rdc_source=paste0(pubrdc_source, "-", pubrdc_celline), rdc_significant_length=1e7, rdc_bootstrap_pvalue=min(rdc_combined_df$rdc_bootstrap_pvalue), rdc_bootstrap_fc=max(rdc_combined_df$rdc_bootstrap_fc), rdc_significant_maxscore=max(rdc_combined_df$rdc_significant_maxscore), rdc_significant_length=max(rdc_combined_df$rdc_significant_length), rdc_length=max(rdc_combined_df$rdc_length), rdc_extended_length=max(rdc_combined_df$rdc_extended_length)) %>%
       tidyr::crossing(data.frame(rdc_subset=unique(rdc_combined_df$rdc_subset))),
     rdc_combined_df %>%
         tidyr::crossing(rdc_source="DKFZ") %>%
-        dplyr::select(tlx_group, rdc_chrom, rdc_extended_start, rdc_extended_end, rdc_start, rdc_end, rdc_source, rdc_subset, rdc_is_significant, rdc_bootstrap_zscore, rdc_bootstrap_pvalue, rdc_bootstrap_fc, rdc_significant_sumarea, rdc_maxscore, rdc_maxscore.adjusted, rdc_sumscore, rdc_length, rdc_extended_length)) %>%
+        dplyr::select(tlx_group, rdc_chrom, rdc_extended_start, rdc_extended_end, rdc_start, rdc_end, rdc_source, rdc_subset, rdc_is_significant, rdc_bootstrap_pvalue, rdc_bootstrap_fc, rdc_significant_length, rdc_significant_maxscore, rdc_significant_length, rdc_length, rdc_extended_length)) %>%
     dplyr::mutate(rdc_bait_chrom=as.character(ifelse(grepl("Intra", tlx_group), as.character(rdc_chrom), "Other chromosome")))
 
   #
@@ -85,10 +85,10 @@ rdc_published_overlap = function()
   if(F) {
     overlaps_venn_mean = overlaps_df %>%
       dplyr::filter(grepl("APH", tlx_group)) %>%
-      # dplyr::filter(rdc_length>=100e3 & rdc_bait_chrom %in% c("chr5", "chr6", "chr8", "chr17", "Other chromosome")) %>%
-      dplyr::filter(rdc_significant_sumarea>=100e3 & rdc_bait_chrom %in% c("chr5", "chr6", "chr8", "Other chromosome")) %>%
+      dplyr::filter(rdc_significant_length>=100e3) %>%
+      dplyr::filter(rdc_bait_chrom %in% c("chr5", "chr6", "chr8", "Other chromosome")) %>%
       dplyr::mutate(th=-log10(rdc_bootstrap_pvalue)) %>%
-      tidyr::crossing(cur_cutoff=seq(2, 100, length.out=100)) %>%
+      tidyr::crossing(cur_cutoff=seq(1, 50, length.out=200)) %>%
       dplyr::group_by(tlx_group, rdc_subset, cur_cutoff) %>%
       dplyr::do((function(odf) {
         ooo <<- odf
@@ -134,7 +134,7 @@ rdc_published_overlap = function()
     dplyr::filter(rdc_subset=="Wei+DKFZ") %>%
     dplyr::filter(rdc_is_significant) %>%
     # dplyr::filter(rdc_significant_sumarea>=100e3 & rdc_bootstrap_pvalue<=0.01) %>%
-    # dplyr::filter(rdc_maxscore>=2 & rdc_extended_length>=300e3 & rdc_significant_sumarea>=100e3) %>%
+    # dplyr::filter(rdc_significant_maxscore>=2 & rdc_extended_length>=300e3 & rdc_significant_sumarea>=100e3) %>%
     dplyr::filter(rdc_bait_chrom %in% c("chr5", "chr6", "chr8", "Other chromosome")) %>%
     dplyr::filter(grepl("APH-", tlx_group) & grepl("^(Wei2018-NPC|DKFZ|Wei)$", rdc_source) | grepl("DMSO-", tlx_group) & grepl("^(Wei2018_DMSO-NPC|Wei2018-NPC|DKFZ|Wei)$", rdc_source))  %>%
     dplyr::group_split(tlx_group) %>%
@@ -154,7 +154,6 @@ rdc_published_overlap = function()
 
   overlaps_venn2 = overlaps_df %>%
     dplyr::filter(rdc_is_significant) %>%
-    # dplyr::filter(rdc_bait_chrom %in% c(bait_chromosomes, "Other chromosome")) %>%
     dplyr::filter(grepl("APH-Inter|DMSO-Inter|APH-Intra|DMSO-Intra", tlx_group) & rdc_source=="DKFZ" & rdc_subset=="Wei+DKFZ") %>%
     dplyr::mutate(tlx_subgroup=paste0(gsub("(APH|DMSO)-", "", tlx_group), "---", gsub("-(Inter|Intra)", "", tlx_group))) %>%
     tidyr::separate_rows(tlx_subgroup, sep="---") %>%
