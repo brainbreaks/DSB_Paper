@@ -9,7 +9,8 @@ When Above dependencies are satisfied you can run following code from command li
 ```console
 git pull git@github.com:brainbreaks/DSB_Paper.git
 cd DSB_Paper
-wget https://raw.githubusercontent.com/brainbreaks/genome_downloader/v0.0.2/download.py
+wget https://raw.githubusercontent.com/brainbreaks/genome_downloader/master/download.py
+python3 download.py mm10 genomes
 git pull git@github.com:brainbreaks/breaktools.git
 RScript 00-setup.R
 ```
