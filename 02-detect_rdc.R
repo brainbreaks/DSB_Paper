@@ -223,7 +223,8 @@ detect_rdc = function()
   #
   rdc_df = rdc_genes_df %>%
     dplyr::inner_join(rdc_bootstrap_sumdf, by=c("tlx_group", "rdc_subset", "rdc_name")) %>%
-    dplyr::mutate(rdc_is_significant=rdc_significant_length>=100e3 & rdc_bootstrap_pvalue<=0.01)
+    dplyr::mutate(rdc_is_significant=rdc_significant_length>=100e3 & rdc_bootstrap_pvalue<=0.01) %>%
+    dplyr::arrange(tlx_group, rdc_chrom, rdc_start)
   readr::write_tsv(rdc_df, file="data/rdc.tsv")
 
   #
