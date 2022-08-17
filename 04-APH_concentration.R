@@ -26,7 +26,7 @@ APH_concentration = function()
   #
   # Read TLX
   #
-  samples_df = tlx_read_samples(annotation_path="data/htgts_samples.tsv", samples_path="~/Workspace/Datasets/HTGTS") %>%
+  samples_df = tlx_read_samples(annotation_path="data/htgts_samples.tsv", samples_path="data") %>%
     dplyr::filter(grepl("APH concentration", experiment))
 
   tlx_all_df = tlx_read_many(samples_df, threads=24) %>%

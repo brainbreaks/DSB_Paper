@@ -1,6 +1,7 @@
 install.packages("devtools")
 devtools::install_cran(c("igraph", "baseline", "smoother", "dbscan"))
 devtools::install_cran(c("ggvenn", "randomcoloR", "ggbeeswarm", "ggpmisc", "ggridges", "ggrepel", "units", "gridpattern", "ggpattern"))
+devtools::install_cran(c("ggprism", "ggpubr"))
 devtools::install_bioc(c("GenomicFeatures", "GenomicRanges", "rtracklayer", "Biostrings", "ComplexHeatmap"))
 devtools::install_deps("breaktools/")
 
