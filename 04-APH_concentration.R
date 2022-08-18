@@ -7,7 +7,6 @@ devtools::load_all('breaktools/')
 APH_concentration = function()
 {
   debug = F
-  dir.create("reports/04-concentration", recursive=T, showWarnings=F)
   group_palette = c("APH 0.2 uM 96h"="#C6DBEF", "APH 0.3 uM 96h"="#6DAACE", "APH 0.4 uM 96h"="#317BA5", "APH 0.6 uM 96h"="#335E9D", "DMSO"="#CCCCCC")
   translocation_palette = c("Inter"="#00D1FF", "Intra"="#E40006")
 
@@ -179,7 +178,7 @@ APH_concentration = function()
     ) %>%
     dplyr::filter(pmin(n_sense, n_anti)>=1)
 
-  pdf("reports/APH_concentration12.pdf", width=11.69, height=8.27, paper="a4r")
+  pdf("reports/04-concentration-APH_concentration.pdf", width=11.69, height=8.27, paper="a4r")
   #
   # 1. Plot shift of junctions peak at each APH each concentration
   #
@@ -250,6 +249,6 @@ APH_concentration = function()
   # Export debuging info (offtarget)
   #
   if(debug) {
-    tlxcov_concentration_df %>% tlxcov_write_bedgraph(path="reports/04-concentration/bedgraph", group="group", ignore.strand=F)
+    tlxcov_concentration_df %>% tlxcov_write_bedgraph(path="reports/04-concentration-bedgraph", group="group", ignore.strand=F)
   }
 }

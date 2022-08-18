@@ -6,8 +6,6 @@ devtools::load_all("breaktools/")
 
 rdc_published_overlap = function()
 {
-  dir.create("reports/03-published_overlap")
-
   rdc_df = readr::read_tsv("data/rdc.tsv")
   rdc_combined_df = rdc_df %>%
     dplyr::filter(grepl("-(Inter|Intra)", tlx_group)) %>% dplyr::mutate(tlx_group=gsub("Inter|Intra", "Combined", tlx_group)) %>%
@@ -131,7 +129,7 @@ rdc_published_overlap = function()
   }
 
 
-  pdf("reports/03-published_overlap/rdc_compare_with_published.pdf", width=8.27, height=8.27)
+  pdf("reports/03-published_overlap-venn.pdf", width=8.27, height=8.27)
   overlaps_venn1 = overlaps_df %>%
     dplyr::filter(rdc_subset=="Wei+DKFZ") %>%
     dplyr::filter(rdc_is_significant) %>%

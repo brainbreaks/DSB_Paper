@@ -10,8 +10,6 @@ devtools::load_all('~/Workspace/breaktools/')
 
 proportions = function()
 {
-  params = macs2_params(extsize=1e5, exttype="symmetrical", llocal=1e7, minqvalue=0.01, effective_size=1.87e9, maxgap=2e5, minlen=1e5)
-
   #
   # Load genes
   #
@@ -22,9 +20,9 @@ proportions = function()
   #
   # Load TLX
   #
-  samples_df = tlx_read_samples("~/Workspace/Datasets/HTGTS/samples/All_samples.tsv", "~/Workspace/Datasets/HTGTS/TLX") %>%
+  samples_df = tlx_read_samples("data/htgts_samples.tsv", "data") %>%
     dplyr::filter((grepl("promoter/enhancer", experiment) & alleles==2 | grepl("concentration", experiment) & concentration==0.4)) %>%
-    dplyr::mutate(group=paste0(ifelse(control, "DMSO", "APH"), " (", bait_chrom, ")"), treatment=ifelse(control, "DMSO", "APH"), control=F, )
+    dplyr::mutate(group=paste0(ifelse(control, "DMSO", "APH"), " (", bait_chrom, ")"), treatment=ifelse(control, "DMSO", "APH"), control=F)
 
   tlx_df = tlx_read_many(samples_df, threads=30)
   tlx_df = tlx_remove_rand_chromosomes(tlx_df)
@@ -34,14 +32,17 @@ proportions = function()
     dplyr::group_by(tlx_sample) %>%
     dplyr::filter(dplyr::n()>2000) %>%
     dplyr::ungroup()
-  libfactors_df = tlx_libfactors(tlx_df, group="group", normalize_within="group", normalize_between="none", normalization_target="smallest")
-  tlx_df = tlx_df %>% dplyr::filter(B_Rname==bait_chrom & tlx_is_bait_chrom & !tlx_is_bait_junction)
-  tlx_ranges = tlx_df %>% df2ranges(Rname, Junction, Junction)
+  libfactors_df = tlx_df %>%
+    tlx_libsizes() %>%
+    tlx_libfactors_within(min(library_size)/library_size)
+  tlx_prop_df = tlx_df %>% dplyr::filter(tlx_is_bait_chrom & !tlx_is_bait_junction)
+  tlx_prop_ranges = tlx_prop_df %>% df2ranges(Rname, Junction, Junction)
 
   #
   # TLX coverage
   #
-  tlxcov_df = tlx_df %>%
+  params = macs2_params(extsize=1e5, exttype="symmetrical", llocal=1e7, minqvalue=0.01, effective_size=1.87e9, maxgap=2e5, minlen=1e5)
+  tlxcov_df = tlx_prop_df %>%
     tlx_coverage(group="group", extsize=params$extsize, exttype=params$exttype, libfactors_df=libfactors_df, ignore.strand=F)
   tlxcov_ranges = tlxcov_df %>% df2ranges(tlxcov_chrom, tlxcov_start, tlxcov_end)
 

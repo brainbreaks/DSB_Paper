@@ -7,8 +7,6 @@ devtools::load_all('breaktools/')
 
 main = function()
 {
-  dir.create("reports/05-promoter_enhancer_deletion", recursive=T, showWarnings=F)
-
   #
   # Read TLX files
   #
@@ -94,7 +92,7 @@ main = function()
     setNames(., levels(group)))
 
 
-  pdf("reports/05-promoter_enhancer_deletion/promoter_enhancer_boxplots_pulled.pdf", width=8.27, height=11.69, paper="a4")
+  pdf("reports/05-promoter_enhancer_deletion-boxplots_pulled.pdf", width=8.27, height=11.69, paper="a4")
   ggplot(tlx2roi_pulled_df, aes(x=group, y=breaks_norm_rel)) +
     geom_boxplot(aes(fill=group), outlier.shape=NA, show.legend=F) +
     geom_point(color="#000000", size=2.5, position=position_jitter(width=0.2, height=0, seed=2), show.legend=F) +
@@ -109,7 +107,7 @@ main = function()
   dev.off()
 
   set.seed(123)
-  pdf("reports/05-promoter_enhancer_deletion/promoter_enhancer_boxplots.pdf", width=11.69, height=8.27, paper="a4r")
+  pdf("reports/05-promoter_enhancer_deletion-boxplots.pdf", width=11.69, height=8.27, paper="a4r")
   rdc2tlx_df %>%
     dplyr::filter(!is.na(rdc_gene)) %>%
     dplyr::group_split(experiment) %>%
