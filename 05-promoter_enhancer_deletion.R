@@ -73,7 +73,6 @@ main = function()
     dplyr::ungroup() %>%
     dplyr::mutate(facet=paste0(roi_gene, " (", experiment, ")"), facet=factor(facet, unique(facet)))
 
-  set.seed(123)
   tlx2roi_pulled_stat = tlx2roi_pulled_df %>%
     dplyr::group_by(facet, roi_gene, group) %>%
     dplyr::mutate(n=dplyr::n()) %>%
@@ -97,7 +96,7 @@ main = function()
     geom_boxplot(aes(fill=group), outlier.shape=NA, show.legend=F) +
     geom_point(color="#000000", size=2.5, position=position_jitter(width=0.2, height=0, seed=2), show.legend=F) +
     facet_wrap(~facet, ncol=2, scales="free") +
-    ggprism::add_pvalue(tlx2roi_pulled_stat, label="p", tip.length = 0.005) +
+    ggprism::add_pvalue(tlx2roi_pulled_stat, label="p", tip.length=0.005) +
     ggpubr::theme_pubclean(base_size=14) +
     labs(y="Relative number of translocations", title="Promoter/enhancer deletion breaks (pulled together)") +
     scale_fill_manual(values=fill_pal) +
@@ -106,7 +105,6 @@ main = function()
     theme(legend.position="bottom", axis.title.x=element_blank(), axis.ticks.x=element_blank())
   dev.off()
 
-  set.seed(123)
   pdf("reports/05-promoter_enhancer_deletion-boxplots.pdf", width=11.69, height=8.27, paper="a4r")
   rdc2tlx_df %>%
     dplyr::filter(!is.na(rdc_gene)) %>%
