@@ -129,15 +129,15 @@ rdc_published_overlap = function()
   }
 
 
-  pdf("reports/03-published_overlap-venn.pdf", width=8.27, height=8.27)
+  pdf("reports/03-published_overlap/wei2018-venn.pdf", width=8.27, height=8.27)
   overlaps_venn1 = overlaps_df %>%
-    dplyr::filter(rdc_subset=="Wei+DKFZ") %>%
+    dplyr::filter(rdc_subset %in% c("Wei+DKFZ", "DKFZ")) %>%
     dplyr::filter(rdc_is_significant) %>%
     # dplyr::filter(rdc_significant_sumarea>=100e3 & rdc_bootstrap_pvalue<=0.01) %>%
     # dplyr::filter(rdc_significant_maxscore>=2 & rdc_extended_length>=300e3 & rdc_significant_sumarea>=100e3) %>%
     dplyr::filter(rdc_bait_chrom %in% c("chr5", "chr6", "chr8", "Other chromosome")) %>%
     dplyr::filter(grepl("APH-", tlx_group) & grepl("^(Wei2018-NPC|DKFZ|Wei)$", rdc_source) | grepl("DMSO-", tlx_group) & grepl("^(Wei2018_DMSO-NPC|Wei2018-NPC|DKFZ|Wei)$", rdc_source))  %>%
-    dplyr::group_split(tlx_group) %>%
+    dplyr::group_split(tlx_group, rdc_subset) %>%
     lapply(FUN=function(odf) {
       ooo <<- odf
       odf_filter = odf %>% dplyr::mutate(rdc_source=factor(rdc_source))
@@ -146,11 +146,17 @@ rdc_published_overlap = function()
       if(length(odf_list)<2) {
         return(grid::grob())
       }
-      ggvenn::ggvenn(odf_list, fill_color=RColorBrewer::brewer.pal(8, "Pastel2")[1:length(odf_list)], stroke_size=0.5, set_name_size=2, show_percentage=F) +
+
+      g = ggvenn::ggvenn(odf_list, fill_color=RColorBrewer::brewer.pal(8, "Pastel2")[1:length(odf_list)], stroke_size=0.5, set_name_size=2, show_percentage=F) +
         ggtitle(gsub("Intra", "Intra (chr5, chr6, chr8)", odf$tlx_group[1])) +
         theme(plot.margin=unit(rep(8, 4), "pt"))
+      g$tlx_group = odf$tlx_group[[1]]
+      g$rdc_subset = odf$rdc_subset[[1]]
+      g
     })
-  gridExtra::grid.arrange(grobs=c(overlaps_venn1), ncol=3, top=grid::textGrob("Overlap between newly calculated\nand published RDCs (Wei+DKFZ)", gp=grid::gpar(fontsize=20,font=3)), padding=grid::unit(100, "pt"))
+
+  gridExtra::grid.arrange(grobs=overlaps_venn1[sapply(overlaps_venn1, function(g) g$rdc_subset)=="Wei+DKFZ"], ncol=3, top=grid::textGrob("Overlap between newly calculated (Wei+DKFZ)\nand published RDCs", gp=grid::gpar(fontsize=20,font=3)), padding=grid::unit(100, "pt"))
+  gridExtra::grid.arrange(grobs=overlaps_venn1[sapply(overlaps_venn1, function(g) g$rdc_subset)=="DKFZ"], ncol=3, top=grid::textGrob("Overlap between newly calculated (DKFZ)\nand published RDCs", gp=grid::gpar(fontsize=20,font=3)), padding=grid::unit(100, "pt"))
 
   overlaps_venn2 = overlaps_df %>%
     dplyr::filter(rdc_is_significant) %>%
