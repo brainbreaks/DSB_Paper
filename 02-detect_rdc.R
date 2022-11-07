@@ -12,6 +12,7 @@ detect_rdc = function()
   debug=F
   dir.create("reports/02-detect_rdc", recursive=T, showWarnings=F)
 
+
   #
   # Load offtargets
   #
@@ -31,16 +32,16 @@ detect_rdc = function()
   samples_df = tlx_read_samples(annotation_path="data/htgts_samples.tsv", samples_path="data") %>%
     dplyr::filter(tlx_exists & celltype=="NPC" & organism=="mouse" & sample!="VI035" & (
       grepl("(Csmd1|Ctnna2|Nrxn1) promoter/enhancer", experiment) |
-      grepl("concentration", experiment) & concentration==0.4 |
+      grepl("concentration", experiment) & concentration %in% c(0, 0.4) |
       grepl("Wei", experiment))
     )
 
   #
   # Load TLX
   #
-  tlx_all_df = tlx_read_many(samples_df, threads=6) %>%
+  tlx_all_df = tlx_read_many(samples_df, threads=4) %>%
     tlx_extract_bait(bait_size=19, bait_region=12e6) %>%
-    tlx_calc_copynumber(bowtie2_index="genomes/mm10/mm10", max_hits=100, threads=6) %>%
+    tlx_calc_copynumber(bowtie2_index="genomes/mm10/mm10", max_hits=100, threads=8) %>%
     tlx_mark_offtargets(offtargets_df, offtarget_region=1e5, bait_region=1e4)
   libfactors_df = tlx_all_df %>% tlx_libsizes()
 
@@ -147,6 +148,7 @@ detect_rdc = function()
     dplyr::mutate(island_combined_name=paste0("ISLAND_", stringr::str_pad((0:(dplyr::n()))[-1], 3, pad="0"))) %>%
     dplyr::ungroup()
 
+
   #
   # Find overlap between stranded and non-stranded peak detection and reduce
   #
@@ -186,7 +188,7 @@ detect_rdc = function()
     dplyr::distinct(tlx_group, rdc_subset, rdc_chrom, rdc_extended_start, rdc_extended_end, .keep_all=T) %>%
     dplyr::mutate(rdc_gene=gene_id, rdc_gene_strand=gene_strand, rdc_gene_overlap=pmin(rdc_extended_end, gene_end)-pmax(rdc_extended_start, gene_start)) %>%
     dplyr::group_by(tlx_group, rdc_subset) %>%
-    dplyr::mutate(rdc_name=paste0("RDC_", stringr::str_pad((0:(dplyr::n()))[-1], 3, pad="0")), rdc_length=rdc_end-rdc_start, rdc_extended_length=rdc_extended_end-rdc_extended_start) %>%
+    dplyr::mutate(rdc_name=paste0("RDC-", rdc_chrom, "-", sprintf((rdc_end+rdc_start)/2e6, fmt='%#.1f')), rdc_length=rdc_end-rdc_start, rdc_extended_length=rdc_extended_end-rdc_extended_start) %>%
     dplyr::ungroup() %>%
     dplyr::select(tlx_group, dplyr::starts_with("rdc_"))
 
@@ -218,38 +220,25 @@ detect_rdc = function()
     })(.)) %>%
     dplyr::ungroup()
 
-  #
-  # Export RDC
-  #
   rdc_df = rdc_genes_df %>%
     dplyr::inner_join(rdc_bootstrap_sumdf, by=c("tlx_group", "rdc_subset", "rdc_name")) %>%
     dplyr::mutate(rdc_is_significant=rdc_significant_length>=100e3 & rdc_bootstrap_pvalue<=0.01) %>%
     dplyr::arrange(tlx_group, rdc_chrom, rdc_start)
-  readr::write_tsv(rdc_df, file="data/rdc.tsv")
 
   #
-  # Plot bootstrap boxplots
+  # Export RDC
   #
-  if(F) {
-  pdf("reports/rdc_bootstrap_boxplots.pdf", width=8.27, height=11.69, paper="a4")
-    rdc_df %>%
-      dplyr::inner_join(rdc_bootstrap_df, by=c("tlx_group", "rdc_subset", "rdc_name")) %>%
-      dplyr::filter(rdc_is_significant) %>%
-      dplyr::group_by(tlx_group, rdc_subset) %>%
-      dplyr::group_split() %>%
-      lapply(function(z)
-        ggplot(z) +
-          geom_boxplot(aes(x=reorder(rdc_name, bootstrap_junctions_mean/rdc_extended_length), y=1e6*bootstrap_data_count/rdc_extended_length, color=bootstrap_type), outlier.shape=NA, position=position_identity()) +
-          scale_y_log10(breaks=scales::trans_breaks("log10", function(x) 10^x), labels=scales::trans_format("log10", scales::math_format(10^.x))) +
-          annotation_logticks() +
-          facet_grid(rdc_chrom~., scales="free_y", space="free_y") +
-          labs(x="", y="Junctions (per Mb)", title=paste0(z$tlx_group[1], " (", z$rdc_subset[1], ")"), fill="Bootstrap") +
-          guides(fill="none", color="none") +
-          theme_bw(base_size=8) +
-          theme(axis.text.x=element_text(size=3), axis.title.x=element_text(size=16), strip.text.y.left=element_text(angle=0)) +
-          coord_flip())
-  }
-  dev.off()
+  readr::write_tsv(rdc_df, file="data/rdc.tsv")
+  rdc_df %>%
+    dplyr::filter(rdc_is_significant) %>%
+    dplyr::group_by(tlx_group, rdc_subset) %>%
+    dplyr::do((function(df){
+      dff<<-df
+      df %>%
+        dplyr::mutate(rdc_display_name=paste0(rdc_gene, " (", rdc_name, ")"), rdc_score=-log10(rdc_bootstrap_pvalue)) %>%
+        dplyr::select(rdc_chrom, rdc_extended_start, rdc_extended_end, rdc_display_name, rdc_score, rdc_gene_strand, rdc_start, rdc_end) %>%
+        readr::write_tsv(paste0("reports/02-detect_rdc/rdc-", df$tlx_group[1], "_", df$rdc_subset[1], ".bed"), col_names=F)
+    })(.))
 
   #
   # Write debugging information from RDC calling
