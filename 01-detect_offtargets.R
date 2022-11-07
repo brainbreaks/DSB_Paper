@@ -23,17 +23,15 @@ detect_offtargets = function()
   samples_df = tlx_read_samples(annotation_path="data/htgts_samples.tsv", samples_path="data") %>%
     dplyr::filter(tlx_exists & celltype=="NPC" & organism=="mouse" & sample!="VI035" & (
       grepl("(Csmd1|Ctnna2|Nrxn1) promoter/enhancer", experiment) |
-      grepl("concentration", experiment) & concentration==0.4 |
+      grepl("concentration", experiment) |
       grepl("Wei|Tena", experiment))
     )
 
-  tlx_all_df = tlx_read_many(samples_df, threads=6) %>%
+  tlx_all_df = tlx_read_many(samples_df, threads=8) %>%
     tlx_extract_bait(bait_size=19, bait_region=12e6) %>%
-    tlx_calc_copynumber(bowtie2_index="genomes/mm10/mm10", max_hits=100, threads=6)
+    tlx_calc_copynumber(bowtie2_index="genomes/mm10/mm10", max_hits=100, threads=8)
 
   libfactors_df = tlx_all_df %>% tlx_libsizes()
-  # save(tlx_all_df, samples_df, baits_df, libfactors_df, file="01-detect_offtargets.rda")
-  # load("01-detect_offtargets.rda")
 
   #
   # Set-up parameters
@@ -173,6 +171,9 @@ detect_offtargets = function()
     dplyr::bind_cols(offtargets_exported_df) %>%
     dplyr::mutate(offtarget_sequence_start=island_region_start+offtarget_alignment_start-1, offtarget_sequence_end=island_region_start+offtarget_alignment_end-3)
 
+  #
+  # Export off-target sites
+  #
   offtargets_exported_sequences_df %>%
     dplyr::mutate(score=1, strand="*", thickStart=offtarget_island_start, thickEnd=offtarget_island_end, score=1, rgb=chrom_colors[offtarget_bait_name]) %>%
     dplyr::select(offtarget_chrom, offtarget_island_start, offtarget_island_end, offtarget_bait_name, score, strand, thickStart, thickEnd, rgb) %>%
@@ -236,8 +237,8 @@ detect_offtargets = function()
     tibble::column_to_rownames("sample") %>%
     dplyr::select(bait_name, experiment, bait_name, size)
 
-  pdf("reports/offtargets_map.pdf", width=2*11.69, height=2*8.27)
-  ComplexHeatmap::Heatmap(offtargets_pheatmap, row_names_gp=gpar(fontsize=6), column_names_gp=gpar(fontsize = 6),
+  pdf("reports/01-detect_offtargets/offtargets_map.pdf", width=2*11.69, height=2*8.27)
+  ComplexHeatmap::Heatmap(offtargets_pheatmap, row_names_gp=grid::gpar(fontsize=6), column_names_gp=grid::gpar(fontsize=6),
     cluster_columns=F, cluster_rows=F, column_split=samples_ann$bait_name,
     top_annotation = ComplexHeatmap::HeatmapAnnotation(experiment=samples_ann$experiment, sample_size=samples_ann$size)
   )
