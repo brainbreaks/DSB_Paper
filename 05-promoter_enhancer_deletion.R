@@ -7,12 +7,15 @@ devtools::load_all('breaktools/')
 
 main = function()
 {
+  dir.create("reports/05-promoter_enhancer_deletion", recursive=T, showWarnings=F)
+
   #
   # Read TLX files
   #
-  samples_df = tlx_read_samples("data/htgts_samples.tsv", "~/Workspace/Datasets/HTGTS") %>%
+  selected_lineages = c("47/5", "18/4", "38/3", "22", "22/5", "22/37", "73/16", "13/12", "37/8")
+  samples_df = tlx_read_samples("data/htgts_samples.tsv", "data") %>%
     dplyr::filter(grepl("(Ctnna2|Nrxn1) promoter/enhancer", experiment)) %>%
-    dplyr::filter(grepl("NXP010|NXP047", group) | grepl("\\((47/5|18/4|38/3|22|22/5|22/37|73/16|13/12|37/8)\\)", group)) %>%
+    dplyr::filter(grepl("NXP010|NXP047", group) | grepl(paste0("\\((", paste(selected_lineages, collapse="|"), ")\\)"), group)) %>%
     dplyr::mutate(group=dplyr::case_when(
       control~"DMSO",
       grepl("NXP010|NXP047", group)~"WT",
@@ -23,14 +26,16 @@ main = function()
     dplyr::mutate(sample_number=gsub("^[^0-9]+0*(\\d+).*", "\\1", basename(path))) %>%
     dplyr::mutate(treatment=ifelse(control, "DMSO", "APH"))
 
+
   tlx_all_df = tlx_read_many(samples_df, threads=10) %>%
     tlx_extract_bait(bait_size=19, bait_region=12e6) %>%
     tlx_calc_copynumber(bowtie2_index="genomes/mm10/mm10", max_hits=100, threads=24)
   tlx_df = tlx_all_df %>%
-    tlx_remove_rand_chromosomes()%>%
+    tlx_remove_rand_chromosomes() %>%
     dplyr::filter(tlx_copynumber==1 & !tlx_duplicated & Rname!="chrY") %>%
+    dplyr::ungroup() %>%
     dplyr::group_by(run, tlx_sample) %>%
-    dplyr::filter(dplyr::n()>5000) %>%
+    dplyr::filter(dplyr::n() >= 5000) %>%
     dplyr::ungroup()
 
   libfactors_df = tlx_df %>%
@@ -91,7 +96,7 @@ main = function()
     setNames(., levels(group)))
 
 
-  pdf("reports/05-promoter_enhancer_deletion-boxplots_pulled.pdf", width=8.27, height=11.69, paper="a4")
+  pdf("reports/05-promoter_enhancer_deletion/promoter_enhancer_deletion-boxplots_pulled.pdf", width=8.27, height=11.69, paper="a4")
   ggplot(tlx2roi_pulled_df, aes(x=group, y=breaks_norm_rel)) +
     geom_boxplot(aes(fill=group), outlier.shape=NA, show.legend=F) +
     geom_point(color="#000000", size=2.5, position=position_jitter(width=0.2, height=0, seed=2), show.legend=F) +
@@ -105,7 +110,7 @@ main = function()
     theme(legend.position="bottom", axis.title.x=element_blank(), axis.ticks.x=element_blank())
   dev.off()
 
-  pdf("reports/05-promoter_enhancer_deletion-boxplots.pdf", width=11.69, height=8.27, paper="a4r")
+  pdf("reports/05-promoter_enhancer_deletion/promoter_enhancer_deletion-boxplots.pdf", width=11.69, height=8.27, paper="a4r")
   rdc2tlx_df %>%
     dplyr::filter(!is.na(rdc_gene)) %>%
     dplyr::group_split(experiment) %>%
