@@ -11,7 +11,7 @@ APH_concentration = function()
   debug = F
   # group_palette = c("APH 0.2 uM 96h"="#C6DBEF", "APH 0.3 uM 96h"="#6DAACE", "APH 0.4 uM 96h"="#317BA5", "APH 0.6 uM 96h"="#335E9D", "DMSO"="#CCCCCC")
   group_palette = c("APH 0.2 uM 96h"="#C49A6C", "APH 0.3 uM 96h"="#C49A6C", "APH 0.4 uM 96h"="#C49A6C", "APH 0.6 uM 96h"="#C49A6C", "DMSO"="#CCCCCC")
-  subset_palette = c("RDC"="#2DBFC4", "Gene"="#F28C69")
+  subset_palette = c("RDC"="#00B9D3", "Gene > 100kb"="#D34B00", "Gene < 100kb"="#D39B00")
   params_concentration = macs2_params(extsize=50e3, exttype="symmetrical")
 
   #
@@ -88,13 +88,15 @@ APH_concentration = function()
   # Off-target based normalization calculation
   #
   libfactors_centration_df = tlx_offtarget_libfactor(tlx_all_df, offtargets_df)
-  libfactors_centration_df$libfactors %>%
-    dplyr::inner_join(tlx_all_df %>% dplyr::distinct(tlx_sample, tlx_sample_raw), by="tlx_sample") %>%
-    dplyr::group_by(group=tlx_sample, library_size, library_factor) %>%
-    dplyr::summarise(sample_count=length(unique(tlx_sample_raw))) %>%
-    readr::write_tsv("reports/04-concentration/APH_concentration_normalization.tsv")
-  libfactors_centration_df$offtargets %>%
-    readr::write_tsv("reports/04-concentration/APH_concentration_normalization_offtargets.tsv")
+  if(F) {
+    libfactors_centration_df$libfactors %>%
+      dplyr::inner_join(tlx_all_df %>% dplyr::distinct(tlx_sample, tlx_sample_raw), by="tlx_sample") %>%
+      dplyr::group_by(group=tlx_sample, library_size, library_factor) %>%
+      dplyr::summarise(sample_count=length(unique(tlx_sample_raw))) %>%
+      readr::write_tsv("reports/04-concentration/APH_concentration_normalization.tsv")
+    libfactors_centration_df$offtargets %>%
+      readr::write_tsv("reports/04-concentration/APH_concentration_normalization_offtargets.tsv")
+  }
 
   #
   # Load RDC and test to filter out only the RDC that are significant in concentration samples
@@ -171,14 +173,15 @@ APH_concentration = function()
 
 
   genes_nonrdc_df = genes_df %>%
-    dplyr::filter(gene_length>=min(rdc_df$rdc_length)) %>%
+    # dplyr::filter(gene_length>=min(rdc_df$rdc_length)) %>%
     df2ranges(gene_chrom, gene_start, gene_end) %>%
     leftJoinByOverlaps(rdc_df %>% df2ranges(rdc_chrom, rdc_start, rdc_end)) %>%
     dplyr::filter(is.na(rdc_name)) %>%
-    dplyr::select(dplyr::matches("gene_"))
+    dplyr::select(dplyr::matches("gene_")) %>%
+    dplyr::mutate(region_subset=ifelse(gene_length>=100e3, "Gene > 100kb", "Gene < 100kb"))
 
   tlx_count_df = dplyr::bind_rows(
-      genes_nonrdc_df %>% dplyr::select(region_chrom=gene_chrom, region_start=gene_start, region_end=gene_end, region_name=gene_id) %>% dplyr::mutate(region_subset="Gene"),
+      genes_nonrdc_df %>% dplyr::select(region_chrom=gene_chrom, region_start=gene_start, region_end=gene_end, region_name=gene_id, region_subset),
       # tlx_offtargets_df %>% dplyr::distinct(region_chrom=offtarget_chrom, region_start=offtarget_start, region_end=offtarget_end, offtarget_name=offtarget_bait_name) %>% dplyr::mutate(region_subset="Off-target"),
       rdc_df %>% dplyr::select(region_chrom=rdc_chrom, region_start=rdc_start, region_end=rdc_end, region_name=rdc_name) %>% dplyr::mutate(region_subset="RDC")) %>%
     df2ranges(region_chrom, region_start, region_end) %>%
@@ -223,31 +226,39 @@ APH_concentration = function()
   #   dplyr::group_by(region_subset) %>%
   #   dplyr::summarise(n=length(unique(region_name)), min_length=min(region_end-region_start))
 
-  pdf("reports/04-concentration/APH_concentration.pdf", width=11.69, height=8.27, paper="a4r")
+  pdf("reports/04-concentration/APH_concentration_everything.pdf", width=11.69, height=8.27, paper="a4r")
   #
   # 1a. Number of junctions increase with concentration (same as 1b but as line with standard error)
   #
   tlx_count_sumdf = tlx_count_df %>%
-    # dplyr::mutate(tlx_concentration=factor(tlx_concentration, unique(tlx_concentration))) %>%
     dplyr::group_by(region_subset, tlx_translocation, tlx_concentration) %>%
     dplyr::summarise(junctions_norm_rel.se=sd(junctions_norm_rel, na.rm=T)/sqrt(sum(!is.na(junctions_norm_rel))), junctions_norm_rel=mean(junctions_norm_rel, na.rm=T))
+
   tlx_count_stat = tlx_count_df %>%
-    dplyr::group_by(region_subset, tlx_translocation, tlx_concentration) %>%
-    dplyr::mutate(s=sd(junctions_norm_rel, na.rm=T)/sqrt(sum(!is.na(junctions_norm_rel))), m=mean(junctions_norm_rel, na.rm=T), y.position=m+s) %>%
     dplyr::group_by(tlx_translocation, tlx_concentration) %>%
-    dplyr::mutate(y.position=max(y.position)+0.1) %>%
-    dplyr::group_by(tlx_translocation, tlx_concentration, y.position) %>%
     rstatix::t_test(junctions_norm_rel ~ region_subset) %>%
-    # rstatix::remove_ns(col="p", signif.cutoff=0.05) %>%
-    dplyr::group_by(tlx_translocation, tlx_concentration) %>%
-    dplyr::mutate(group1=as.numeric(tlx_concentration)-0.1, group2=as.numeric(tlx_concentration)+0.1) %>%
-    dplyr::ungroup()
+    dplyr::filter((group1 == "Gene > 100kb" | group2 == "Gene > 100kb") & tlx_concentration != "DMSO") %>%
+    dplyr::inner_join(tlx_count_sumdf %>% dplyr::rename(junctions_norm_rel.se.g1="junctions_norm_rel.se", junctions_norm_rel.g1="junctions_norm_rel"), by=c("tlx_translocation", "tlx_concentration", "group1"="region_subset")) %>%
+    dplyr::inner_join(tlx_count_sumdf %>% dplyr::rename(junctions_norm_rel.se.g2="junctions_norm_rel.se", junctions_norm_rel.g2="junctions_norm_rel"), by=c("tlx_translocation", "tlx_concentration", "group2"="region_subset")) %>%
+    dplyr::mutate(group1=as.factor(group1), group2=as.factor(group2)) %>%
+    dplyr::group_by(tlx_translocation, tlx_concentration, group1, group2) %>%
+    dplyr::mutate(
+      ymin=pmin(junctions_norm_rel.g1, junctions_norm_rel.g2),
+      ymax=pmax(junctions_norm_rel.g1, junctions_norm_rel.g2),
+      x=(as.numeric(group1)+as.numeric(group2))[1]/2,
+      p.signif=dplyr::case_when(p<=0.0001~"****", p<=0.001~"***", p<=0.01~"**", p<=0.05~"*", T~"ns")
+    )
+
   ggplot(tlx_count_sumdf) +
-      geom_hline(yintercept=0, linetype="dashed") +
+      facet_wrap(~tlx_translocation, scales="free") +
       geom_line(aes(y=junctions_norm_rel, x=as.numeric(tlx_concentration), color=region_subset)) +
       geom_errorbar(aes(ymin=junctions_norm_rel-junctions_norm_rel.se, ymax=junctions_norm_rel+junctions_norm_rel.se, x=as.numeric(tlx_concentration), color=region_subset), width=0.1) +
-      ggprism::add_pvalue(tlx_count_stat, tip.length=0.005) +
-      facet_wrap(~tlx_translocation, scales="free") +
+      geom_hline(yintercept=0, linetype="dashed") +
+      # ggprism::add_pvalue(tlx_count_stat, tip.length=0.005) +
+      geom_segment(aes(x=as.numeric(tlx_concentration)+x/6,y=ymin,xend=as.numeric(tlx_concentration)+x/6,yend=ymax), data=tlx_count_stat, size=0.2) +
+      geom_segment(aes(x=as.numeric(tlx_concentration)+x/6,y=ymin,xend=as.numeric(tlx_concentration)+x/6-0.05,yend=ymin), data=tlx_count_stat, size=0.2) +
+      geom_segment(aes(x=as.numeric(tlx_concentration)+x/6,y=ymax,xend=as.numeric(tlx_concentration)+x/6-0.05,yend=ymax), data=tlx_count_stat, size=0.2) +
+      geom_text(aes(x=as.numeric(tlx_concentration)+x/6, y=ymax/2+ymin/2, label=p.signif), data=tlx_count_stat, hjust=-0.5) +
       labs(y="Offtarget−normalized translocations count\ndevided by DMSO translocations count (per each RDC), log2", color="Subset") +
       scale_x_continuous(breaks=1:nlevels(tlx_count_sumdf$tlx_concentration), labels=levels(tlx_count_sumdf$tlx_concentration)) +
       scale_color_manual(values=subset_palette) +
