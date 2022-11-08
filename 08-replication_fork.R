@@ -115,31 +115,40 @@ replication_fork_length = function() {
         return(data.frame(is_any_transcribed=F, consecutive_transcribed=0, prop_transcribed=0, is_transcribed=F, sum_transcribed=0, bins_number=nrow(z)))
       }
     })(.)) %>%
-    dplyr::mutate(replication_length=replication_right-replication_left, replication_length_group=dplyr::case_when(replication_length>=1e6~">1Mb", replication_length>=5e5~">500kb", replication_length>=1e5~">100kb", T~">0"))
+    dplyr::ungroup() %>%
+    dplyr::mutate(replication_length=replication_right-replication_left, replication_length_group=dplyr::case_when(replication_length>=1e6~">1Mb", replication_length>=5e5~">500kb", replication_length>=1e5~">100kb", T~">0")) %>%
+    dplyr::mutate(replication_length.log10=log10(replication_length))
 
 
 
-  pdf("reports/08-replication_fork/replication_fork_collision.pdf", width=8.27, height=11.6)
+  pdf("reports/08-replication_fork/replication_fork_collision2.pdf", width=8.27, height=11.6)
   g0 = ggplot(replication_df) +
     geom_histogram(aes(y=0.1*..density.., x=replication_length), alpha=0.5, binwidth=100e3, position="identity", fill="#111111", color="#000000") +
+    geom_vline(xintercept=median(replication_df$replication_length), color="#FF0000") +
+    geom_text(x=median(replication_df$replication_length), y=1.5e-7, label=round(median(replication_df$replication_length), 2), vjust=1.1, hjust=-0.1, size=3, color="#FF0000", data=data.frame(1)) +
     theme_paper() +
     labs(x="Replication length", y="count")
-  g1 = rdc2replication_df %>%
+
+  rdc2replication_sumdf = rdc2replication_df %>%
     dplyr::group_by(overlap_type) %>%
-    dplyr::summarise(sum_transcribed=sum(sum_transcribed), bins_number=sum(bins_number), prop=sum_transcribed/bins_number) %>%
-      ggplot() +
-      geom_bar(aes(x=overlap_type, y=prop, fill=overlap_type), stat="identity", alpha=0.5) +
-      labs(x="", y="Average\ntranscription proportion", fill="Overlap") +
-      guides(fill=guide_legend(title.position="top", title.hjust=0.5, ncol=2), color="none") +
-      scale_fill_manual(values=subset_palette) +
-      theme_paper(base_size=12) +
-      theme(legend.position="bottom") +
-      ggplot2::theme(axis.text.x=ggplot2::element_text(angle=45, hjust=1, vjust=1), legend.key=element_rect(color="#000000"))
+    dplyr::summarise(sum_transcribed=sum(sum_transcribed), bins_number=sum(bins_number), prop=sum_transcribed/bins_number)
+  g1 = ggplot(rdc2replication_sumdf) +
+    geom_bar(aes(x=overlap_type, y=prop, fill=overlap_type), stat="identity", alpha=0.5) +
+    geom_text(aes(x=overlap_type, y=prop, label=round(prop, 2)), size=3, color="#FF0000", stat="identity", vjust=ifelse(max(rdc2replication_sumdf$prop)==rdc2replication_sumdf$prop, 1.2, -1)) +
+    labs(x="", y="Average\ntranscription proportion", fill="Overlap") +
+    guides(fill=guide_legend(title.position="top", title.hjust=0.5, ncol=2), color="none") +
+    scale_fill_manual(values=subset_palette) +
+    scale_y_continuous(expand=c(0, 0), breaks=scales::pretty_breaks(n=5)) +
+    theme_paper(base_size=12) +
+    theme(legend.position="bottom") +
+    ggplot2::theme(axis.text.x=ggplot2::element_text(angle=45, hjust=1, vjust=1), legend.key=element_rect(color="#000000"))
 
   g2 = ggplot(rdc2replication_df, aes(x=overlap_type, y=prop_transcribed)) +
     geom_boxplot(aes(fill=overlap_type), outlier.shape = NA, outlier.alpha=0, alpha=0.5) +
-    # ggbeeswarm::geom_beeswarm(aes(group=overlap_type), shape=21, color="#00000033", fill="#FFFFFF33") +
-    geom_point(aes(group=overlap_type), position=position_jitter(height=0,width = 0.1, seed=2), shape=21, color="#00000033", fill="#FFFFFF33") +
+    # geom_point(aes(group=overlap_type), position=position_jitter(height=0,width = 0.1, seed=2), shape=21, color="#00000033", fill="#FFFFFF33", size=2, data=rdc2replication_df %>% dplyr::filter(abs(prop_transcribed-0.5)==0.5)) +
+    geom_dotplot(aes(group=overlap_type), binwidth=0.005, binaxis="y", stackdir="center", shape=21, color="#00000033", fill="#FFFFFF33", data=rdc2replication_df %>% dplyr::filter(abs(prop_transcribed-0.5)==0.5) %>% dplyr::mutate(prop_transcribed=jitter(prop_transcribed, 0.11))) +
+    geom_dotplot(aes(group=overlap_type), binwidth=0.005, binaxis="y", stackdir="center", shape=21, color="#00000033", fill="#FFFFFF33", data=rdc2replication_df %>% dplyr::filter(abs(prop_transcribed-0.5)<0.5)) +
+    geom_text(aes(x=overlap_type, y=prop_transcribed.values, label=round(prop_transcribed.values, 2)), size=3, stat="identity", color="#FF0000", vjust=-1, hjust=-1, data=rdc2replication_df %>% dplyr::group_by(overlap_type) %>% dplyr::summarise(prop_transcribed.quantiles=1:3*0.25, prop_transcribed.values=quantile(prop_transcribed, prop_transcribed.quantiles, na.rm=T))) +
     guides(fill=guide_legend(title.position="top", title.hjust=0.5, ncol=2), color="none") +
     scale_fill_manual(values=subset_palette) +
     labs(x="", y="Transcribed proportion", fill="Overlap") +
@@ -148,38 +157,43 @@ replication_fork_length = function() {
     ggplot2::theme(axis.text.x = ggplot2::element_text(angle=45, hjust=1, vjust=1))
 
   g3 = ggplot(rdc2replication_df, aes(y=overlap_type, x=prop_transcribed, fill=overlap_type)) +
-    # ggridges::geom_density_ridges(alpha=0.5) +
-    ggridges::geom_density_ridges(aes(height=0.1*..density.., y=overlap_type, fill=overlap_type), alpha=0.5, binwidth=0.1, data=rdc2replication_df, position="identity", stat = "binline") +
+    ggridges::geom_density_ridges(aes(height=0.1*..density.., y=overlap_type, fill=overlap_type), alpha=0.5, binwidth=0.1, position="identity", stat="binline", draw_baseline=F) +
     # geom_point(aes(color=overlap_type), pch=1, position=position_jitterdodge(jitter.width=0.01, dodge.width=0.04, seed=2), fill="#000000", alpha=0.1) +
     geom_text(label="|", size=2, position=position_jitter(width=0.01, height=0, seed=2), fill="#000000", alpha=0.1) +
+    geom_text(aes(label=label), size=3, color="#FF0000", data=rdc2replication_df %>% dplyr::group_by(overlap_type) %>% dplyr::summarise(prop_transcribed=median(prop_transcribed, na.rm=T), label=paste0("\n|\n", round(prop_transcribed, 2)))) +
     scale_color_manual(values=sapply(subset_palette, function(z) "#000000")) +
     scale_fill_manual(values=subset_palette) +
+    scale_x_continuous(expand=c(0, 0), breaks=scales::pretty_breaks(n=5)) +
     labs(y="", x="Transcribed proportion", fill="Overlap") +
     guides(fill=guide_legend(title.position="top", title.hjust=0.5, ncol=2), color="none") +
     theme_paper(base_size=12) +
-    theme_x_blank() +
     theme(legend.position="bottom")
 
-
-  g4 = ggplot(rdc2replication_df, aes(x=overlap_type, y=log10(replication_length))) +
+  g4 = ggplot(rdc2replication_df, aes(x=overlap_type, y=replication_length.log10)) +
     geom_boxplot(aes(fill=overlap_type), outlier.shape = NA, outlier.alpha=0, alpha=0.5) +
-    geom_point(aes(group=overlap_type), position=position_jitter(height=0,width = 0.1, seed=2), shape=21, color="#00000033", fill="#FFFFFF33") +
+    # geom_point(aes(group=overlap_type), position=position_jitter(height=0,width = 0.1, seed=2), shape=21, color="#00000033", fill="#FFFFFF33") +
+    geom_dotplot(aes(group=overlap_type), binwidth=0.005, binaxis="y", stackdir="center", shape=21, color="#00000033", fill="#FFFFFF33", data=rdc2replication_df %>% dplyr::mutate(replication_length.log10=jitter(replication_length.log10, 10))) +
+    geom_text(aes(x=overlap_type, y=replication_length.log10.values, label=round(replication_length.log10.values, 2)), size=3, stat="identity", color="#FF0000", vjust=-1, hjust=-1, data=rdc2replication_df %>% dplyr::group_by(overlap_type) %>% dplyr::summarise(replication_length.log10.quantiles=1:3*0.25, replication_length.log10.values=quantile(replication_length.log10, replication_length.log10.quantiles, na.rm=T))) +
     scale_fill_manual(values=subset_palette) +
     labs(x="", y="Fork length, log10", fill="Overlap") +
     guides(fill=guide_legend(title.position="top", title.hjust=0.5, ncol=2), color="none") +
     theme_paper(base_size=12) +
     ggplot2::theme(axis.text.x = ggplot2::element_text(angle=45, hjust=1, vjust=1), legend.position="bottom")
-  g5 = ggplot(rdc2replication_df, aes(y=overlap_type, x=log10(replication_length))) +
-    ggridges::geom_density_ridges(aes(height=0.1*..density.., y=overlap_type, fill=overlap_type), alpha=0.5, binwidth=0.1, position="identity", stat = "binline") +
+
+  g5 = ggplot(rdc2replication_df, aes(y=overlap_type, x=replication_length.log10)) +
+    ggridges::geom_density_ridges(aes(height=0.1*..density.., y=overlap_type, fill=overlap_type), alpha=0.5, binwidth=0.1, position="identity", stat="binline", draw_baseline=F) +
     geom_text(label="|", size=2, position=position_jitter(width=0.05, height=0, seed=2), fill="#000000", alpha=0.1) +
+    geom_text(aes(label=label), size=3, color="#FF0000", data=rdc2replication_df %>% dplyr::group_by(overlap_type) %>% dplyr::summarise(replication_length.log10=median(replication_length.log10, na.rm=T), label=paste0("\n|\n", round(replication_length.log10, 2)))) +
     labs(x="Replication length, log10", y="", fill="Overlap") +
-    # scale_y_continuous(labels = scales::percent) +
+    # scale_y_continuous(labels = scales::percent) + +
+    scale_x_continuous(expand=c(0, 0), breaks=scales::pretty_breaks(n=5)) +
     scale_fill_manual(values=subset_palette) +
     guides(fill=guide_legend(title.position="top", title.hjust=0.5, ncol=2), color="none") +
     theme_paper(base_size=12) +
     theme(legend.position="bottom")
+
   gridExtra::grid.arrange(
-    gridExtra::arrangeGrob(grid::textGrob(paste0("Each point is\none of\n", nrow(rdc2replication_df)*2, " replication forks"), gp=grid::gpar(fontsize=20,font=3)), g0, nrow=3),
+    gridExtra::arrangeGrob(grid::textGrob(paste0("Each point is\none of\n", nrow(rdc2replication_df)*2, " replication forks"), gp=grid::gpar(fontsize=20,font=3)), g0, nrow=2),
     g1,g2,g3, g4,g5, ncol=2)
   dev.off()
 }
