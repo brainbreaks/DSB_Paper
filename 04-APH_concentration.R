@@ -11,7 +11,7 @@ APH_concentration = function()
   debug = F
   # group_palette = c("APH 0.2 uM 96h"="#C6DBEF", "APH 0.3 uM 96h"="#6DAACE", "APH 0.4 uM 96h"="#317BA5", "APH 0.6 uM 96h"="#335E9D", "DMSO"="#CCCCCC")
   group_palette = c("APH 0.2 uM 96h"="#C49A6C", "APH 0.3 uM 96h"="#C49A6C", "APH 0.4 uM 96h"="#C49A6C", "APH 0.6 uM 96h"="#C49A6C", "DMSO"="#CCCCCC")
-  subset_palette = c("RDC"="#00B9D3", "Gene > 100kb"="#D34B00", "Gene < 100kb"="#D39B00")
+  region_palette = c("RDC"="#00B9D3", "Gene > 100kb"="#D34B00", "Gene < 100kb"="#D39B00")
   params_concentration = macs2_params(extsize=50e3, exttype="symmetrical")
 
   #
@@ -219,14 +219,14 @@ APH_concentration = function()
     })(.)) %>%
     dplyr::ungroup() %>%
     dplyr::group_by(tlx_translocation, region_subset, region_name, region_chrom, region_start, region_end, groseq_score) %>%
-    dplyr::filter(groseq_score>=500) %>%
+    dplyr::filter(groseq_score>=500 & region_subset!="Gene < 100kb") %>%
     dplyr::ungroup()
 
   # tlx_count_df %>%
   #   dplyr::group_by(region_subset) %>%
   #   dplyr::summarise(n=length(unique(region_name)), min_length=min(region_end-region_start))
 
-  pdf("reports/04-concentration/APH_concentration_everything.pdf", width=11.69, height=8.27, paper="a4r")
+  pdf("reports/04-concentration/APH_concentration.pdf", width=11.69, height=8.27, paper="a4r")
   #
   # 1a. Number of junctions increase with concentration (same as 1b but as line with standard error)
   #
@@ -261,7 +261,7 @@ APH_concentration = function()
       geom_text(aes(x=as.numeric(tlx_concentration)+x/6, y=ymax/2+ymin/2, label=p.signif), data=tlx_count_stat, hjust=-0.5) +
       labs(y="Offtarget−normalized translocations count\ndevided by DMSO translocations count (per each RDC), log2", color="Subset") +
       scale_x_continuous(breaks=1:nlevels(tlx_count_sumdf$tlx_concentration), labels=levels(tlx_count_sumdf$tlx_concentration)) +
-      scale_color_manual(values=subset_palette) +
+      scale_color_manual(values=region_palette) +
       theme_paper(base_size=12) +
       theme_x_factors(size=10) +
       theme(legend.key.size=unit(1.2, 'cm'))

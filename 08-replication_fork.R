@@ -121,7 +121,7 @@ replication_fork_length = function() {
 
 
 
-  pdf("reports/08-replication_fork/replication_fork_collision2.pdf", width=8.27, height=11.6)
+  pdf("reports/08-replication_fork/replication_fork_collision.pdf", width=8.27, height=11.6)
   g0 = ggplot(replication_df) +
     geom_histogram(aes(y=0.1*..density.., x=replication_length), alpha=0.5, binwidth=100e3, position="identity", fill="#111111", color="#000000") +
     geom_vline(xintercept=median(replication_df$replication_length), color="#FF0000") +
@@ -194,6 +194,6 @@ replication_fork_length = function() {
 
   gridExtra::grid.arrange(
     gridExtra::arrangeGrob(grid::textGrob(paste0("Each point is\none of\n", nrow(rdc2replication_df)*2, " replication forks"), gp=grid::gpar(fontsize=20,font=3)), g0, nrow=2),
-    g1,g2,g3, g4,g5, ncol=2)
+    g1,g2,g3, g4,g5, ncol=2, padding=4)
   dev.off()
 }
