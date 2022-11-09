@@ -3,17 +3,16 @@ tlx_offtarget_libfactor = function(tlx_df, offtargets_df)
   #
   # Off-target based normalization calculation
   #
-  offtargets_best_ranges = offtargets_df %>%
+  offtargets_best_df = offtargets_df %>%
     dplyr::arrange(offtarget_strand_pvalue) %>%
     dplyr::group_by(offtarget_bait_name) %>%
     dplyr::slice(1) %>%
     dplyr::ungroup() %>%
-    dplyr::select(offtarget_bait_name, offtarget_chrom, offtarget_start, offtarget_end, offtarget_end, offtarget_strand_pvalue) %>%
-    df2ranges(offtarget_chrom, (offtarget_start+offtarget_end)/2-5e3, (offtarget_start+offtarget_end)/2+5e3)
+    dplyr::select(offtarget_bait_name, offtarget_chrom, offtarget_start, offtarget_end, offtarget_end, offtarget_strand_pvalue)
   tlx_offtargets_df = tlx_df %>%
     dplyr::filter(tlx_is_offtarget) %>%
     df2ranges(Rname, Junction, Junction) %>%
-    innerJoinByOverlaps(offtargets_best_ranges) %>%
+    innerJoinByOverlaps(offtargets_best_df %>% df2ranges(offtarget_chrom, (offtarget_start+offtarget_end)/2-5e3, (offtarget_start+offtarget_end)/2+5e3)) %>%
     dplyr::filter(offtarget_bait_name==bait_name)
   libfactors_centration_df = tlx_offtargets_df %>%
     tlx_libsizes() %>%
