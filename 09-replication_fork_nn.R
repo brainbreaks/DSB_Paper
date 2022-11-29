@@ -242,33 +242,26 @@ prepare_data = function(repliseq_df, binsize=50e3, binsmargin=6, binspersample=3
   r_pred_matrix
 }
 
-predict_model = function(model, repliseq_df, binsize=50e3, binspersample=30, binsmargin=6, fractions=16, threshold=0.5) {
+predict_model = function(model, repliseq_df, binsize=50e3, binspersample=30, binsmargin=6, fractions=16, threshold=0.9) {
   repliseq_matrix = prepare_data(repliseq_df, binsize=binsize, binsmargin=binsmargin, binspersample=binspersample, fractions=fractions)
   prediction_regions_df = as.data.frame(stringr::str_split(rownames(repliseq_matrix), pattern="[|:-]", simplify=T)) %>%
     dplyr::rename(prediction_zoomout="V1", prediction_chrom="V2", prediction_start="V3", prediction_end="V4") %>%
     dplyr::mutate(prediction_zoomout=as.numeric(prediction_zoomout), prediction_start=as.numeric(prediction_start), prediction_end=as.numeric(prediction_end))
 
-  repliseqTime_df = repliseq_df %>%
-    dplyr::group_by(repliseq_chrom, repliseq_start, repliseq_end) %>%
-    dplyr::summarise(repliseq_mean_fraction=weighted.mean(repliseq_fraction, tidyr::replace_na(repliseq_value, 0)), .groups="keep") %>%
-    dplyr::mutate(repliseq_pos=round(repliseq_start/2+repliseq_end/2))
-
   chromsizes_df = repliseq_df %>%
     dplyr::group_by(chromsize_chrom=repliseq_chrom) %>%
     dplyr::summarise(chromsize_length=max(repliseq_start))
+
 
   predictions_df = as.matrix(predict(model, repliseq_matrix)[,,,1], check.names=F) %>%
     `dimnames<-`(dimnames(repliseq_matrix)[1:2]) %>%
     reshape2::melt(value.name="tz_pred") %>%
     tidyr::separate(Var1, sep="[|:-]", into=c("tz_zoomout", "tz_chrom", "prediction_start", "prediction_end"), remove=F) %>%
-    # dplyr::filter(grepl("(1|2)\\|chr6:60000000", Var1) | grepl("(1|2)\\|chr6:48000000", Var1)) %>%
     dplyr::mutate(
       tz_zoomout=as.numeric(tz_zoomout),
       tz_step=as.numeric(gsub("^V", "", as.character(Var2))),
       prediction_start=as.numeric(prediction_start),
       prediction_end=as.numeric(prediction_end),
-      # tz_chrom=gsub(":.*", "", as.character(Var1)),
-      # prediction_start=as.numeric(gsub(".* ", "", as.character(Var1))),
       tz_start=prediction_start+(tz_step-1)*binsize*tz_zoomout,
       tz_end=tz_start+binsize*tz_zoomout
     ) %>%
@@ -276,54 +269,156 @@ predict_model = function(model, repliseq_df, binsize=50e3, binspersample=30, bin
     dplyr::select(tz_zoomout, tz_chrom, tz_start, tz_end, tz_step, tz_pred, tz_prediction_start=prediction_start) %>%
     dplyr::distinct(tz_zoomout, tz_chrom, tz_start, tz_end, .keep_all=T)
 
-  predictions_significant_df = predictions_df %>%
-    dplyr::filter(tz_pred>=threshold) %>%
+  #
+  # Select significant termination zones bins
+  #
+  predictions_raw_significant_df = predictions_df %>%
+    dplyr::filter(tz_pred>=threshold)
+
+  #
+  # Reduce termination zones predictions at each zoom level
+  #
+  predictions_reduced_significant_df = predictions_raw_significant_df %>%
+    dplyr::group_by(tz_zoomout) %>%
+    dplyr::do((function(z){
+      z %>%
+        df2ranges(tz_chrom, tz_start, tz_end) %>%
+        GenomicRanges::reduce(min.gapwidth=binsize*2+1) %>%
+        as.data.frame() %>%
+        dplyr::select(tz_reduced_chrom=seqnames, tz_reduced_start=start, tz_reduced_end=end) %>%
+        df2ranges(tz_reduced_chrom, tz_reduced_start, tz_reduced_end) %>%
+        innerJoinByOverlaps(z %>% df2ranges(tz_chrom, tz_start, tz_end)) %>%
+        dplyr::arrange(tz_reduced_chrom, tz_reduced_start, tz_reduced_end, dplyr::desc(tz_pred)) %>%
+        dplyr::distinct(tz_reduced_chrom, tz_reduced_start, tz_reduced_end, .keep_all=T) %>%
+        dplyr::select(tz_chrom=tz_reduced_chrom, tz_start=tz_reduced_start, tz_end=tz_reduced_end, tz_pred)
+    })(.))
+
+  #
+  # Reduce termination zones predictions across zoom levels
+  #
+  repliseqTime_tz_df = repliseq_df %>%
+    dplyr::arrange(repliseq_chrom, repliseq_start, repliseq_end, repliseq_value) %>%
+    dplyr::group_by(repliseq_chrom, repliseq_start, repliseq_end) %>%
+    dplyr::summarise(
+      repliseq_mean_fraction=weighted.mean(
+        repliseq_fraction,
+        tidyr::replace_na(ifelse(repliseq_fraction>repliseq_fraction[which.max(repliseq_value)]+1, 0, repliseq_value), 0)), .groups="keep") %>%
+    dplyr::ungroup()
+  # repliseqTime_tz_df %>%
+  #   dplyr::select(repliseq_chrom, repliseq_start, repliseq_end, repliseq_mean_fraction) %>%
+  #   readr::write_tsv("repliseq_tz.bedgraph", col_names=F)
+  predictions_significant_df = predictions_reduced_significant_df %>%
     df2ranges(tz_chrom, tz_start, tz_end) %>%
     GenomicRanges::reduce() %>%
     as.data.frame() %>%
-    dplyr::select(tz_chrom="seqnames", tz_start="start", tz_end="end") %>%
-    df2ranges(tz_chrom, tz_start, tz_end) %>%
-    innerJoinByOverlaps(predictions_df %>% dplyr::select(raw_zoomout=tz_zoomout, raw_chrom=tz_chrom, raw_start=tz_start, raw_end=tz_end, raw_pred=tz_pred) %>% df2ranges(raw_chrom, raw_start, raw_end)) %>%
-    dplyr::arrange(raw_zoomout, dplyr::desc(raw_pred)) %>%
-    dplyr::distinct(tz_chrom, tz_start, tz_end, .keep_all=T) %>%
-    dplyr::mutate(tz_start=raw_start, tz_end=raw_end, tz_pred=raw_pred) %>%
-    dplyr::select(dplyr::starts_with("tz_")) %>%
-    dplyr::mutate(tz_pos=round(tz_start/2+tz_end/2))
-
-
-  forks_df = dplyr::bind_cols(
-    predictions_significant_df,
-    predictions_significant_df[predictions_significant_df %>% df2ranges(tz_chrom, tz_pos, tz_pos) %>% GenomicRanges::follow(),] %>% dplyr::select(tz_left=tz_pos),
-    predictions_significant_df[predictions_significant_df %>% df2ranges(tz_chrom, tz_pos, tz_pos) %>% GenomicRanges::precede(),] %>% dplyr::select(tz_right=tz_pos)
-  ) %>%
-    # dplyr::filter(tz_chrom=="chr13", tz_start>=119850000) %>%
-    # dplyr::filter(tz_chrom=="chr4" & tz_start>=39.2e6 & tz_end<=40.6e6) %>%
-    inner_join(chromsizes_df, by=c("tz_chrom"="chromsize_chrom")) %>%
-    df2ranges(tz_chrom, ifelse(!is.na(tz_left), tz_left, 1), ifelse(!is.na(tz_right), tz_right, chromsize_length)) %>%
-    innerJoinByOverlaps(repliseqTime_df %>% df2ranges(repliseq_chrom, repliseq_start, repliseq_end)) %>%
-    dplyr::group_by(tz_chrom, tz_pos, tz_left, tz_right, tz_pred) %>%
-    dplyr::mutate(is_left=repliseq_pos<tz_pos & repliseq_pos>tz_left, is_right=repliseq_pos>tz_pos & repliseq_pos<tz_right) %>%
-    dplyr::summarise(
-      tz_iz_left=ifelse(!is.na(tz_left[1]), repliseq_pos[is_left][which.min(repliseq_mean_fraction[is_left])], 1),
-      tz_iz_right=ifelse(!is.na(tz_right[1]), repliseq_pos[is_right][which.min(repliseq_mean_fraction[is_right])], chromsize_length[1]),
-      tz_iz_left=ifelse(!is.na(tz_iz_left), tz_iz_left, tz_left[1]/2+tz_pos[1]/2),
-      tz_iz_right=ifelse(!is.na(tz_iz_right), tz_iz_right, tz_right[1]/2+tz_pos[1]/2)
-    ) %>%
-    # dplyr::mutate(tz_iz_left=round(tz_start/2+tz_left/2), tz_iz_right=round(tz_end/2+tz_right/2)) %>%
+    dplyr::select(tz_reduced_chrom="seqnames", tz_reduced_start="start", tz_reduced_end="end") %>%
+    df2ranges(tz_reduced_chrom, tz_reduced_start, tz_reduced_end) %>%
+    innerJoinByOverlaps(predictions_reduced_significant_df %>% df2ranges(tz_chrom, tz_start, tz_end)) %>%
+    dplyr::group_by(tz_reduced_chrom, tz_reduced_start, tz_reduced_end) %>%
+    dplyr::filter(all(tz_zoomout==2) | tz_zoomout==1) %>%
     dplyr::ungroup() %>%
+    df2ranges(tz_reduced_chrom, tz_reduced_start, tz_reduced_end) %>%
+    innerJoinByOverlaps(repliseqTime_tz_df %>% df2ranges(repliseq_chrom, repliseq_start, repliseq_end)) %>%
+    dplyr::group_by(tz_chrom=tz_reduced_chrom, tz_start=tz_reduced_start, tz_end=tz_reduced_end) %>%
+    dplyr::summarise(tz_pos=round(weighted.mean(tz_start/2+tz_end/2, repliseq_mean_fraction)), tz_pred=max(tz_pred)) %>%
+    dplyr::ungroup()
+
+  #
+  # Find initiation zones locations
+  #
+  fork_minsize = binsize*2
+  repliseqTime_iz_df = repliseq_df %>%
+    dplyr::arrange(repliseq_chrom, repliseq_start, repliseq_end, repliseq_value) %>%
+    dplyr::group_by(repliseq_chrom, repliseq_start, repliseq_end) %>%
+    dplyr::summarise(
+      repliseq_pos=round(repliseq_start/2+repliseq_end/2),
+      repliseq_mean_fraction=weighted.mean(repliseq_fraction, ifelse(repliseq_fraction<repliseq_fraction[which.max(repliseq_value)]+1, repliseq_value, 0), na.rm=T), .groups="keep") %>%
+    dplyr::ungroup()
+  extended_tz_df = predictions_significant_df %>%
+    dplyr::inner_join(chromsizes_df, by=c("tz_chrom"="chromsize_chrom")) %>%
+    dplyr::group_by(tz_chrom) %>%
+    dplyr::summarise(tz_pos=c(1, chromsize_length[1]+fork_minsize), tz_start=tz_pos, tz_end=tz_pos, tz_pred=1) %>%
+    dplyr::ungroup() %>%
+    dplyr::bind_rows(predictions_significant_df) %>%
+    dplyr::inner_join(chromsizes_df, by=c("tz_chrom"="chromsize_chrom")) %>%
+    dplyr::arrange(tz_chrom, tz_pos)
+  iz_df = dplyr::bind_cols(
+    extended_tz_df,
+    extended_tz_df[extended_tz_df %>% df2ranges(tz_chrom, tz_pos, tz_pos) %>% GenomicRanges::follow(),] %>%
+      dplyr::mutate(tz_prev=dplyr::case_when(tz_pos==1~-fork_minsize, T~tz_pos)) %>% dplyr::select(tz_prev)) %>%
+      dplyr::filter(!is.na(tz_prev)) %>%
+      df2ranges(tz_chrom, tz_prev, tz_pos) %>%
+      innerJoinByOverlaps(repliseqTime_iz_df %>% df2ranges(repliseq_chrom, repliseq_pos, repliseq_pos)) %>%
+      dplyr::filter(tz_pos-tz_prev<=fork_minsize*2 | tz_prev+fork_minsize<=repliseq_pos & repliseq_pos<=tz_pos-fork_minsize) %>%
+      dplyr::group_by(tz_chrom, tz_prev, tz_pos, chromsize_length) %>%
+      dplyr::summarise(iz_pos=dplyr::case_when(
+        tz_pos[1]-tz_prev[1]<=fork_minsize*2 ~ round(tz_pos/2+tz_prev/2)[1],
+        T ~ repliseq_pos[which.min(repliseq_mean_fraction)]
+      )) %>%
+    dplyr::ungroup() %>%
+    dplyr::mutate(iz_pos=dplyr::case_when(
+      tz_prev<=1~1,
+      tz_pos>=chromsize_length~chromsize_length,
+      T~iz_pos)) %>%
+    dplyr::select(iz_chrom=tz_chrom, iz_pos)
+
+  forks_neighbors_df = predictions_significant_df %>%
+    dplyr::inner_join(iz_df, by=c("tz_chrom"="iz_chrom")) %>%
+    dplyr::mutate(is_right=tz_pos-iz_pos<0)%>%
+    dplyr::arrange(is_right, tz_pos-iz_pos) %>%
+    dplyr::distinct(tz_chrom, tz_pos, .keep_all=T) %>%
+    dplyr::rename(tz_iz_left="iz_pos") %>%
+    dplyr::inner_join(iz_df, by=c("tz_chrom"="iz_chrom")) %>%
+    dplyr::mutate(is_left=(tz_pos-iz_pos)>0) %>%
+    dplyr::arrange(is_left, iz_pos-tz_pos) %>%
+    dplyr::distinct(tz_chrom, tz_pos, .keep_all=T) %>%
+    dplyr::rename(tz_iz_right="iz_pos") %>%
+    dplyr::select(tz_chrom, tz_start, tz_end, tz_pos, tz_pred, tz_iz_left, tz_iz_right)
+
+
+  # forks_neighbors_df %>%
+  #   dplyr::mutate(score=0, strand="*", name=" ", thickStart=tz_pos, thickEnd=tz_pos+1, rgb=dplyr::case_when(tz_pred>0.9~"50,0,0",tz_pred>0.8~"125,50,50",tz_pred>0.5~"255,100,100",T~"0,0,255")) %>%
+  #   dplyr::select(tz_chrom, tz_iz_left, tz_iz_right, name, score, strand, thickStart, thickEnd, rgb)%>%
+  #   readr::write_tsv("tz_iz_final3.bed", col_names=F)
+
+  #
+  # Correct fork IZ for forks that are smaller than binsize and prepare final result
+  #
+  forks_df = forks_neighbors_df %>%
     reshape2::melt(measure.vars=c("tz_iz_left", "tz_iz_right"), variable.name="fork_direction", value.name="fork_iz") %>%
-    dplyr::mutate(
+    dplyr::arrange(tz_chrom, fork_iz, tz_pos) %>%
+    dplyr::mutate(fork_iz=dplyr::case_when(
+      fork_direction=="tz_iz_left" & tz_pos-fork_iz<=fork_minsize ~ tz_pos-fork_minsize,
+      fork_direction=="tz_iz_right" & fork_iz-tz_pos<=fork_minsize ~ tz_pos+fork_minsize,
+      fork_direction=="tz_iz_left" & dplyr::lag(fork_iz-tz_pos)<=fork_minsize ~ fork_iz+fork_minsize-dplyr::lag(fork_iz-tz_pos),
+      fork_direction=="tz_iz_right" & dplyr::lead(tz_pos-fork_iz)<=fork_minsize ~ fork_iz-fork_minsize+dplyr::lead(tz_pos-fork_iz),
+      T~fork_iz
+    ),
       fork_chrom=tz_chrom,
-      fork_direction=dplyr::case_when(fork_direction=="tz_iz_left"~"right", T~"left"),
+      fork_direction=dplyr::case_when(fork_direction=="tz_iz_left"~"telomeric", T~"centromeric"),
       fork_tz=tz_pos,
       fork_start=pmin(fork_iz, fork_tz),
       fork_end=pmax(fork_tz, fork_iz),
       fork_pred=tz_pred
     ) %>%
     dplyr::select(dplyr::starts_with("fork_")) %>%
-    dplyr::arrange(fork_chrom, fork_tz, fork_start)
+    dplyr::arrange(fork_chrom, fork_start, fork_end)
 
-  list(all=predictions_df, significant=predictions_significant_df, forks=forks_df, regions=prediction_regions_df)
+  collisions_df = forks_df %>%
+    dplyr::arrange(fork_chrom, fork_start, fork_end) %>%
+    dplyr::group_by(collision_chrom=fork_chrom) %>%
+    dplyr::mutate(collision_iz_left=dplyr::lag(fork_iz), collision_iz_right=fork_iz, collision_tz=fork_tz) %>%
+    dplyr::filter(fork_direction=="centromeric") %>%
+    dplyr::ungroup() %>%
+    dplyr::select(dplyr::starts_with("collision"))
+
+  forks_df %>%
+    dplyr::mutate(score=0, strand="*", name=" ", thickStart=fork_tz, thickEnd=fork_tz+1, rgb=dplyr::case_when(fork_direction=="telomeric"~"250,50,50",T~"50,50,250")) %>%
+    dplyr::select(fork_chrom, fork_start, fork_end, name, score, strand, thickStart, thickEnd, rgb)%>%
+    readr::write_tsv("fork_final2.bed", col_names=F)
+
+
+  list(all=predictions_df, significant=predictions_significant_df, forks=forks_df, collisions=collisions_df, regions=prediction_regions_df)
 }
 
 layer_activate = function(input, name, activation="selu", dropout=0, normalize=T) {
@@ -381,10 +476,10 @@ tzNN_prepare_training_data = function()
     # Combine all datasets and calculate average fraction for each locus
     #
     repliseq_compare_df = dplyr::bind_rows(repliseq_df, repliseq1_df, repliseq2_df, repliseq3_df)
-    repliseqTime_compare_df = repliseq_compare_df %>%
-      dplyr::group_by(Run, repliseq_chrom, repliseq_start, repliseq_end) %>%
-      dplyr::summarise(repliseq_mean_fraction=weighted.mean(repliseq_fraction, tidyr::replace_na(repliseq_value, 0)), .groups="keep") %>%
-      dplyr::ungroup()
+    # repliseqTime_compare_df = repliseq_compare_df %>%
+    #   dplyr::group_by(Run, repliseq_chrom, repliseq_start, repliseq_end) %>%
+    #   dplyr::summarise(repliseq_mean_fraction=weighted.mean(repliseq_fraction, tidyr::replace_na(repliseq_value, 0)), .groups="keep") %>%
+    #   dplyr::ungroup()
 
     repliseqTime_compare_df = repliseq_compare_df %>%
       dplyr::filter(Run=="Zhao_mESC16") %>%
@@ -1104,25 +1199,27 @@ tzNN_predict = function() {
   #
   # Export predictions
   #
-  p$forks %>%
-    dplyr::mutate(
-      replication_chrom=fork_chrom,
-      replication_strand=dplyr::case_when(fork_direction=="right"~"+", T~"-"),
-      replication_direction=dplyr::case_when(fork_direction=="right"~"telomeric", T~"centromeric"),
-      replication_length=fork_end-fork_start,
-      replication_start=dplyr::case_when(fork_direction=="right"~fork_start, T~fork_end),
-      replication_end=dplyr::case_when(fork_direction=="right"~fork_end, T~fork_start)) %>%
-    dplyr::select(dplyr::matches("replication_")) %>%
-    readr::write_tsv("data/replication_reduced_subsets_predicted.tsv")
+  # p$forks %>%
+  #   dplyr::mutate(
+  #     replication_chrom=fork_chrom,
+  #     replication_strand=dplyr::case_when(fork_direction=="right"~"+", T~"-"),
+  #     replication_direction=dplyr::case_when(fork_direction=="right"~"telomeric", T~"centromeric"),
+  #     replication_length=fork_end-fork_start,
+  #     replication_start=dplyr::case_when(fork_direction=="right"~fork_start, T~fork_end),
+  #     replication_end=dplyr::case_when(fork_direction=="right"~fork_end, T~fork_start)) %>%
+  #   dplyr::select(dplyr::matches("replication_")) %>%
+  #   readr::write_tsv(paste0("data/replication_forks_", celltype, ".tsv"))
+  readr::write_tsv(p$forks, paste0("data/replication_forks_", celltype, ".tsv"))
+  readr::write_tsv(p$collisions, paste0("data/replication_collisions_", celltype, ".tsv"))
 
   #
   # Export predictions (BED)
   #
-  path_suffix = "2022-11-01"
+  path_suffix = "2022-11-12"
   fork_bed_path = paste0("reports/09-replication_fork_nn/forks-", celltype, "-", path_suffix, ".bed")
   writeLines('track itemRgb=On visibility=2 colorByStrand="255,0,0 0,0,255"', con=fork_bed_path)
   p$forks %>%
-    dplyr::mutate(fork_strand=dplyr::case_when(fork_direction=="right"~"+", fork_direction=="left"~"-"), thickStat=fork_start, thickEnd=fork_end, fork_color=dplyr::case_when(fork_direction=="right"~"#FF0000", fork_direction=="left"~"#0000FF")) %>%
+    dplyr::mutate(fork_strand=dplyr::case_when(fork_direction=="telomeric"~"+", fork_direction=="centromeric"~"-"), thickStat=fork_start, thickEnd=fork_end, fork_color=dplyr::case_when(fork_direction=="telomeric"~"255,0,0", fork_direction=="centromeric"~"0,0,255")) %>%
     dplyr::select(fork_chrom, fork_start, fork_end, fork_direction, fork_pred, fork_strand, thickStat, thickEnd, fork_color) %>%
     readr::write_tsv(fork_bed_path, append=T, col_names=F)
   p$significant %>%
@@ -1139,8 +1236,6 @@ tzNN_predict = function() {
         dplyr::select(tz_chrom, tz_start, tz_end, tz_pred) %>%
         readr::write_tsv(paste0("reports/09-replication_fork_nn/predicted_tz_", celltype, "-", path_suffix, "-zoomout", z$tz_zoomout[1], ".bedgraph"), col_names=F)
     })(.))
-
-
 
 
   #

@@ -1,9 +1,9 @@
+Sys.setenv(TZ='GMT')
 library(readr)
 library(dplyr)
 library(ggplot2)
 library(cowplot)
 library(stringr)
-# library(plyranges)
 devtools::load_all("breaktools/")
 
 ggplot_rdc_breaks = function(rdc2rdc_df, rdc2tlxcov_df, rdc2tlx_df, rdc2genes_df, rdc2repliseq_df, rdc2replication_df=NULL, rdc2offtargets_df=NULL, rdc_filter=".*")
@@ -22,12 +22,9 @@ ggplot_rdc_breaks = function(rdc2rdc_df, rdc2tlxcov_df, rdc2tlx_df, rdc2genes_df
   if(!is.null(rdc2replication_df)) {
     rdc2replication_dff = rdc2replication_df %>% dplyr::filter(grepl(rdc_filter, rdc_name))
     if(nrow(rdc2replication_dff)>0) {
-      # pdf("reports/x.pdf", width=6*8.27, height=6*11.69, paper="a4")
       g = g +
-        geom_segment(aes(x=replication_start, xend=replication_end, y=-19+y, yend=-19+y, color=replication_strand), size=0.1, arrow=grid::arrow(length=unit(1,"pt")), data=rdc2replication_dff %>% dplyr::mutate(y=ifelse(replication_strand=="+", 0.2, -0.2))) +
-        geom_vline(aes(xintercept=replication_start), size=0.1, alpha=0.1, data=rdc2replication_dff) +
-        geom_vline(aes(xintercept=replication_end), size=0.1, alpha=0.1, data=rdc2replication_dff)
-      # dev.off()
+        geom_segment(aes(x=fork_iz, xend=fork_tz, y=-19+y, yend=-19+y, color=fork_strand), size=0.1, arrow=grid::arrow(length=unit(1,"pt")), data=rdc2replication_dff %>% dplyr::mutate(fork_strand=ifelse(fork_direction=="telomeric", "+", "-"), y=ifelse(fork_direction=="telomeric", 0.2, -0.2)))
+
     }
   }
 
@@ -39,7 +36,6 @@ ggplot_rdc_breaks = function(rdc2rdc_df, rdc2tlxcov_df, rdc2tlx_df, rdc2genes_df
     geom_step(aes(x=tlxcov_start, y=tlxcov_pileup*15, group=tlx_strand), data=rdc2tlxcov_dff, size=0.1, alpha=0.5, color=ifelse(rdc2tlxcov_dff$tlx_strand=="+", "#E31A1C", "#1F78B4")) +
     geom_segment(aes(x=Junction, xend=Junction, y=-1.2, yend=tlx_strand_sign-1.2, color=tlx_strand), data=rdc2tlx_dff %>% dplyr::mutate(tlx_strand_sign=ifelse(tlx_strand=="+", 1, -1)), size=0.1, alpha=0.6)
 
-  g + facet_wrap(~rdc_name, scales="free_x")
   if(!is.null(rdc2offtargets_df)) {
     rdc2offtargets_dff = rdc2offtargets_df %>% dplyr::filter(grepl(rdc_filter, rdc_name))
     if(nrow(rdc2offtargets_dff)>0) {
@@ -60,7 +56,7 @@ ggplot_rdc_breaks = function(rdc2rdc_df, rdc2tlxcov_df, rdc2tlx_df, rdc2genes_df
     theme(legend.position="bottom", axis.text.x=element_text(angle=45, hjust=1)) +
     scale_fill_manual(values=c("-"="#A6CEE3", "+"="#FB9A99", "cluster"="#00FF00")) +
     scale_color_manual(values=c("-"="#E31A1C", "+"="#1F78B4", "cluster"="#00FF00")) +
-    scale_y_continuous(breaks=c(-3, seq(1, 16, 5), 24.5, 32)-19, labels=c("gene", seq(1, 16, 5), 0.5, 1)) +
+    scale_y_continuous(breaks=c(-3, c(1, 16), 27.5)-19, labels=c("gene", "early", "late", "density")) +
     scale_x_continuous(labels=scales::label_number(accuracy=0.1, scale=1e-6, suffix="Mb")) +
     labs(x="", y="")
   g
@@ -68,6 +64,7 @@ ggplot_rdc_breaks = function(rdc2rdc_df, rdc2tlxcov_df, rdc2tlx_df, rdc2genes_df
 
 multiomics_examples = function()
 {
+  dir.create("reports/07-multiomic_examples", recursive=T, showWarnings=F)
   params = macs2_params(extsize=1e5, exttype="symmetrical", llocal=1e7, minqvalue=0.01, effective_size=1.87e9, maxgap=2e5, minlen=1e5)
 
   #
@@ -84,10 +81,10 @@ multiomics_examples = function()
   # Load RDC
   #
   rdc_df = readr::read_tsv("data/rdc.tsv") %>%
-    dplyr::filter(tlx_group=="APH-Inter" & rdc_subset=="Wei+DKFZ" & rdc_is_significant) %>%
-    dplyr::mutate(rdc_region_start=rdc_extended_start-1e6, rdc_region_end=rdc_extended_start+1e6) %>%
+    dplyr::filter(tlx_group %in% c("APH-Inter", "APH-Intra") & rdc_subset=="Wei+DKFZ" & rdc_is_significant) %>%
+    dplyr::mutate(rdc_region_start=rdc_extended_start-1e6, rdc_region_end=rdc_extended_end+1e6, rdc_tlx_group=tlx_group) %>%
     dplyr::select(dplyr::matches("rdc_")) %>%
-    dplyr::mutate(rdc_no=as.numeric(gsub("RDC_", "", rdc_name)), rdc_name_display=paste0(rdc_chrom, ":", rdc_name))
+    dplyr::mutate(rdc_no=as.numeric(gsub("RDC-chr[^-]+-", "", rdc_name)), rdc_name_display=paste0(rdc_chrom, ":", rdc_name))
 
   #
   # Load TLX
@@ -98,7 +95,7 @@ multiomics_examples = function()
       grepl("concentration", experiment) & concentration==0.4 |
       grepl("Wei", experiment)))
 
-  tlx_all_df = tlx_read_many(samples_df, threads=30) %>%
+  tlx_all_df = tlx_read_many(samples_df, threads=16) %>%
     tlx_extract_bait(bait_size=19, bait_region=12e6) %>%
     tlx_mark_dust() %>%
     tlx_mark_offtargets(offtargets_df, offtarget_region=1e5, bait_region=1e4) %>%
@@ -116,13 +113,7 @@ multiomics_examples = function()
   tlx_clean_df = tlx_all_df %>%
     tlx_remove_rand_chromosomes() %>%
     dplyr::filter(tlx_copynumber==1 & !tlx_duplicated) %>%
-    dplyr::group_by(tlx_sample) %>%
-    # dplyr::filter(dplyr::n()>5000) %>%
-    dplyr::ungroup() %>%
     dplyr::filter(!tlx_control & !tlx_is_offtarget)
-    # dplyr::group_by(Rname) %>%
-    # dplyr::mutate(dbscan_cluster=dbscan::dbscan(matrix(Junction), minPts=20, eps=100)$cluster) %>%
-    # dplyr::mutate(tlx_strand=ifelse(dbscan_cluster==0, tlx_strand, "cluster"))
 
   #
   # Calculate TLX coverage
@@ -131,7 +122,6 @@ multiomics_examples = function()
     tlx_coverage(group="group", exttype=params$exttype, extsize=params$extsize, libfactors_df=libfactors_df, ignore.strand=F)
   tlxcov_clean_all_df = tlx_clean_df %>%
     tlx_coverage(group="group", exttype=params$exttype, extsize=params$extsize, libfactors_df=libfactors_df, ignore.strand=T)
-  #macs_clean = tlxcov_macs2(tlxcov_clean_all_df, group="group", params)
 
   #
   # Write TLX coverage
@@ -149,10 +139,11 @@ multiomics_examples = function()
     dplyr::select(-rdc_extended_start, -rdc_extended_end) %>%
     df2ranges(rdc_region_chrom, rdc_region_start, rdc_region_end)
   rdc_narrow_ranges = rdc_df %>%
-    dplyr::select(rdc_chrom, rdc_extended_start, rdc_extended_end) %>%
+    dplyr::select(rdc_tlx_group, rdc_chrom, rdc_extended_start, rdc_extended_end) %>%
     df2ranges(rdc_chrom, rdc_extended_start, rdc_extended_end)
   rdc2rdc_df = innerJoinByOverlaps(rdc_wide_ranges, rdc_narrow_ranges) %>%
-    dplyr::group_by(rdc_name, rdc_name_display, rdc_no) %>%
+    filter(rdc_tlx_group.x==rdc_tlx_group.y) %>%
+    dplyr::group_by(rdc_tlx_group=rdc_tlx_group.x, rdc_name, rdc_name_display, rdc_no) %>%
     dplyr::mutate(rdc_region_start=min(c(rdc_start, rdc_region_start)), rdc_region_end=max(c(rdc_region_end, rdc_end))) %>%
     dplyr::ungroup()
 
@@ -160,7 +151,7 @@ multiomics_examples = function()
     df2ranges(tlxcov_chrom, tlxcov_start, tlxcov_end) %>%
     innerJoinByOverlaps(rdc_df %>% df2ranges(rdc_chrom, rdc_region_start, rdc_region_end)) %>%
     dplyr::filter(tlxcov_start>=rdc_region_start & tlxcov_end<=rdc_region_end) %>%
-    dplyr::group_by(tlx_group, rdc_name, rdc_name_display, rdc_no) %>%
+    dplyr::group_by(rdc_tlx_group, tlx_group, rdc_name, rdc_name_display, rdc_no) %>%
     dplyr::mutate(tlxcov_pileup=tlxcov_pileup/max(tlxcov_pileup[tlx_strand %in% c("+", "-")])) %>%
     dplyr::mutate(tlxcov_pileup=pmin(tlxcov_pileup, 1)) %>%
     dplyr::ungroup()
@@ -186,20 +177,26 @@ multiomics_examples = function()
     dplyr::filter(!tlx_control)
 
   # Load Repli-SEQ data
-  replication_df = readr::read_tsv("data/replication_reduced_subsets.tsv")
-  rdc2replication_df = replication_df %>%
-    df2ranges(replication_chrom, pmin(replication_start, replication_end), pmax(replication_start, replication_end)) %>%
+  #replication_df = readr::read_tsv("data/replication_reduced_subsets.tsv")
+  forks_df = readr::read_tsv("data/replication_forks_NPC.tsv") %>%
+    dplyr::mutate(fork_strand=ifelse(fork_direction=="telomeric", "+", "-"))
+
+
+  rdc2replication_df = forks_df %>%
+    df2ranges(fork_chrom, fork_start, fork_end) %>%
     innerJoinByOverlaps(rdc_df %>% df2ranges(rdc_chrom, rdc_region_start, rdc_region_end)) %>%
     dplyr::mutate(
-      replication_start=dplyr::case_when(replication_end>replication_start~pmax(rdc_region_start, replication_start), T~pmin(rdc_region_end, replication_start)),
-      replication_end=dplyr::case_when(replication_end>replication_start~pmin(rdc_region_end, replication_end), T~pmax(rdc_region_start, replication_end)))
+      fork_start=pmax(fork_start, rdc_region_start),
+      fork_end=pmin(fork_end, rdc_region_end),
+      fork_iz=ifelse(fork_direction=="telomeric", fork_start, fork_end),
+      fork_tz=ifelse(fork_direction=="telomeric", fork_end, fork_start))
 
-  repliseq_df = readr::read_tsv("~/Workspace/Datasets/zhao_bmc_repliseq_2020/preprocessed/repliseq_NPC.tsv")
+  repliseq_df = readr::read_tsv("data/repliseq_zhao_bmc2020/repliseq_NPC.tsv")
   rdc2repliseq_df = rdc_df %>%
     df2ranges(rdc_chrom, rdc_region_start, rdc_region_end) %>%
     innerJoinByOverlaps(repliseq_df %>% df2ranges(repliseq_chrom, repliseq_start, repliseq_end))  %>%
     dplyr::select(-dplyr::matches("_ranges\\.")) %>%
-    dplyr::group_by(rdc_name, rdc_name_display, repliseq_start) %>%
+    dplyr::group_by(rdc_tlx_group, rdc_name, rdc_name_display, repliseq_start) %>%
     dplyr::mutate(repliseq_value=repliseq_value-min(repliseq_value)+0.01) %>%
     dplyr::mutate(repliseq_value=repliseq_value^1.5) %>%
     dplyr::mutate(repliseq_value=repliseq_value/quantile(repliseq_value, 0.95, na.rm=T), repliseq_value=pmin(repliseq_value, 1)) %>%
@@ -210,30 +207,28 @@ multiomics_examples = function()
   #
   rdc_samples_df = rdc2tlxcov_clean_strand_df %>%
     dplyr::arrange(rdc_no) %>%
-    # dplyr::filter(grepl("MACS_002", rdc_cluster)) %>%
-    dplyr::group_by(rdc_name) %>%
-    dplyr::summarize(rdc_length=max(tlxcov_end)-min(tlxcov_start)) %>%
+    dplyr::group_by(rdc_tlx_group, rdc_name) %>%
+    dplyr::summarize(rdc_length=max(tlxcov_end)-min(tlxcov_start), .groups="keep") %>%
     dplyr::ungroup() %>%
-    # dplyr::left_join(readr::read_tsv("data/rdc_subsets.tsv"), by="rdc_name") %>%
     dplyr::mutate(rdc_no=match(rdc_name, unique(rdc_name)), rdc_repliseq_type=paste0("Other ", cut(1:dplyr::n(), 8))) %>%
-    dplyr::select(rdc_name, rdc_repliseq_type, rdc_length) %>%
-    dplyr::group_by(rdc_repliseq_type) %>%
-    dplyr::summarize(rdc_filter=paste(rdc_name, collapse="|"), rdc_examples_n=dplyr::n(), rdc_examples_length=sum(rdc_length)) %>%
+    dplyr::select(rdc_tlx_group, rdc_name, rdc_repliseq_type, rdc_length) %>%
+    dplyr::group_by(rdc_tlx_group, rdc_repliseq_type) %>%
+    dplyr::summarize(rdc_filter=paste(gsub("\\.", "\\\\\\.", rdc_name), collapse="|"), rdc_examples_n=dplyr::n(), rdc_examples_length=sum(rdc_length), .groups="keep") %>%
     dplyr::mutate(rdc_examples_missing=max(rdc_examples_n) - rdc_examples_n, rdc_examples_mislength=max(rdc_examples_length) - rdc_examples_length)
 
-  pdf("reports/multiomics_samples.pdf", width=5*8.27, height=2*11.6)
-    for(tg in sort(unique(rdc2tlx_df$tlx_group))) {
-      plist = lapply(split(rdc_samples_df, f=rdc_samples_df$rdc_repliseq_type), FUN=function(df) {
+  pdf("reports/07-multiomic_examples/multiomics_examples-new.pdf", width=5*8.27, height=2*11.6)
+    for(tg in rdc2tlx_df %>% dplyr::distinct(rdc_tlx_group, tlx_group) %>% split(f=1:nrow(.))) {
+      rdc_samples_df.tg = rdc_samples_df %>% dplyr::filter(rdc_tlx_group==tg$rdc_tlx_group)
+      plist = lapply(split(rdc_samples_df.tg, f=rdc_samples_df.tg$rdc_repliseq_type), FUN=function(df) {
         dff<<-df
-        # df = rdc_samples_df %>% dplyr::slice(2)
         ggplot_rdc_breaks(
-          rdc2rdc_df=rdc2rdc_df,
-          rdc2tlxcov_df=rdc2tlxcov_clean_strand_df %>% dplyr::filter(tlx_group==tg),
-          rdc2tlx_df=rdc2tlx_df %>% dplyr::filter(tlx_group==tg),
-          rdc2genes_df=rdc2genes_df,
-          rdc2repliseq_df=rdc2repliseq_df,
+          rdc2rdc_df=rdc2rdc_df %>% dplyr::filter(rdc_tlx_group==tg$rdc_tlx_group),
+          rdc2tlxcov_df=rdc2tlxcov_clean_strand_df %>% dplyr::inner_join(tg, by=c("rdc_tlx_group","tlx_group")),
+          rdc2tlx_df=rdc2tlx_df %>% dplyr::inner_join(tg, by=c("rdc_tlx_group", "tlx_group")),
+          rdc2genes_df=rdc2genes_df %>% dplyr::filter(rdc_tlx_group==tg$rdc_tlx_group),
+          rdc2repliseq_df=rdc2repliseq_df %>% dplyr::filter(rdc_tlx_group==tg$rdc_tlx_group),
           # rdc2offtargets_df=rdc2offtargets_df,
-          rdc2replication_df=rdc2replication_df,
+          rdc2replication_df=rdc2replication_df %>% dplyr::filter(rdc_tlx_group==tg$rdc_tlx_group),
           rdc_filter=df$rdc_filter) +
             ggtitle(df$rdc_repliseq_type) +
             geom_segment(aes(x=0, xend=rdc_examples_mislength, y=-0.2, yend=-0.2), data=df %>% dplyr::mutate(rdc_name="X", rdc_name_display="X"), size=1, color="#FFFFFF") +
@@ -242,7 +237,7 @@ multiomics_examples = function()
             ggpubr::theme_pubclean(base_size=6) +
             theme(axis.text.x=element_text(angle=45, hjust=1), axis.text=element_text(size=8))
       })
-      g_title = cowplot::ggdraw() + draw_label(paste0(tg, "-chromosomal translocations examples"), fontface='bold', x=0, hjust=0)
+      g_title = cowplot::ggdraw() + draw_label(paste0(tg$tlx_group, "-chromosomal translocations examples (RDC source: ", tg$rdc_tlx_group, ")"), fontface='bold', x=0, hjust=0)
       g_legend = get_legend(plist[[1]] + theme(legend.box.margin=margin(0, 0, 0, 12)))
       g_plots = cowplot::plot_grid(plotlist=lapply(plist, function(p) p+theme(legend.position="none")), align="v", axis="t", ncol=1)
       print(cowplot::plot_grid(g_title, g_plots, g_legend, ncol=1, rel_heights=c(1, 19, 1)))
