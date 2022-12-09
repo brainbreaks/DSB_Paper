@@ -1,8 +1,8 @@
 sample	experiment	run	celltype	organism	path	bait_chrom	bait_name	treatment	group	group_short	group_i	control	alleles	concentration	description
 PW090	APH concentration	B400_016	NPC	mouse	TLX/APH_concentration/PW090_B400_016_result.tlx	chr6	Chr6_70Mb	DMSO	DMSO	DMSO	1	T	2	0	ESC-NPC;NXP010; DMSO
-PW091	APH concentration	B400_016	NPC	mouse	TLX/APH_concentration/PW091_B400_016_result.tlx	chr6	Chr6_70Mb	APH 0.4 uM 96h	APH 0.4 uM 96h	APH 0.4	1	F	2	0.4	ESC-NPC;NXP010; Aphidicolin 0.4 uM 96 hr
-PW092	APH concentration	B400_016	NPC	mouse	TLX/APH_concentration/PW092_B400_016_result.tlx	chr6	Chr6_70Mb	APH 0.2 uM 96h	APH 0.2 uM 96h	APH 0.2	1	F	2	0.2	ESC-NPC;NXP010; Aphidicolin 0.2 uM 96 hr
-PW093	APH concentration	B400_016	NPC	mouse	TLX/APH_concentration/PW093_B400_016_result.tlx	chr6	Chr6_70Mb	APH 0.6 uM 96h	APH 0.6 uM 96h	APH 0.6	1	F	2	0.6	ESC-NPC;NXP010; Aphidicolin 0.6 uM 96 hr
+PW091	APH concentration	B400_016	NPC	mouse	TLX/APH_concentration/PW091_B400_016_result.tlx	chr6	Chr6_70Mb	APH 0.4 uM 96h	APH 0.4 uM 96h	APH 0.4	1	F	2	0.4	ESC-NPC;NXP010; Aphidicolin 0.4 uM 96h
+PW092	APH concentration	B400_016	NPC	mouse	TLX/APH_concentration/PW092_B400_016_result.tlx	chr6	Chr6_70Mb	APH 0.2 uM 96h	APH 0.2 uM 96h	APH 0.2	1	F	2	0.2	ESC-NPC;NXP010; Aphidicolin 0.2 uM 96h
+PW093	APH concentration	B400_016	NPC	mouse	TLX/APH_concentration/PW093_B400_016_result.tlx	chr6	Chr6_70Mb	APH 0.6 uM 96h	APH 0.6 uM 96h	APH 0.6	1	F	2	0.6	ESC-NPC;NXP010; Aphidicolin 0.6 uM 96h
 PW094	Hydroxyurea	B400_016	NPC	mouse	TLX/PW094_B400_016_result.tlx	chr6	Chr6_70Mb	DMSO	HU-chr6	HU-chr6	3	T	2	0	ESC-NPC;NXP010; DMSO
 PW095	Hydroxyurea	B400_016	NPC	mouse	TLX/PW095_B400_016_result.tlx	chr6	Chr6_70Mb	HU 2 uM 6h	HU-chr6	HU-chr6	3	F	2	2	ESC-NPC;NXP010; Hydroxyurea 2 uM 6hr
 PW096	Hydroxyurea	B400_016	NPC	mouse	TLX/PW096_B400_016_result.tlx	chr6	Chr6_70Mb	DMSO	HU-chr6	HU-chr6	4	T	2	0	ESC-NPC;NXP010; DMSO
@@ -13,88 +13,88 @@ PW100	Chr8 and offtarget baits	B400_016	NPC	mouse	TLX/PW100_B400_016_result.tlx	
 PW101	Chr8 and offtarget baits	B400_016	NPC	mouse	TLX/PW101_B400_016_result.tlx	chr6	Chr8_61Mb-Chr6_32Mb	No treatment	Chr8 Chr6-OT bait	Chr8 Chr6-OT bait	1	T	2	0	ESC-NPC;NXP010; No treatment
 PW102	Chr8 and offtarget baits	B400_016	NPC	mouse	TLX/PW102_B400_016_result.tlx	chr14	Chr8_61Mb-Chr14_22Mb	No treatment	Chr8 Chr14-OT bait	Chr8 Chr14-OT bait	1	T	2	0	ESC-NPC;NXP010; No treatment
 LC037	Auts2 isoforms (cDNA)	B400_016	ESC	mouse	TLX/LC037_B400_016_result.tlx	chr5	Chr5_101Mb	DMSO	APH 0.2 uM 96h	Auts2-exon2	1	T	2	0.2	ESC;NXP010; Bait before Auts2 exon 2 DMSO
-LC038	Auts2 isoforms (cDNA)	B400_016	ESC	mouse	TLX/LC038_B400_016_result.tlx	chr5	Chr5_101Mb	APH 0.2 uM 96h	APH 0.2 uM 96h	Auts2-exon2	1	F	2	0.2	ESC;NXP010; Bait before Auts2 exon 2; Aphidicolin 0.2 uM 96 hr
+LC038	Auts2 isoforms (cDNA)	B400_016	ESC	mouse	TLX/LC038_B400_016_result.tlx	chr5	Chr5_101Mb	APH 0.2 uM 96h	APH 0.2 uM 96h	Auts2-exon2	1	F	2	0.2	ESC;NXP010; Bait before Auts2 exon 2; Aphidicolin 0.2 uM 96h
 LC039	Auts2 isoforms (cDNA)	B400_016	ESC	mouse	TLX/LC039_B400_016_result.tlx	chr5	Chr5_101Mb	DMSO	APH 0.2 uM 96h	Auts2-exon3	1	T	2	0.2	ESC;NXP010; Bait before Auts2 exon 3 DMSO
-LC040	Auts2 isoforms (cDNA)	B400_016	ESC	mouse	TLX/LC040_B400_016_result.tlx	chr5	Chr5_101Mb	APH 0.2 uM 96h	APH 0.2 uM 96h	Auts2-exon3	1	F	2	0.2	ESC;NXP010; Bait before Auts2 exon 3; Aphidicolin 0.2 uM 96 hr
+LC040	Auts2 isoforms (cDNA)	B400_016	ESC	mouse	TLX/LC040_B400_016_result.tlx	chr5	Chr5_101Mb	APH 0.2 uM 96h	APH 0.2 uM 96h	Auts2-exon3	1	F	2	0.2	ESC;NXP010; Bait before Auts2 exon 3; Aphidicolin 0.2 uM 96h
 JF022	Aphidicolin+Nocodazole	B400_011	NPC	mouse	TLX/JF022_B400_011_result.tlx	chr6	Chr6_70Mb	APH 48h + NOC 30h	APH 48h + NOC 30h		1	F	2		ESC-NPC;NXP010; aphidicolin 48hrs + Noco 30hrs
 JF023	Aphidicolin+Nocodazole	B400_011	NPC	mouse	TLX/JF023_B400_011_result.tlx	chr6	Chr6_70Mb	APH 48h + resealse 30h	APH 48h + resealse 30h		1	F	2		ESC-NPC;NXP010; aphidicolin 48hrs + resealse 30hrs
 JF024	Aphidicolin+Nocodazole	B400_011	NPC	mouse	TLX/JF024_B400_011_result.tlx	chr6	Chr6_70Mb	DMSO	DMSO		1	T	2		ESC-NPC;NXP010; DMSO 78 hrs
 JF021	Aphidicolin+Nocodazole	B400_011	NPC	mouse	TLX/JF021_B400_011_result.tlx	chr6	Chr6_70Mb	NOC 30h	NOC 30h		1	F	2		ESC-NPC;NXP010; Nocodazole 30hrs
-LC0022	Csmd1 promoter/enhancer	B400_005	NPC	mouse	TLX/LC0022_B400_005_result.tlx	chr8	Chr8_61Mb	APH 0.5 uM 96h	Allelic deletion (73/16)	fndr_73-16	1	F	1	0.5	ESC-NPC;Nxp010;73/16; Aphidicolin 0.5 uM 96 hr
+LC0022	Csmd1 promoter/enhancer	B400_005	NPC	mouse	TLX/LC0022_B400_005_result.tlx	chr8	Chr8_61Mb	APH 0.5 uM 96h	Allelic deletion (73/16)	fndr_73-16	1	F	1	0.5	ESC-NPC;Nxp010;73/16; Aphidicolin 0.5 uM 96h
 LC0023	Csmd1 promoter/enhancer	B400_005	NPC	mouse	TLX/LC0023_B400_005_result.tlx	chr8	Chr8_61Mb	DMSO	Allelic deletion (73/16)	fndr_73-16	1	T	1	0	ESC-NPC;Nxp010;73/16; DMSO
 PW061	Csmd1 promoter/enhancer	B400_008	NPC	mouse	TLX/PW061_B400_008_result.tlx	chr8	Chr8_61Mb	DMSO	Allelic deletion (73/16)	fndr_73-16	2	T	1	0	ESC-NPC;NXP010;73/16; DMSO
-PW062	Csmd1 promoter/enhancer	B400_007	NPC	mouse	TLX/PW062_B400_007_result.tlx	chr8	Chr8_61Mb	APH 0.5 uM 96h	Allelic deletion (73/16)	fndr_73-16	2	F	1	0.5	ESC-NPC;NXP010;73/16; Aphidicolin 0.5 uM 96 hr
+PW062	Csmd1 promoter/enhancer	B400_007	NPC	mouse	TLX/PW062_B400_007_result.tlx	chr8	Chr8_61Mb	APH 0.5 uM 96h	Allelic deletion (73/16)	fndr_73-16	2	F	1	0.5	ESC-NPC;NXP010;73/16; Aphidicolin 0.5 uM 96h
 VI026	Csmd1 promoter/enhancer	B400_006	NPC	mouse	TLX/VI026_B400_006_result.tlx	chr8	Chr8_61Mb	DMSO	Allelic deletion (73/16)	fndr_73-16	4	T	1	0	ESC-NPC;NXP010;73/16; DMSO
-VI027	Csmd1 promoter/enhancer	B400_006	NPC	mouse	TLX/VI027_B400_006_result.tlx	chr8	Chr8_61Mb	APH 0.5 uM 96h	Allelic deletion (73/16)	fndr_73-16	4	F	1	0.5	ESC-NPC;NXP010;73/16; Aphidicolin 0.5 uM 96 hr
+VI027	Csmd1 promoter/enhancer	B400_006	NPC	mouse	TLX/VI027_B400_006_result.tlx	chr8	Chr8_61Mb	APH 0.5 uM 96h	Allelic deletion (73/16)	fndr_73-16	4	F	1	0.5	ESC-NPC;NXP010;73/16; Aphidicolin 0.5 uM 96h
 VI041	Csmd1 promoter/enhancer	B400_007	NPC	mouse	TLX/VI041_B400_007_result.tlx	chr8	Chr8_61Mb	DMSO	Allelic deletion (73/16)	fndr_73-16	5	T	1	0	ESC-NPC;NXP010;73/16; DMSO
-VI042	Csmd1 promoter/enhancer	B400_007	NPC	mouse	TLX/VI042_B400_007_result.tlx	chr8	Chr8_61Mb	APH 0.5 uM 96h	Allelic deletion (73/16)	fndr_73-16	5	F	1	0.5	ESC-NPC;NXP010;73/16; Aphidicolin 0.5 uM 96 hr
+VI042	Csmd1 promoter/enhancer	B400_007	NPC	mouse	TLX/VI042_B400_007_result.tlx	chr8	Chr8_61Mb	APH 0.5 uM 96h	Allelic deletion (73/16)	fndr_73-16	5	F	1	0.5	ESC-NPC;NXP010;73/16; Aphidicolin 0.5 uM 96h
 LC029	Csmd1 promoter/enhancer	B400_007	NPC	mouse	TLX/LC029_B400_007_result.tlx	chr8	Chr8_61Mb	DMSO	Allelic+promoter deletion (13/12)	fndr-prom_13-12	1	T	1	0	ESC-NPC;NXP010;13/12; DMSO
-VI032	Csmd1 promoter/enhancer	B400_008	NPC	mouse	TLX/VI032_B400_008_result.tlx	chr8	Chr8_61Mb	APH 0.5 uM 96h	Allelic+promoter deletion (13/12)	fndr-prom_13-12	1	F	1	0.5	ESC-NPC;NXP010;13/12; Aphidicolin 0.5 uM 96 hr
+VI032	Csmd1 promoter/enhancer	B400_008	NPC	mouse	TLX/VI032_B400_008_result.tlx	chr8	Chr8_61Mb	APH 0.5 uM 96h	Allelic+promoter deletion (13/12)	fndr-prom_13-12	1	F	1	0.5	ESC-NPC;NXP010;13/12; Aphidicolin 0.5 uM 96h
 LC028	Csmd1 promoter/enhancer	B400_007	NPC	mouse	TLX/LC028_B400_007_result.tlx	chr8	Chr8_61Mb	DMSO	Allelic+promoter deletion (37/8)	fndr-prom_37-8	1	T	1	0	ESC-NPC;NXP010;37/8; DMSO
-VI031	Csmd1 promoter/enhancer	B400_006	NPC	mouse	TLX/VI031_B400_006_result.tlx	chr8	Chr8_61Mb	APH 0.5 uM 96h	Allelic+promoter deletion (37/8)	fndr-prom_37-8	1	F	1	0.5	ESC-NPC;NXP010;37/8; Aphidicolin 0.5 uM 96 hr
-LC0020	Csmd1 promoter/enhancer	B400_005	NPC	mouse	TLX/LC0020_B400_005_result.tlx	chr8	Chr8_61Mb	APH 0.5 uM 96h	Perental cell (NXP010)	NXP010	1	F	2	0.5	ESC-NPC;Nxp010; Aphidicolin 0.5 uM 96 hr
+VI031	Csmd1 promoter/enhancer	B400_006	NPC	mouse	TLX/VI031_B400_006_result.tlx	chr8	Chr8_61Mb	APH 0.5 uM 96h	Allelic+promoter deletion (37/8)	fndr-prom_37-8	1	F	1	0.5	ESC-NPC;NXP010;37/8; Aphidicolin 0.5 uM 96h
+LC0020	Csmd1 promoter/enhancer	B400_005	NPC	mouse	TLX/LC0020_B400_005_result.tlx	chr8	Chr8_61Mb	APH 0.5 uM 96h	Perental cell (NXP010)	NXP010	1	F	2	0.5	ESC-NPC;Nxp010; Aphidicolin 0.5 uM 96h
 LC0021	Csmd1 promoter/enhancer	B400_005	NPC	mouse	TLX/LC0021_B400_005_result.tlx	chr8	Chr8_61Mb	DMSO	Perental cell (NXP010)	NXP010	1	T	2	0	ESC-NPC;Nxp010; DMSO
 LC030	Csmd1 promoter/enhancer	B400_007	NPC	mouse	TLX/LC030_B400_007_result.tlx	chr8	Chr8_61Mb	DMSO	Perental cell (NXP010)	NXP010	2	T	2	0	ESC-NPC;NXP010; DMSO
 PW059	Csmd1 promoter/enhancer	B400_007	NPC	mouse	TLX/PW059_B400_007_result.tlx	chr8	Chr8_61Mb	DMSO	Perental cell (NXP010)	NXP010	3	T	2	0	ESC-NPC;NXP010; DMSO
-PW060	Csmd1 promoter/enhancer	B400_007	NPC	mouse	TLX/PW060_B400_007_result.tlx	chr8	Chr8_61Mb	APH 0.5 uM 96h	Perental cell (NXP010)	NXP010	2	F	2	0.5	ESC-NPC;NXP010; Aphidicolin 0.5 uM 96 hr
+PW060	Csmd1 promoter/enhancer	B400_007	NPC	mouse	TLX/PW060_B400_007_result.tlx	chr8	Chr8_61Mb	APH 0.5 uM 96h	Perental cell (NXP010)	NXP010	2	F	2	0.5	ESC-NPC;NXP010; Aphidicolin 0.5 uM 96h
 VI024	Csmd1 promoter/enhancer	B400_006	NPC	mouse	TLX/VI024_B400_006_result.tlx	chr8	Chr8_61Mb	DMSO	Perental cell (NXP010)	NXP010	5	T	2	0	ESC-NPC;NXP010; DMSO
-VI030	Csmd1 promoter/enhancer	B400_006	NPC	mouse	TLX/VI030_B400_006_result.tlx	chr8	Chr8_61Mb	APH 0.5 uM 96h	Perental cell (NXP010)	NXP010	4	F	2	0.5	ESC-NPC;NXP010; Aphidicolin 0.5 uM 96 hr
+VI030	Csmd1 promoter/enhancer	B400_006	NPC	mouse	TLX/VI030_B400_006_result.tlx	chr8	Chr8_61Mb	APH 0.5 uM 96h	Perental cell (NXP010)	NXP010	4	F	2	0.5	ESC-NPC;NXP010; Aphidicolin 0.5 uM 96h
 VI039	Csmd1 promoter/enhancer	B400_007	NPC	mouse	TLX/VI039_B400_007_result.tlx	chr8	Chr8_61Mb	DMSO	Perental cell (NXP010)	NXP010	6	T	2	0	ESC-NPC;NXP010; DMSO
 LC0027	Ctnna2 promoter/enhancer	B400_005	NPC	mouse	TLX/LC0027_B400_005_result.tlx	chr6	Chr6_70Mb	DMSO	Allelic deletion (47/5)	fndr_47-5	1	T	1	0	ESC-NPC;Nxp010;47/5; DMSO
 PW057	Ctnna2 promoter/enhancer	B400_007	NPC	mouse	TLX/PW057_B400_007_result.tlx	chr6	Chr6_70Mb	DMSO	Allelic deletion (47/5)	fndr_47-5	2	T	1	0	ESC-NPC;NXP010;47/5; DMSO
-PW058	Ctnna2 promoter/enhancer	B400_007	NPC	mouse	TLX/PW058_B400_007_result.tlx	chr6	Chr6_70Mb	APH 0.5 uM 96h	Allelic deletion (47/5)	fndr_47-5	1	F	1	0.5	ESC-NPC;NXP010;47/5; Aphidicolin 0.5 uM 96 hr
+PW058	Ctnna2 promoter/enhancer	B400_007	NPC	mouse	TLX/PW058_B400_007_result.tlx	chr6	Chr6_70Mb	APH 0.5 uM 96h	Allelic deletion (47/5)	fndr_47-5	1	F	1	0.5	ESC-NPC;NXP010;47/5; Aphidicolin 0.5 uM 96h
 VI012	Ctnna2 promoter/enhancer	B400_003	NPC	mouse	TLX/VI012_B400_003_result.tlx	chr6	Chr6_70Mb	DMSO	Allelic deletion (47/5)	fndr_47-5	3	T	1	0	ESC-NPC;NXP010;47/5; DMSO
-VI013	Ctnna2 promoter/enhancer	B400_003	NPC	mouse	TLX/VI013_B400_003_result.tlx	chr6	Chr6_70Mb	APH 0.5 uM 96h	Allelic deletion (47/5)	fndr_47-5	2	F	1	0.5	ESC-NPC;NXP010;47/5; Aphidicolin 0.5 uM 96 hr
+VI013	Ctnna2 promoter/enhancer	B400_003	NPC	mouse	TLX/VI013_B400_003_result.tlx	chr6	Chr6_70Mb	APH 0.5 uM 96h	Allelic deletion (47/5)	fndr_47-5	2	F	1	0.5	ESC-NPC;NXP010;47/5; Aphidicolin 0.5 uM 96h
 VI022	Ctnna2 promoter/enhancer	B400_006	NPC	mouse	TLX/VI022_B400_006_result.tlx	chr6	Chr6_70Mb	DMSO	Allelic deletion (47/5)	fndr_47-5	4	T	1	0	ESC-NPC;NXP010;47/5; DMSO
-VI023	Ctnna2 promoter/enhancer	B400_006	NPC	mouse	TLX/VI023_B400_006_result.tlx	chr6	Chr6_70Mb	APH 0.5 uM 96h	Allelic deletion (47/5)	fndr_47-5	3	F	1	0.5	ESC-NPC;NXP010;47/5; Aphidicolin 0.5 uM 96 hr
-VI029	Ctnna2 promoter/enhancer	B400_006	NPC	mouse	TLX/VI029_B400_006_result.tlx	chr6	Chr6_70Mb	APH 0.5 uM 96h	Allelic deletion (47/5)	fndr_47-5	4	F	1	0.5	ESC-NPC;NXP010;47/5; Aphidicolin 0.5 uM 96 hr
+VI023	Ctnna2 promoter/enhancer	B400_006	NPC	mouse	TLX/VI023_B400_006_result.tlx	chr6	Chr6_70Mb	APH 0.5 uM 96h	Allelic deletion (47/5)	fndr_47-5	3	F	1	0.5	ESC-NPC;NXP010;47/5; Aphidicolin 0.5 uM 96h
+VI029	Ctnna2 promoter/enhancer	B400_006	NPC	mouse	TLX/VI029_B400_006_result.tlx	chr6	Chr6_70Mb	APH 0.5 uM 96h	Allelic deletion (47/5)	fndr_47-5	4	F	1	0.5	ESC-NPC;NXP010;47/5; Aphidicolin 0.5 uM 96h
 VI037	Ctnna2 promoter/enhancer	B400_007	NPC	mouse	TLX/VI037_B400_007_result.tlx	chr6	Chr6_70Mb	DMSO	Allelic deletion (47/5)	fndr_47-5	5	T	1	0	ESC-NPC;NXP010;47/5; DMSO
-VI038	Ctnna2 promoter/enhancer	B400_007	NPC	mouse	TLX/VI038_B400_007_result.tlx	chr6	Chr6_70Mb	APH 0.5 uM 96h	Allelic deletion (47/5)	fndr_47-5	5	F	1	0.5	ESC-NPC;NXP010;47/5; Aphidicolin 0.5 uM 96 hr
+VI038	Ctnna2 promoter/enhancer	B400_007	NPC	mouse	TLX/VI038_B400_007_result.tlx	chr6	Chr6_70Mb	APH 0.5 uM 96h	Allelic deletion (47/5)	fndr_47-5	5	F	1	0.5	ESC-NPC;NXP010;47/5; Aphidicolin 0.5 uM 96h
 VI043	Ctnna2 promoter/enhancer	B400_010	NPC	mouse	TLX/VI043_B400_010_result.tlx	chr6	Chr6_70Mb	DMSO	Allelic deletion (47/5)	fndr_47-5	6	T	1	0	ESC-NPC;NXP010;47/5; DMSO
-VI044	Ctnna2 promoter/enhancer	B400_010	NPC	mouse	TLX/VI044_B400_010_result.tlx	chr6	Chr6_70Mb	APH 0.5 uM 96h	Allelic deletion (47/5)	fndr_47-5	6	F	1	0.5	ESC-NPC;NXP010;47/5; Aphidicolin 0.5 uM 96 hr
+VI044	Ctnna2 promoter/enhancer	B400_010	NPC	mouse	TLX/VI044_B400_010_result.tlx	chr6	Chr6_70Mb	APH 0.5 uM 96h	Allelic deletion (47/5)	fndr_47-5	6	F	1	0.5	ESC-NPC;NXP010;47/5; Aphidicolin 0.5 uM 96h
 VI049	Ctnna2 promoter/enhancer	B400_011	NPC	mouse	TLX/VI049_B400_011_result.tlx	chr6	Chr6_70Mb	DMSO	Allelic deletion (47/5)	fndr_47-5	7	T	1	0	ESC-NPC;NXP010;47/5; DMSO
-VI050	Ctnna2 promoter/enhancer	B400_011	NPC	mouse	TLX/VI050_B400_011_result.tlx	chr6	Chr6_70Mb	APH 0.5 uM 96h	Allelic deletion (47/5)	fndr_47-5	7	F	1	0.5	ESC-NPC;NXP010;47/5; Aphidicolin 0.5 uM 96 hr
+VI050	Ctnna2 promoter/enhancer	B400_011	NPC	mouse	TLX/VI050_B400_011_result.tlx	chr6	Chr6_70Mb	APH 0.5 uM 96h	Allelic deletion (47/5)	fndr_47-5	7	F	1	0.5	ESC-NPC;NXP010;47/5; Aphidicolin 0.5 uM 96h
 VI055	Ctnna2 promoter/enhancer	B400_012	NPC	mouse	TLX/VI055_B400_012_result.tlx	chr6	Chr6_70Mb	DMSO	Allelic deletion (47/5)	fndr_47-5	8	T	1	0	ESC-NPC;NXP010;47/5; DMSO
-VI056	Ctnna2 promoter/enhancer	B400_012	NPC	mouse	TLX/VI056_B400_012_result.tlx	chr6	Chr6_70Mb	APH 0.5 uM 96h	Allelic deletion (47/5)	fndr_47-5	8	F	1	0.5	ESC-NPC;NXP010;47/5; Aphidicolin 0.5 uM 96 hr
+VI056	Ctnna2 promoter/enhancer	B400_012	NPC	mouse	TLX/VI056_B400_012_result.tlx	chr6	Chr6_70Mb	APH 0.5 uM 96h	Allelic deletion (47/5)	fndr_47-5	8	F	1	0.5	ESC-NPC;NXP010;47/5; Aphidicolin 0.5 uM 96h
 VI014	Ctnna2 promoter/enhancer	B400_003	NPC	mouse	TLX/VI014_B400_003_result.tlx	chr6	Chr6_70Mb	DMSO	Allelic deletion (71/3)	fndr_71-3	1	T	1	0	ESC-NPC;NXP010;71/3; DMSO
-VI015	Ctnna2 promoter/enhancer	B400_003	NPC	mouse	TLX/VI015_B400_003_result.tlx	chr6	Chr6_70Mb	APH 0.5 uM 96h	Allelic deletion (71/3)	fndr_71-3	1	F	1	0.5	ESC-NPC;NXP010;71/3; Aphidicolin 0.5 uM 96 hr
+VI015	Ctnna2 promoter/enhancer	B400_003	NPC	mouse	TLX/VI015_B400_003_result.tlx	chr6	Chr6_70Mb	APH 0.5 uM 96h	Allelic deletion (71/3)	fndr_71-3	1	F	1	0.5	ESC-NPC;NXP010;71/3; Aphidicolin 0.5 uM 96h
 VI061	Ctnna2 promoter/enhancer	B400_015	NPC	mouse	TLX/VI061_B400_015_result.tlx	chr6	Chr6_70Mb	DMSO	Allelic deletion (71/3)	fndr_71-3	2	T	1	0	ESC-NPC;NXP010;71/3; DMSO
-VI062	Ctnna2 promoter/enhancer	B400_015	NPC	mouse	TLX/VI062_B400_015_result.tlx	chr6	Chr6_70Mb	APH 0.5 uM 96h	Allelic deletion (71/3)	fndr_71-3	2	F	1	0.5	ESC-NPC;NXP010;71/3; Aphidicolin 0.5 uM 96 hr
+VI062	Ctnna2 promoter/enhancer	B400_015	NPC	mouse	TLX/VI062_B400_015_result.tlx	chr6	Chr6_70Mb	APH 0.5 uM 96h	Allelic deletion (71/3)	fndr_71-3	2	F	1	0.5	ESC-NPC;NXP010;71/3; Aphidicolin 0.5 uM 96h
 LC0025	Ctnna2 promoter/enhancer	B400_005	NPC	mouse	TLX/LC0025_B400_005_result.tlx	chr6	Chr6_70Mb	DMSO	Allelic+promoter deletion (18/4)	fndr-prom_18-4	1	T	1	0	ESC-NPC;Nxp010;18/4; DMSO
-VI034	Ctnna2 promoter/enhancer	B400_006	NPC	mouse	TLX/VI034_B400_006_result.tlx	chr6	Chr6_70Mb	APH 0.5 uM 96h	Allelic+promoter deletion (18/4)	fndr-prom_18-4	1	F	1	0.5	ESC-NPC;NXP010;18/4; Aphidicolin 0.5 uM 96 hr
+VI034	Ctnna2 promoter/enhancer	B400_006	NPC	mouse	TLX/VI034_B400_006_result.tlx	chr6	Chr6_70Mb	APH 0.5 uM 96h	Allelic+promoter deletion (18/4)	fndr-prom_18-4	1	F	1	0.5	ESC-NPC;NXP010;18/4; Aphidicolin 0.5 uM 96h
 VI057	Ctnna2 promoter/enhancer	B400_012	NPC	mouse	TLX/VI057_B400_012_result.tlx	chr6	Chr6_70Mb	DMSO	Allelic+promoter deletion (18/4)	fndr-prom_18-4	2	T	1	0	ESC-NPC;NXP010;18/4; DMSO
-VI058	Ctnna2 promoter/enhancer	B400_012	NPC	mouse	TLX/VI058_B400_012_result.tlx	chr6	Chr6_70Mb	APH 0.5 uM 96h	Allelic+promoter deletion (18/4)	fndr-prom_18-4	2	F	1	0.5	ESC-NPC;NXP010;18/4; Aphidicolin 0.5 uM 96 hr
+VI058	Ctnna2 promoter/enhancer	B400_012	NPC	mouse	TLX/VI058_B400_012_result.tlx	chr6	Chr6_70Mb	APH 0.5 uM 96h	Allelic+promoter deletion (18/4)	fndr-prom_18-4	2	F	1	0.5	ESC-NPC;NXP010;18/4; Aphidicolin 0.5 uM 96h
 VI065	Ctnna2 promoter/enhancer	B400_015	NPC	mouse	TLX/VI065_B400_015_result.tlx	chr6	Chr6_70Mb	DMSO	Allelic+promoter deletion (18/4)	fndr-prom_18-4	3	T	1	0	ESC-NPC;NXP010;18/4; DMSO
-VI066	Ctnna2 promoter/enhancer	B400_015	NPC	mouse	TLX/VI066_B400_015_result.tlx	chr6	Chr6_70Mb	APH 0.5 uM 96h	Allelic+promoter deletion (18/4)	fndr-prom_18-4	3	F	1	0.5	ESC-NPC;NXP010;18/4; Aphidicolin 0.5 uM 96 hr
+VI066	Ctnna2 promoter/enhancer	B400_015	NPC	mouse	TLX/VI066_B400_015_result.tlx	chr6	Chr6_70Mb	APH 0.5 uM 96h	Allelic+promoter deletion (18/4)	fndr-prom_18-4	3	F	1	0.5	ESC-NPC;NXP010;18/4; Aphidicolin 0.5 uM 96h
 LC0026	Ctnna2 promoter/enhancer	B400_005	NPC	mouse	TLX/LC0026_B400_005_result.tlx	chr6	Chr6_70Mb	DMSO	Allelic+promoter deletion (38/3)	fndr-prom_38-3	1	T	1	0	ESC-NPC;Nxp010;38/3; DMSO
-VI033	Ctnna2 promoter/enhancer	B400_006	NPC	mouse	TLX/VI033_B400_006_result.tlx	chr6	Chr6_70Mb	APH 0.5 uM 96h	Allelic+promoter deletion (38/3)	fndr-prom_38-3	1	F	1	0.5	ESC-NPC;NXP010;38/3; Aphidicolin 0.5 uM 96 hr
+VI033	Ctnna2 promoter/enhancer	B400_006	NPC	mouse	TLX/VI033_B400_006_result.tlx	chr6	Chr6_70Mb	APH 0.5 uM 96h	Allelic+promoter deletion (38/3)	fndr-prom_38-3	1	F	1	0.5	ESC-NPC;NXP010;38/3; Aphidicolin 0.5 uM 96h
 VI045	Ctnna2 promoter/enhancer	B400_010	NPC	mouse	TLX/VI045_B400_010_result.tlx	chr6	Chr6_70Mb	DMSO	Allelic+promoter deletion (38/3)	fndr-prom_38-3	2	T	1	0	ESC-NPC;NXP010;38/3; DMSO
-VI046	Ctnna2 promoter/enhancer	B400_010	NPC	mouse	TLX/VI046_B400_010_result.tlx	chr6	Chr6_70Mb	APH 0.5 uM 96h	Allelic+promoter deletion (38/3)	fndr-prom_38-3	2	F	1	0.5	ESC-NPC;NXP010;38/3; Aphidicolin 0.5 uM 96 hr
+VI046	Ctnna2 promoter/enhancer	B400_010	NPC	mouse	TLX/VI046_B400_010_result.tlx	chr6	Chr6_70Mb	APH 0.5 uM 96h	Allelic+promoter deletion (38/3)	fndr-prom_38-3	2	F	1	0.5	ESC-NPC;NXP010;38/3; Aphidicolin 0.5 uM 96h
 VI051	Ctnna2 promoter/enhancer	B400_011	NPC	mouse	TLX/VI051_B400_011_result.tlx	chr6	Chr6_70Mb	DMSO	Allelic+promoter deletion (38/3)	fndr-prom_38-3	3	T	1	0	ESC-NPC;NXP010;38/3; DMSO
-VI052	Ctnna2 promoter/enhancer	B400_011	NPC	mouse	TLX/VI052_B400_011_result.tlx	chr6	Chr6_70Mb	APH 0.5 uM 96h	Allelic+promoter deletion (38/3)	fndr-prom_38-3	3	F	1	0.5	ESC-NPC;NXP010;38/3; Aphidicolin 0.5 uM 96 hr
+VI052	Ctnna2 promoter/enhancer	B400_011	NPC	mouse	TLX/VI052_B400_011_result.tlx	chr6	Chr6_70Mb	APH 0.5 uM 96h	Allelic+promoter deletion (38/3)	fndr-prom_38-3	3	F	1	0.5	ESC-NPC;NXP010;38/3; Aphidicolin 0.5 uM 96h
 VI063	Ctnna2 promoter/enhancer	B400_015	NPC	mouse	TLX/VI063_B400_015_result.tlx	chr6	Chr6_70Mb	DMSO	Allelic+promoter deletion (38/3)	fndr-prom_38-3	4	T	1	0	ESC-NPC;NXP010;38/3; DMSO
-VI064	Ctnna2 promoter/enhancer	B400_015	NPC	mouse	TLX/VI064_B400_015_result.tlx	chr6	Chr6_70Mb	APH 0.5 uM 96h	Allelic+promoter deletion (38/3)	fndr-prom_38-3	4	F	1	0.5	ESC-NPC;NXP010;38/3; Aphidicolin 0.5 uM 96 hr
+VI064	Ctnna2 promoter/enhancer	B400_015	NPC	mouse	TLX/VI064_B400_015_result.tlx	chr6	Chr6_70Mb	APH 0.5 uM 96h	Allelic+promoter deletion (38/3)	fndr-prom_38-3	4	F	1	0.5	ESC-NPC;NXP010;38/3; Aphidicolin 0.5 uM 96h
 LC0024	Ctnna2 promoter/enhancer	B400_005	NPC	mouse	TLX/LC0024_B400_005_result.tlx	chr6	Chr6_70Mb	DMSO	Perental cell (NXP010)	NXP010	1	T	2	0	ESC-NPC;Nxp010; DMSO
 PW055	Ctnna2 promoter/enhancer	B400_007	NPC	mouse	TLX/PW055_B400_007_result.tlx	chr6	Chr6_70Mb	DMSO	Perental cell (NXP010)	NXP010	2	T	2	0	ESC-NPC;NXP010; DMSO
-PW056	Ctnna2 promoter/enhancer	B400_008	NPC	mouse	TLX/PW056_B400_008_result.tlx	chr6	Chr6_70Mb	APH 0.5 uM 96h	Perental cell (NXP010)	NXP010	1	F	2	0.5	ESC-NPC;NXP010; Aphidicolin 0.5 uM 96 hr
-VI011	Ctnna2 promoter/enhancer	B400_003	NPC	mouse	TLX/VI011_B400_003_result.tlx	chr6	Chr6_70Mb	APH 0.5 uM 96h	Perental cell (NXP010)	NXP010	2	F	2	0.5	ESC-NPC;NXP010; Aphidicolin 0.5 uM 96 hr
+PW056	Ctnna2 promoter/enhancer	B400_008	NPC	mouse	TLX/PW056_B400_008_result.tlx	chr6	Chr6_70Mb	APH 0.5 uM 96h	Perental cell (NXP010)	NXP010	1	F	2	0.5	ESC-NPC;NXP010; Aphidicolin 0.5 uM 96h
+VI011	Ctnna2 promoter/enhancer	B400_003	NPC	mouse	TLX/VI011_B400_003_result.tlx	chr6	Chr6_70Mb	APH 0.5 uM 96h	Perental cell (NXP010)	NXP010	2	F	2	0.5	ESC-NPC;NXP010; Aphidicolin 0.5 uM 96h
 VI020	Ctnna2 promoter/enhancer	B400_006	NPC	mouse	TLX/VI020_B400_006_result.tlx	chr6	Chr6_70Mb	DMSO	Perental cell (NXP010)	NXP010	3	T	2	0	ESC-NPC;NXP010; DMSO
-VI021	Ctnna2 promoter/enhancer	B400_006	NPC	mouse	TLX/VI021_B400_006_result.tlx	chr6	Chr6_70Mb	APH 0.5 uM 96h	Perental cell (NXP010)	NXP010	3	F	2	0.5	ESC-NPC;NXP010; Aphidicolin 0.5 uM 96 hr
-VI028	Ctnna2 promoter/enhancer	B400_006	NPC	mouse	TLX/VI028_B400_006_result.tlx	chr6	Chr6_70Mb	APH 0.5 uM 96h	Perental cell (NXP010)	NXP010	4	F	2	0.5	ESC-NPC;NXP010; Aphidicolin 0.5 uM 96 hr
+VI021	Ctnna2 promoter/enhancer	B400_006	NPC	mouse	TLX/VI021_B400_006_result.tlx	chr6	Chr6_70Mb	APH 0.5 uM 96h	Perental cell (NXP010)	NXP010	3	F	2	0.5	ESC-NPC;NXP010; Aphidicolin 0.5 uM 96h
+VI028	Ctnna2 promoter/enhancer	B400_006	NPC	mouse	TLX/VI028_B400_006_result.tlx	chr6	Chr6_70Mb	APH 0.5 uM 96h	Perental cell (NXP010)	NXP010	4	F	2	0.5	ESC-NPC;NXP010; Aphidicolin 0.5 uM 96h
 VI035	Ctnna2 promoter/enhancer	B400_007	NPC	mouse	TLX/VI035_B400_007_result.tlx	chr6	Chr6_70Mb	DMSO	Perental cell (NXP010)	NXP010	4	T	2	0	ESC-NPC;NXP010; DMSO
-VI036	Ctnna2 promoter/enhancer	B400_009	NPC	mouse	TLX/VI036_B400_009_result.tlx	chr6	Chr6_70Mb	APH 0.5 uM 96h	Perental cell (NXP010)	NXP010	5	F	2	0.5	ESC-NPC;NXP010; Aphidicolin 0.5 uM 96 hr
+VI036	Ctnna2 promoter/enhancer	B400_009	NPC	mouse	TLX/VI036_B400_009_result.tlx	chr6	Chr6_70Mb	APH 0.5 uM 96h	Perental cell (NXP010)	NXP010	5	F	2	0.5	ESC-NPC;NXP010; Aphidicolin 0.5 uM 96h
 VI047	Ctnna2 promoter/enhancer	B400_011	NPC	mouse	TLX/VI047_B400_011_result.tlx	chr6	Chr6_70Mb	DMSO	Perental cell (NXP010)	NXP010	5	T	2	0	ESC-NPC;NXP010; DMSO
-VI048	Ctnna2 promoter/enhancer	B400_011	NPC	mouse	TLX/VI048_B400_011_result.tlx	chr6	Chr6_70Mb	APH 0.5 uM 96h	Perental cell (NXP010)	NXP010	6	F	2	0.5	ESC-NPC;NXP010; Aphidicolin 0.5 uM 96 hr
+VI048	Ctnna2 promoter/enhancer	B400_011	NPC	mouse	TLX/VI048_B400_011_result.tlx	chr6	Chr6_70Mb	APH 0.5 uM 96h	Perental cell (NXP010)	NXP010	6	F	2	0.5	ESC-NPC;NXP010; Aphidicolin 0.5 uM 96h
 VI053	Ctnna2 promoter/enhancer	B400_012	NPC	mouse	TLX/VI053_B400_012_result.tlx	chr6	Chr6_70Mb	DMSO	Perental cell (NXP010)	NXP010	6	T	2	0	ESC-NPC;NXP010; DMSO
-VI054	Ctnna2 promoter/enhancer	B400_012	NPC	mouse	TLX/VI054_B400_012_result.tlx	chr6	Chr6_70Mb	APH 0.5 uM 96h	Perental cell (NXP010)	NXP010	7	F	2	0.5	ESC-NPC;NXP010; Aphidicolin 0.5 uM 96 hr
+VI054	Ctnna2 promoter/enhancer	B400_012	NPC	mouse	TLX/VI054_B400_012_result.tlx	chr6	Chr6_70Mb	APH 0.5 uM 96h	Perental cell (NXP010)	NXP010	7	F	2	0.5	ESC-NPC;NXP010; Aphidicolin 0.5 uM 96h
 VI059	Ctnna2 promoter/enhancer	B400_015	NPC	mouse	TLX/VI059_B400_015_result.tlx	chr6	Chr6_70Mb	DMSO	Perental cell (NXP010)	NXP010	7	T	2	0	ESC-NPC;NXP010; DMSO
-VI060	Ctnna2 promoter/enhancer	B400_015	NPC	mouse	TLX/VI060_B400_015_result.tlx	chr6	Chr6_70Mb	APH 0.5 uM 96h	Perental cell (NXP010)	NXP010	8	F	2	0.5	ESC-NPC;NXP010; Aphidicolin 0.5 uM 96 hr
+VI060	Ctnna2 promoter/enhancer	B400_015	NPC	mouse	TLX/VI060_B400_015_result.tlx	chr6	Chr6_70Mb	APH 0.5 uM 96h	Perental cell (NXP010)	NXP010	8	F	2	0.5	ESC-NPC;NXP010; Aphidicolin 0.5 uM 96h
 LC031	ESC cell aphidicolin	B400_014	NPC	mouse	TLX/LC031_B400_014_result.tlx	chr5	Chr5_101Mb	DMSO	APH		1	T	2	0	ESC;Nxp010; DMSO
-LC032	ESC cell aphidicolin	B400_014	NPC	mouse	TLX/LC032_B400_014_result.tlx	chr5	Chr5_101Mb	APH 0.2 uM 96h	APH		1	F	2	0.2	ESC;Nxp010; Aphidicolin 0.2 uM 96 hr
+LC032	ESC cell aphidicolin	B400_014	NPC	mouse	TLX/LC032_B400_014_result.tlx	chr5	Chr5_101Mb	APH 0.2 uM 96h	APH		1	F	2	0.2	ESC;Nxp010; Aphidicolin 0.2 uM 96h
 LC033	ESC cell aphidicolin	B400_014	NPC	mouse	TLX/LC033_B400_014_result.tlx	chr5	Chr5_101Mb	DMSO	APH		2	T	2	0	ESC;Nxp010; DMSO
-LC034	ESC cell aphidicolin	B400_014	NPC	mouse	TLX/LC034_B400_014_result.tlx	chr5	Chr5_101Mb	APH 0.2 uM 96h	APH		2	F	2	0.2	ESC;Nxp010; Aphidicolin 0.2 uM 96 hr
+LC034	ESC cell aphidicolin	B400_014	NPC	mouse	TLX/LC034_B400_014_result.tlx	chr5	Chr5_101Mb	APH 0.2 uM 96h	APH		2	F	2	0.2	ESC;Nxp010; Aphidicolin 0.2 uM 96h
 LC035	ESC cell aphidicolin	B400_014	NPC	mouse	TLX/LC035_B400_014_result.tlx	chr5	Chr5_101Mb	DMSO	APH		3	T	2	0	ESC;Nxp010; DMSO
-LC036	ESC cell aphidicolin	B400_014	NPC	mouse	TLX/LC036_B400_014_result.tlx	chr5	Chr5_101Mb	APH 0.2 uM 96h	APH		3	F	2	0.2	ESC;Nxp010; Aphidicolin 0.2 uM 96 hr
+LC036	ESC cell aphidicolin	B400_014	NPC	mouse	TLX/LC036_B400_014_result.tlx	chr5	Chr5_101Mb	APH 0.2 uM 96h	APH		3	F	2	0.2	ESC;Nxp010; Aphidicolin 0.2 uM 96h
 JF017	Hydroxyurea	B400_006	NPC	mouse	TLX/JF017_B400_006_result.tlx	chr12	Chr12_13Mb	DMSO	HU-chr12		1	T	2	0	ESC-NPC;NXP010; DMSO 32 hr
 JF018	Hydroxyurea	B400_006	NPC	mouse	TLX/JF018_B400_006_result.tlx	chr12	Chr12_13Mb	HU 2 uM 6h	HU-chr12		1	F	2	2	ESC-NPC;NXP010; Hydroxyurea 2 uM 6hr
 JF019	Hydroxyurea	B400_006	NPC	mouse	TLX/JF019_B400_006_result.tlx	chr12	Chr12_13Mb	DMSO	HU-chr12		2	T	2	0	ESC-NPC;NXP010; DMSO 32 hr
@@ -104,7 +104,7 @@ PW016	Hydroxyurea	B400_002	NPC	mouse	TLX/PW016_B400_002_result.tlx	chr15	Chr15_8
 PW017	Hydroxyurea	B400_002	NPC	mouse	TLX/PW017_B400_002_result.tlx	chr15	Chr15_86Mb	DMSO	HU-chr15		2	T	2	0	ESC-NPC;NXP010; DMSO
 PW018	Hydroxyurea	B400_002	NPC	mouse	TLX/PW018_B400_002_result.tlx	chr15	Chr15_86Mb	HU 2 uM 24h	HU-chr15		2	F	2	2	ESC-NPC;NXP010; Hydroxyurea 2 uM 24hr
 PW019	Hydroxyurea	B400_002	NPC	mouse	TLX/PW019_B400_002_result.tlx	chr15	Chr15_86Mb	DMSO	HU-chr15		3	T	2	0	ESC-NPC;NXP010; DMSO
-PW020	Hydroxyurea	B400_002	NPC	mouse	TLX/PW020_B400_002_result.tlx	chr15	Chr15_86Mb	APH 0.5 uM 96h	HU-chr15		3	F	2	0.5	ESC-NPC;NXP010; Aphidicolin 0.5 uM 96 hr
+PW020	Hydroxyurea	B400_002	NPC	mouse	TLX/PW020_B400_002_result.tlx	chr15	Chr15_86Mb	APH 0.5 uM 96h	HU-chr15		3	F	2	0.5	ESC-NPC;NXP010; Aphidicolin 0.5 uM 96h
 JF013	Hydroxyurea	B400_006	NPC	mouse	TLX/JF013_B400_006_result.tlx	chr16	Chr15_86Mb	DMSO	HU-chr16		1	T	2	0	ESC-NPC;NXP010; DMSO 32 hr
 JF014	Hydroxyurea	B400_006	NPC	mouse	TLX/JF014_B400_006_result.tlx	chr16	Chr15_86Mb	HU 2 uM 6h	HU-chr16		1	F	2	2	ESC-NPC;NXP010; Hydroxyurea 2 uM 6hr
 JF015	Hydroxyurea	B400_006	NPC	mouse	TLX/JF015_B400_006_result.tlx	chr16	Chr15_86Mb	DMSO	HU-chr16		2	T	2	0	ESC-NPC;NXP010; DMSO 32 hr
@@ -113,31 +113,31 @@ JF025	Hydroxyurea	B400_013	NPC	mouse	TLX/JF025_B400_013_result.tlx	chr6	Chr6_70M
 JF026	Hydroxyurea	B400_013	NPC	mouse	TLX/JF026_B400_013_result.tlx	chr6	Chr6_70Mb	HU 2 uM 6h	HU-chr6		2	F	2	2	ESC-NPC;NXP010; Hydroxyurea 2 uM 6hr
 JF027	Hydroxyurea	B400_013	NPC	mouse	TLX/JF027_B400_013_result.tlx	chr6	Chr6_70Mb	DMSO	HU-chr6		1	T	2	0	ESC-NPC;NXP010; DMSO
 JF028	Hydroxyurea	B400_013	NPC	mouse	TLX/JF028_B400_013_result.tlx	chr6	Chr6_70Mb	DMSO	HU-chr6		2	T	2	0	ESC-NPC;NXP010; DMSO
-PW009	Nrxn1 promoter/enhancer	B400_001	NPC	mouse	TLX/PW009_B400_001_result.tlx	chr17	Chr17_41Mb	APH 0.5 uM 96h	Allelic deletion (22)	fndr_22	1	F	1	0.5	ESC-NPC;Nxp047;22; Aphidicolin 0.5 uM 96 hr
+PW009	Nrxn1 promoter/enhancer	B400_001	NPC	mouse	TLX/PW009_B400_001_result.tlx	chr17	Chr17_41Mb	APH 0.5 uM 96h	Allelic deletion (22)	fndr_22	1	F	1	0.5	ESC-NPC;Nxp047;22; Aphidicolin 0.5 uM 96h
 PW010	Nrxn1 promoter/enhancer	B400_001	NPC	mouse	TLX/PW010_B400_001_result.tlx	chr17	Chr17_41Mb	DMSO	Allelic deletion (22)	fndr_22	1	T	1	0	ESC-NPC;Nxp047;22; DMSO
 PW047	Nrxn1 promoter/enhancer	B400_005	NPC	mouse	TLX/PW047_B400_005_result.tlx	chr17	Chr17_41Mb	DMSO	Allelic deletion (22)	fndr_22	2	T	1	0	ESC-NPC;Nxp047;22; DMSO
-PW048	Nrxn1 promoter/enhancer	B400_005	NPC	mouse	TLX/PW048_B400_005_result.tlx	chr17	Chr17_41Mb	APH 0.5 uM 96h	Allelic deletion (22)	fndr_22	2	F	1	0.5	ESC-NPC;Nxp047;22; Aphidicolin 0.5 uM 96 hr
+PW048	Nrxn1 promoter/enhancer	B400_005	NPC	mouse	TLX/PW048_B400_005_result.tlx	chr17	Chr17_41Mb	APH 0.5 uM 96h	Allelic deletion (22)	fndr_22	2	F	1	0.5	ESC-NPC;Nxp047;22; Aphidicolin 0.5 uM 96h
 PW079	Nrxn1 promoter/enhancer	B400_010	NPC	mouse	TLX/PW079_B400_010_result.tlx	chr17	Chr17_41Mb	DMSO	Allelic deletion (22)	fndr_22	3	T	1	0	ESC-NPC;Nxp047;22; DMSO
-PW080	Nrxn1 promoter/enhancer	B400_010	NPC	mouse	TLX/PW080_B400_010_result.tlx	chr17	Chr17_41Mb	APH 0.5 uM 96h	Allelic deletion (22)	fndr_22	3	F	1	0.5	ESC-NPC;Nxp047;22; Aphidicolin 0.5 uM 96 hr
-PW011	Nrxn1 promoter/enhancer	B400_001	NPC	mouse	TLX/PW011_B400_001_result.tlx	chr17	Chr17_41Mb	APH 0.5 uM 96h	Allelic+promoter deletion (22/1)	fndr-prom_22-1	1	F	1	0.5	ESC-NPC;Nxp047;22-1; Aphidicolin 0.5 uM 96 hr
+PW080	Nrxn1 promoter/enhancer	B400_010	NPC	mouse	TLX/PW080_B400_010_result.tlx	chr17	Chr17_41Mb	APH 0.5 uM 96h	Allelic deletion (22)	fndr_22	3	F	1	0.5	ESC-NPC;Nxp047;22; Aphidicolin 0.5 uM 96h
+PW011	Nrxn1 promoter/enhancer	B400_001	NPC	mouse	TLX/PW011_B400_001_result.tlx	chr17	Chr17_41Mb	APH 0.5 uM 96h	Allelic+promoter deletion (22/1)	fndr-prom_22-1	1	F	1	0.5	ESC-NPC;Nxp047;22-1; Aphidicolin 0.5 uM 96h
 PW012	Nrxn1 promoter/enhancer	B400_001	NPC	mouse	TLX/PW012_B400_001_result.tlx	chr17	Chr17_41Mb	DMSO	Allelic+promoter deletion (22/1)	fndr-prom_22-1	1	T	1	0	ESC-NPC;Nxp047;22-1; DMSO
 PW049	Nrxn1 promoter/enhancer	B400_005	NPC	mouse	TLX/PW049_B400_005_result.tlx	chr17	Chr17_41Mb	DMSO	Allelic+promoter deletion (22/1)	fndr-prom_22-1	2	T	1	0	ESC-NPC;Nxp047;22-1; DMSO
-PW050	Nrxn1 promoter/enhancer	B400_005	NPC	mouse	TLX/PW050_B400_005_result.tlx	chr17	Chr17_41Mb	APH 0.5 uM 96h	Allelic+promoter deletion (22/1)	fndr-prom_22-1	2	F	1	0.5	ESC-NPC;Nxp047;22-1; Aphidicolin 0.5 uM 96 hr
+PW050	Nrxn1 promoter/enhancer	B400_005	NPC	mouse	TLX/PW050_B400_005_result.tlx	chr17	Chr17_41Mb	APH 0.5 uM 96h	Allelic+promoter deletion (22/1)	fndr-prom_22-1	2	F	1	0.5	ESC-NPC;Nxp047;22-1; Aphidicolin 0.5 uM 96h
 PW081	Nrxn1 promoter/enhancer	B400_012	NPC	mouse	TLX/PW081_B400_012_result.tlx	chr17	Chr17_41Mb	DMSO	Allelic+promoter deletion (22/1)	fndr-prom_22-1	3	T	1	0	ESC-NPC;Nxp047;22-1; DMSO
-PW082	Nrxn1 promoter/enhancer	B400_012	NPC	mouse	TLX/PW082_B400_012_result.tlx	chr17	Chr17_41Mb	APH 0.5 uM 96h	Allelic+promoter deletion (22/1)	fndr-prom_22-1	3	F	1	0.5	ESC-NPC;Nxp047;22-1; Aphidicolin 0.5 uM 96 hr
-PW013	Nrxn1 promoter/enhancer	B400_001	NPC	mouse	TLX/PW013_B400_001_result.tlx	chr17	Chr17_41Mb	APH 0.5 uM 96h	Allelic+promoter deletion (22/37)	fndr-prom_22-37	1	F	1	0.5	ESC-NPC;Nxp047;22-37; Aphidicolin 0.5 uM 96 hr
+PW082	Nrxn1 promoter/enhancer	B400_012	NPC	mouse	TLX/PW082_B400_012_result.tlx	chr17	Chr17_41Mb	APH 0.5 uM 96h	Allelic+promoter deletion (22/1)	fndr-prom_22-1	3	F	1	0.5	ESC-NPC;Nxp047;22-1; Aphidicolin 0.5 uM 96h
+PW013	Nrxn1 promoter/enhancer	B400_001	NPC	mouse	TLX/PW013_B400_001_result.tlx	chr17	Chr17_41Mb	APH 0.5 uM 96h	Allelic+promoter deletion (22/37)	fndr-prom_22-37	1	F	1	0.5	ESC-NPC;Nxp047;22-37; Aphidicolin 0.5 uM 96h
 PW014	Nrxn1 promoter/enhancer	B400_001	NPC	mouse	TLX/PW014_B400_001_result.tlx	chr17	Chr17_41Mb	DMSO	Allelic+promoter deletion (22/37)	fndr-prom_22-37	1	T	1	0	ESC-NPC;Nxp047;22-37; DMSO
 PW053	Nrxn1 promoter/enhancer	B400_005	NPC	mouse	TLX/PW053_B400_005_result.tlx	chr17	Chr17_41Mb	DMSO	Allelic+promoter deletion (22/39)	fndr-prom_22-39	1	T	1	0	ESC-NPC;Nxp047;22-39; DMSO
-PW054	Nrxn1 promoter/enhancer	B400_005	NPC	mouse	TLX/PW054_B400_005_result.tlx	chr17	Chr17_41Mb	APH 0.5 uM 96h	Allelic+promoter deletion (22/39)	fndr-prom_22-39	1	F	1	0.5	ESC-NPC;Nxp047;22-39; Aphidicolin 0.5 uM 96 hr
+PW054	Nrxn1 promoter/enhancer	B400_005	NPC	mouse	TLX/PW054_B400_005_result.tlx	chr17	Chr17_41Mb	APH 0.5 uM 96h	Allelic+promoter deletion (22/39)	fndr-prom_22-39	1	F	1	0.5	ESC-NPC;Nxp047;22-39; Aphidicolin 0.5 uM 96h
 PW088	Nrxn1 promoter/enhancer	B400_012	NPC	mouse	TLX/PW088_B400_012_result.tlx	chr17	Chr17_41Mb	DMSO	Allelic+promoter deletion (22/39)	fndr-prom_22-39	2	T	1	0	ESC-NPC;Nxp047;22-39; DMSO
-PW089	Nrxn1 promoter/enhancer	B400_012	NPC	mouse	TLX/PW089_B400_012_result.tlx	chr17	Chr17_41Mb	APH 0.5 uM 96h	Allelic+promoter deletion (22/39)	fndr-prom_22-39	2	F	1	0.5	ESC-NPC;Nxp047;22-39; Aphidicolin 0.5 uM 96 hr
-PW084	Nrxn1 promoter/enhancer	B400_012	NPC	mouse	TLX/PW084_B400_012_result.tlx	chr17	Chr17_41Mb	APH 0.5 uM 96h	Allelic+promoter deletion (22/5)	fndr-prom_22-5	1	F	1	0.5	ESC-NPC;Nxp047;22-5; Aphidicolin 0.5 uM 96 hr
+PW089	Nrxn1 promoter/enhancer	B400_012	NPC	mouse	TLX/PW089_B400_012_result.tlx	chr17	Chr17_41Mb	APH 0.5 uM 96h	Allelic+promoter deletion (22/39)	fndr-prom_22-39	2	F	1	0.5	ESC-NPC;Nxp047;22-39; Aphidicolin 0.5 uM 96h
+PW084	Nrxn1 promoter/enhancer	B400_012	NPC	mouse	TLX/PW084_B400_012_result.tlx	chr17	Chr17_41Mb	APH 0.5 uM 96h	Allelic+promoter deletion (22/5)	fndr-prom_22-5	1	F	1	0.5	ESC-NPC;Nxp047;22-5; Aphidicolin 0.5 uM 96h
 PW086	Nrxn1 promoter/enhancer	B400_012	NPC	mouse	TLX/PW086_B400_012_result.tlx	chr17	Chr17_41Mb	DMSO	Allelic+promoter deletion (22/5)	fndr-prom_22-5	1	T	1	0	ESC-NPC;Nxp047;22-5; DMSO
-PW087	Nrxn1 promoter/enhancer	B400_012	NPC	mouse	TLX/PW087_B400_012_result.tlx	chr17	Chr17_41Mb	APH 0.5 uM 96h	Allelic+promoter deletion (22/5)	fndr-prom_22-5	2	F	1	0.5	ESC-NPC;Nxp047;22-5; Aphidicolin 0.5 uM 96 hr
-PW005	Nrxn1 promoter/enhancer	B400_001	NPC	mouse	TLX/PW005_B400_001_result.tlx	chr17	Chr17_41Mb	APH 0.5 uM 96h	Parental cell (NXP047)	NXP047	1	F	2	0.5	ESC-NPC;Nxp047; Aphidicolin 0.5 uM 96 hr
+PW087	Nrxn1 promoter/enhancer	B400_012	NPC	mouse	TLX/PW087_B400_012_result.tlx	chr17	Chr17_41Mb	APH 0.5 uM 96h	Allelic+promoter deletion (22/5)	fndr-prom_22-5	2	F	1	0.5	ESC-NPC;Nxp047;22-5; Aphidicolin 0.5 uM 96h
+PW005	Nrxn1 promoter/enhancer	B400_001	NPC	mouse	TLX/PW005_B400_001_result.tlx	chr17	Chr17_41Mb	APH 0.5 uM 96h	Parental cell (NXP047)	NXP047	1	F	2	0.5	ESC-NPC;Nxp047; Aphidicolin 0.5 uM 96h
 PW006	Nrxn1 promoter/enhancer	B400_001	NPC	mouse	TLX/PW006_B400_001_result.tlx	chr17	Chr17_41Mb	DMSO	Parental cell (NXP047)	NXP047	1	T	2	0	ESC-NPC;Nxp047; DMSO
 PW045	Nrxn1 promoter/enhancer	B400_005	NPC	mouse	TLX/PW045_B400_005_result.tlx	chr17	Chr17_41Mb	DMSO	Parental cell (NXP047)	NXP047	2	T	2	0	ESC-NPC;Nxp047; DMSO
-PW046	Nrxn1 promoter/enhancer	B400_005	NPC	mouse	TLX/PW046_B400_005_result.tlx	chr17	Chr17_41Mb	APH 0.5 uM 96h	Parental cell (NXP047)	NXP047	2	F	2	0.5	ESC-NPC;Nxp047; Aphidicolin 0.5 uM 96 hr
+PW046	Nrxn1 promoter/enhancer	B400_005	NPC	mouse	TLX/PW046_B400_005_result.tlx	chr17	Chr17_41Mb	APH 0.5 uM 96h	Parental cell (NXP047)	NXP047	2	F	2	0.5	ESC-NPC;Nxp047; Aphidicolin 0.5 uM 96h
 BD001	Sonic hedgehog + Smoothened agonist	B400_015	NPC	mouse	TLX/BD001_B400_015_result.tlx	chr6	Chr6_70Mb	no treatment	no treatment		1	T	2		CGNPs;Atoh1-EGFP; No treatment
 BD004	Sonic hedgehog + Smoothened agonist	B400_015	NPC	mouse	TLX/BD004_B400_015_result.tlx	chr6	Chr6_70Mb	SAG	SAG		1	F	2		CGNPs;Atoh1-EGFP; SAG
 BD002	Sonic hedgehog + Smoothened agonist	B400_015	NPC	mouse	TLX/BD002_B400_015_result.tlx	chr6	Chr6_70Mb	SHH 0.22 ug/ml	SHH 0.22 ug/ml		1	F	2		CGNPs;Atoh1-EGFP; SHH 0.22 ug/ml
@@ -365,105 +365,105 @@ SRR10734039	Tena et al., 2020	Tena2020_ESC-NPC_Chr15	NPC	mouse	TLX/Tena2018/SRR1
 SRR10734040	Tena et al., 2020	Tena2020_ESC-NPC_Chr15	NPC	mouse	TLX/Tena2018/SRR10734040_TENA2020_result.tlx	chr15	Chr15_86Mb	DMSO	chr15	chr15	3	T	2	0	From Tena et al. PNAS 2020; exp line 02
 SRR10734041	Tena et al., 2020	Tena2020_ESC-NPC_Chr15	NPC	mouse	TLX/Tena2018/SRR10734041_TENA2020_result.tlx	chr15	Chr15_86Mb	DMSO	chr15	chr15	4	T	2	0	From Tena et al. PNAS 2020; exp line 02
 PW103	APH concentration	B400_017	NPC	mouse	TLX/APH_concentration/PW103_B400_017_result.tlx	chr8	Chr8_61Mb	DMSO	DMSO	DMSO	1	T	2	0	ESC-NPC;NXP010; DMSO
-PW104	APH concentration	B400_017	NPC	mouse	TLX/APH_concentration/PW104_B400_017_result.tlx	chr8	Chr8_61Mb	APH 0.2 uM 96h	APH 0.2 uM 96h	APH 0.2	1	F	2	0.2	ESC-NPC;NXP010; Aphidicolin 0.2 uM 96 hr
-PW105	APH concentration	B400_017	NPC	mouse	TLX/APH_concentration/PW105_B400_017_result.tlx	chr8	Chr8_61Mb	APH 0.4 uM 96h	APH 0.4 uM 96h	APH 0.4	1	F	2	0.4	ESC-NPC;NXP010; Aphidicolin 0.4 uM 96 hr
-PW106	APH concentration	B400_017	NPC	mouse	TLX/APH_concentration/PW106_B400_017_result.tlx	chr8	Chr8_61Mb	APH 0.6 uM 96h	APH 0.6 uM 96h	APH 0.6	1	F	2	0.6	ESC-NPC;NXP010; Aphidicolin 0.6 uM 96 hr
+PW104	APH concentration	B400_017	NPC	mouse	TLX/APH_concentration/PW104_B400_017_result.tlx	chr8	Chr8_61Mb	APH 0.2 uM 96h	APH 0.2 uM 96h	APH 0.2	1	F	2	0.2	ESC-NPC;NXP010; Aphidicolin 0.2 uM 96h
+PW105	APH concentration	B400_017	NPC	mouse	TLX/APH_concentration/PW105_B400_017_result.tlx	chr8	Chr8_61Mb	APH 0.4 uM 96h	APH 0.4 uM 96h	APH 0.4	1	F	2	0.4	ESC-NPC;NXP010; Aphidicolin 0.4 uM 96h
+PW106	APH concentration	B400_017	NPC	mouse	TLX/APH_concentration/PW106_B400_017_result.tlx	chr8	Chr8_61Mb	APH 0.6 uM 96h	APH 0.6 uM 96h	APH 0.6	1	F	2	0.6	ESC-NPC;NXP010; Aphidicolin 0.6 uM 96h
 PW107	APH concentration	B400_017	NPC	mouse	TLX/APH_concentration/PW107_B400_017_result.tlx	chr6	Chr6_70Mb	DMSO	DMSO	DMSO	2	T	2	0	ESC-NPC;NXP010; DMSO
-PW108	APH concentration	B400_017	NPC	mouse	TLX/APH_concentration/PW108_B400_017_result.tlx	chr6	Chr6_70Mb	APH 0.2 uM 96h	APH 0.2 uM 96h	APH 0.2	2	F	2	0.2	ESC-NPC;NXP010; Aphidicolin 0.2 uM 96 hr
-PW109	APH concentration	B400_017	NPC	mouse	TLX/APH_concentration/PW109_B400_017_result.tlx	chr6	Chr6_70Mb	APH 0.4 uM 96h	APH 0.4 uM 96h	APH 0.4	2	F	2	0.4	ESC-NPC;NXP010; Aphidicolin 0.4 uM 96 hr
-PW110	APH concentration	B400_017	NPC	mouse	TLX/APH_concentration/PW110_B400_017_result.tlx	chr6	Chr6_70Mb	APH 0.6 uM 96h	APH 0.6 uM 96h	APH 0.6	2	F	2	0.6	ESC-NPC;NXP010; Aphidicolin 0.6 uM 96 hr
+PW108	APH concentration	B400_017	NPC	mouse	TLX/APH_concentration/PW108_B400_017_result.tlx	chr6	Chr6_70Mb	APH 0.2 uM 96h	APH 0.2 uM 96h	APH 0.2	2	F	2	0.2	ESC-NPC;NXP010; Aphidicolin 0.2 uM 96h
+PW109	APH concentration	B400_017	NPC	mouse	TLX/APH_concentration/PW109_B400_017_result.tlx	chr6	Chr6_70Mb	APH 0.4 uM 96h	APH 0.4 uM 96h	APH 0.4	2	F	2	0.4	ESC-NPC;NXP010; Aphidicolin 0.4 uM 96h
+PW110	APH concentration	B400_017	NPC	mouse	TLX/APH_concentration/PW110_B400_017_result.tlx	chr6	Chr6_70Mb	APH 0.6 uM 96h	APH 0.6 uM 96h	APH 0.6	2	F	2	0.6	ESC-NPC;NXP010; Aphidicolin 0.6 uM 96h
 PW111	APH concentration	B400_017	NPC	mouse	TLX/APH_concentration/PW111_B400_017_result.tlx	chr6	Chr6_70Mb	DMSO	DMSO	DMSO	3	T	2	0	ESC-NPC;NXP010; DMSO
-PW112	APH concentration	B400_017	NPC	mouse	TLX/APH_concentration/PW112_B400_017_result.tlx	chr6	Chr6_70Mb	APH 0.2 uM 96h	APH 0.2 uM 96h	APH 0.2	3	F	2	0.2	ESC-NPC;NXP010; Aphidicolin 0.2 uM 96 hr
-PW113	APH concentration	B400_017	NPC	mouse	TLX/APH_concentration/PW113_B400_017_result.tlx	chr6	Chr6_70Mb	APH 0.4 uM 96h	APH 0.4 uM 96h	APH 0.4	3	F	2	0.4	ESC-NPC;NXP010; Aphidicolin 0.4 uM 96 hr
-PW114	APH concentration	B400_017	NPC	mouse	TLX/APH_concentration/PW114_B400_017_result.tlx	chr6	Chr6_70Mb	APH 0.6 uM 96h	APH 0.6 uM 96h	APH 0.6	3	F	2	0.6	ESC-NPC;NXP010; Aphidicolin 0.6 uM 96 hr
+PW112	APH concentration	B400_017	NPC	mouse	TLX/APH_concentration/PW112_B400_017_result.tlx	chr6	Chr6_70Mb	APH 0.2 uM 96h	APH 0.2 uM 96h	APH 0.2	3	F	2	0.2	ESC-NPC;NXP010; Aphidicolin 0.2 uM 96h
+PW113	APH concentration	B400_017	NPC	mouse	TLX/APH_concentration/PW113_B400_017_result.tlx	chr6	Chr6_70Mb	APH 0.4 uM 96h	APH 0.4 uM 96h	APH 0.4	3	F	2	0.4	ESC-NPC;NXP010; Aphidicolin 0.4 uM 96h
+PW114	APH concentration	B400_017	NPC	mouse	TLX/APH_concentration/PW114_B400_017_result.tlx	chr6	Chr6_70Mb	APH 0.6 uM 96h	APH 0.6 uM 96h	APH 0.6	3	F	2	0.6	ESC-NPC;NXP010; Aphidicolin 0.6 uM 96h
 PW115	APH concentration	B400_018	NPC	mouse	TLX/APH_concentration/PW115_B400_018_result.tlx	chr8	Chr8_61Mb	DMSO	DMSO	DMSO	2	T	2	0	ESC-NPC;NXP010; DMSO
-PW116	APH concentration	B400_018	NPC	mouse	TLX/APH_concentration/PW116_B400_018_result.tlx	chr8	Chr8_61Mb	APH 0.2 uM 96h	APH 0.2 uM 96h	APH 0.2	2	F	2	0.2	ESC-NPC;NXP010; Aphidicolin 0.2 uM 96 hr
-PW117	APH concentration	B400_018	NPC	mouse	TLX/APH_concentration/PW117_B400_018_result.tlx	chr8	Chr8_61Mb	APH 0.4 uM 96h	APH 0.4 uM 96h	APH 0.4	2	F	2	0.4	ESC-NPC;NXP010; Aphidicolin 0.4 uM 96 hr
-PW118	APH concentration	B400_018	NPC	mouse	TLX/APH_concentration/PW118_B400_018_result.tlx	chr8	Chr8_61Mb	APH 0.6 uM 96h	APH 0.6 uM 96h	APH 0.6	2	F	2	0.6	ESC-NPC;NXP010; Aphidicolin 0.6 uM 96 hr
+PW116	APH concentration	B400_018	NPC	mouse	TLX/APH_concentration/PW116_B400_018_result.tlx	chr8	Chr8_61Mb	APH 0.2 uM 96h	APH 0.2 uM 96h	APH 0.2	2	F	2	0.2	ESC-NPC;NXP010; Aphidicolin 0.2 uM 96h
+PW117	APH concentration	B400_018	NPC	mouse	TLX/APH_concentration/PW117_B400_018_result.tlx	chr8	Chr8_61Mb	APH 0.4 uM 96h	APH 0.4 uM 96h	APH 0.4	2	F	2	0.4	ESC-NPC;NXP010; Aphidicolin 0.4 uM 96h
+PW118	APH concentration	B400_018	NPC	mouse	TLX/APH_concentration/PW118_B400_018_result.tlx	chr8	Chr8_61Mb	APH 0.6 uM 96h	APH 0.6 uM 96h	APH 0.6	2	F	2	0.6	ESC-NPC;NXP010; Aphidicolin 0.6 uM 96h
 PW119	APH concentration	B400_018	NPC	mouse	TLX/APH_concentration/PW119_B400_018_result.tlx	chr8	Chr8_61Mb	DMSO	DMSO	DMSO	3	T	2	0	ESC-NPC;NXP010; DMSO
-PW120	APH concentration	B400_018	NPC	mouse	TLX/APH_concentration/PW120_B400_018_result.tlx	chr8	Chr8_61Mb	APH 0.2 uM 96h	APH 0.2 uM 96h	APH 0.2	3	F	2	0.2	ESC-NPC;NXP010; Aphidicolin 0.2 uM 96 hr
-PW121	APH concentration	B400_018	NPC	mouse	TLX/APH_concentration/PW121_B400_018_result.tlx	chr8	Chr8_61Mb	APH 0.4 uM 96h	APH 0.4 uM 96h	APH 0.4	3	F	2	0.4	ESC-NPC;NXP010; Aphidicolin 0.4 uM 96 hr
-PW122	APH concentration	B400_018	NPC	mouse	TLX/APH_concentration/PW122_B400_018_result.tlx	chr8	Chr8_61Mb	APH 0.6 uM 96h	APH 0.6 uM 96h	APH 0.6	3	F	2	0.6	ESC-NPC;NXP010; Aphidicolin 0.6 uM 96 hr
+PW120	APH concentration	B400_018	NPC	mouse	TLX/APH_concentration/PW120_B400_018_result.tlx	chr8	Chr8_61Mb	APH 0.2 uM 96h	APH 0.2 uM 96h	APH 0.2	3	F	2	0.2	ESC-NPC;NXP010; Aphidicolin 0.2 uM 96h
+PW121	APH concentration	B400_018	NPC	mouse	TLX/APH_concentration/PW121_B400_018_result.tlx	chr8	Chr8_61Mb	APH 0.4 uM 96h	APH 0.4 uM 96h	APH 0.4	3	F	2	0.4	ESC-NPC;NXP010; Aphidicolin 0.4 uM 96h
+PW122	APH concentration	B400_018	NPC	mouse	TLX/APH_concentration/PW122_B400_018_result.tlx	chr8	Chr8_61Mb	APH 0.6 uM 96h	APH 0.6 uM 96h	APH 0.6	3	F	2	0.6	ESC-NPC;NXP010; Aphidicolin 0.6 uM 96h
 PW123	APH concentration	B400_018	NPC	mouse	TLX/APH_concentration/PW123_B400_018_result.tlx	chr5	Chr5_101Mb	DMSO	DMSO	DMSO	1	T	2	0	ESC-NPC;NXP010; DMSO
-PW124	APH concentration	B400_018	NPC	mouse	TLX/APH_concentration/PW124_B400_018_result.tlx	chr5	Chr5_101Mb	APH 0.2 uM 96h	APH 0.2 uM 96h	APH 0.2	1	F	2	0.2	ESC-NPC;NXP010; Aphidicolin 0.2 uM 96 hr
-PW125	APH concentration	B400_018	NPC	mouse	TLX/APH_concentration/PW125_B400_018_result.tlx	chr5	Chr5_101Mb	APH 0.4 uM 96h	APH 0.4 uM 96h	APH 0.4	1	F	2	0.4	ESC-NPC;NXP010; Aphidicolin 0.4 uM 96 hr
-PW126	APH concentration	B400_018	NPC	mouse	TLX/APH_concentration/PW126_B400_018_result.tlx	chr5	Chr5_101Mb	APH 0.6 uM 96h	APH 0.6 uM 96h	APH 0.6	1	F	2	0.6	ESC-NPC;NXP010; Aphidicolin 0.6 uM 96 hr
+PW124	APH concentration	B400_018	NPC	mouse	TLX/APH_concentration/PW124_B400_018_result.tlx	chr5	Chr5_101Mb	APH 0.2 uM 96h	APH 0.2 uM 96h	APH 0.2	1	F	2	0.2	ESC-NPC;NXP010; Aphidicolin 0.2 uM 96h
+PW125	APH concentration	B400_018	NPC	mouse	TLX/APH_concentration/PW125_B400_018_result.tlx	chr5	Chr5_101Mb	APH 0.4 uM 96h	APH 0.4 uM 96h	APH 0.4	1	F	2	0.4	ESC-NPC;NXP010; Aphidicolin 0.4 uM 96h
+PW126	APH concentration	B400_018	NPC	mouse	TLX/APH_concentration/PW126_B400_018_result.tlx	chr5	Chr5_101Mb	APH 0.6 uM 96h	APH 0.6 uM 96h	APH 0.6	1	F	2	0.6	ESC-NPC;NXP010; Aphidicolin 0.6 uM 96h
 PW127	APH concentration	B400_018	NPC	mouse	TLX/APH_concentration/PW127_B400_018_result.tlx	chr5	Chr5_101Mb	DMSO	DMSO	DMSO	2	T	2	0	ESC-NPC;NXP010; DMSO
-PW128	APH concentration	B400_018	NPC	mouse	TLX/APH_concentration/PW128_B400_018_result.tlx	chr5	Chr5_101Mb	APH 0.2 uM 96h	APH 0.2 uM 96h	APH 0.2	2	F	2	0.2	ESC-NPC;NXP010; Aphidicolin 0.2 uM 96 hr
-PW129	APH concentration	B400_018	NPC	mouse	TLX/APH_concentration/PW129_B400_018_result.tlx	chr5	Chr5_101Mb	APH 0.4 uM 96h	APH 0.4 uM 96h	APH 0.4	2	F	2	0.4	ESC-NPC;NXP010; Aphidicolin 0.4 uM 96 hr
-PW130	APH concentration	B400_018	NPC	mouse	TLX/APH_concentration/PW130_B400_018_result.tlx	chr5	Chr5_101Mb	APH 0.6 uM 96h	APH 0.6 uM 96h	APH 0.6	2	F	2	0.6	ESC-NPC;NXP010; Aphidicolin 0.6 uM 96 hr
+PW128	APH concentration	B400_018	NPC	mouse	TLX/APH_concentration/PW128_B400_018_result.tlx	chr5	Chr5_101Mb	APH 0.2 uM 96h	APH 0.2 uM 96h	APH 0.2	2	F	2	0.2	ESC-NPC;NXP010; Aphidicolin 0.2 uM 96h
+PW129	APH concentration	B400_018	NPC	mouse	TLX/APH_concentration/PW129_B400_018_result.tlx	chr5	Chr5_101Mb	APH 0.4 uM 96h	APH 0.4 uM 96h	APH 0.4	2	F	2	0.4	ESC-NPC;NXP010; Aphidicolin 0.4 uM 96h
+PW130	APH concentration	B400_018	NPC	mouse	TLX/APH_concentration/PW130_B400_018_result.tlx	chr5	Chr5_101Mb	APH 0.6 uM 96h	APH 0.6 uM 96h	APH 0.6	2	F	2	0.6	ESC-NPC;NXP010; Aphidicolin 0.6 uM 96h
 PW131	APH concentration	B400_018	NPC	mouse	TLX/APH_concentration/PW131_B400_018_result.tlx	chr5	Chr5_101Mb	DMSO	DMSO	DMSO	3	T	2	0	ESC-NPC;NXP010; DMSO
-PW132	APH concentration	B400_018	NPC	mouse	TLX/APH_concentration/PW132_B400_018_result.tlx	chr5	Chr5_101Mb	APH 0.2 uM 96h	APH 0.2 uM 96h	APH 0.2	3	F	2	0.2	ESC-NPC;NXP010; Aphidicolin 0.2 uM 96 hr
-PW133	APH concentration	B400_018	NPC	mouse	TLX/APH_concentration/PW133_B400_018_result.tlx	chr5	Chr5_101Mb	APH 0.4 uM 96h	APH 0.4 uM 96h	APH 0.4	3	F	2	0.4	ESC-NPC;NXP010; Aphidicolin 0.4 uM 96 hr
-PW134	APH concentration	B400_018	NPC	mouse	TLX/APH_concentration/PW134_B400_018_result.tlx	chr5	Chr5_101Mb	APH 0.6 uM 96h	APH 0.6 uM 96h	APH 0.6	3	F	2	0.6	ESC-NPC;NXP010; Aphidicolin 0.6 uM 96 hr
-PW135	APH concentration	B400_019	NPC	mouse	TLX/APH_concentration/PW135_B400_019_result.tlx	chr5	Chr5_101Mb	APH 0.3 uM 96h	APH 0.3 uM 96h	APH 0.3	1	F	2	0.3	ESC-NPC;NXP010; Aphidicolin 0.3 uM 96 hr
-PW136	APH concentration	B400_019	NPC	mouse	TLX/APH_concentration/PW136_B400_019_result.tlx	chr5	Chr5_101Mb	APH 0.3 uM 96h	APH 0.3 uM 96h	APH 0.3	2	F	2	0.3	ESC-NPC;NXP010; Aphidicolin 0.3 uM 96 hr
-PW137	APH concentration	B400_019	NPC	mouse	TLX/APH_concentration/PW137_B400_019_result.tlx	chr5	Chr5_101Mb	APH 0.3 uM 96h	APH 0.3 uM 96h	APH 0.3	3	F	2	0.3	ESC-NPC;NXP010; Aphidicolin 0.3 uM 96 hr
-PW138	APH concentration	B400_019	NPC	mouse	TLX/APH_concentration/PW138_B400_019_result.tlx	chr6	Chr6_70Mb	APH 0.3 uM 96h	APH 0.3 uM 96h	APH 0.3	1	F	2	0.3	ESC-NPC;NXP010; Aphidicolin 0.3 uM 96 hr
-PW139	APH concentration	B400_019	NPC	mouse	TLX/APH_concentration/PW139_B400_019_result.tlx	chr6	Chr6_70Mb	APH 0.3 uM 96h	APH 0.3 uM 96h	APH 0.3	2	F	2	0.3	ESC-NPC;NXP010; Aphidicolin 0.3 uM 96 hr
-PW140	APH concentration	B400_019	NPC	mouse	TLX/APH_concentration/PW140_B400_019_result.tlx	chr8	Chr8_61Mb	APH 0.3 uM 96h	APH 0.3 uM 96h	APH 0.3	1	F	2	0.3	ESC-NPC;NXP010; Aphidicolin 0.3 uM 96 hr
-PW141	APH concentration	B400_019	NPC	mouse	TLX/APH_concentration/PW141_B400_019_result.tlx	chr8	Chr8_61Mb	APH 0.3 uM 96h	APH 0.3 uM 96h	APH 0.3	2	F	2	0.3	ESC-NPC;NXP010; Aphidicolin 0.3 uM 96 hr
-PW142	APH concentration (experimental)	B400_019	NPC	mouse	TLX/APH_concentration/PW142_B400_019_result.tlx	chr8	Chr8_61Mb	APH 0.2 uM 96h	APH 0.2 uM 96h	APH 0.2	1	F	2	0.2	ESC-NPC;NXP010; Aphidicolin 0.2 uM 96 hr (test new aphidicolin)
-PW143	APH concentration (experimental)	B400_019	NPC	mouse	TLX/APH_concentration/PW143_B400_019_result.tlx	chr8	Chr8_61Mb	APH 0.4 uM 96h	APH 0.4 uM 96h	APH 0.4	1	F	2	0.4	ESC-NPC;NXP010; Aphidicolin 0.4 uM 96 hr (test new aphidicolin)
-PW144	APH concentration (experimental)	B400_019	NPC	mouse	TLX/APH_concentration/PW144_B400_019_result.tlx	chr8	Chr8_61Mb	APH 0.6 uM 96h	APH 0.6 uM 96h	APH 0.6	1	F	2	0.6	ESC-NPC;NXP010; Aphidicolin 0.6 uM 96 hr (test new aphidicolin)
-PW145	APH concentration (experimental)	B400_019	NPC	mouse	TLX/APH_concentration/PW145_B400_019_result.tlx	chr5	Chr5_101Mb	APH 0.3 uM 96h	APH 0.3 uM 96h	APH 0.3	1	F	2	0.3	ESC-NPC;NXP010; Aphidicolin 0.3 uM 96 hr (Home-made Pfu enzyme)
+PW132	APH concentration	B400_018	NPC	mouse	TLX/APH_concentration/PW132_B400_018_result.tlx	chr5	Chr5_101Mb	APH 0.2 uM 96h	APH 0.2 uM 96h	APH 0.2	3	F	2	0.2	ESC-NPC;NXP010; Aphidicolin 0.2 uM 96h
+PW133	APH concentration	B400_018	NPC	mouse	TLX/APH_concentration/PW133_B400_018_result.tlx	chr5	Chr5_101Mb	APH 0.4 uM 96h	APH 0.4 uM 96h	APH 0.4	3	F	2	0.4	ESC-NPC;NXP010; Aphidicolin 0.4 uM 96h
+PW134	APH concentration	B400_018	NPC	mouse	TLX/APH_concentration/PW134_B400_018_result.tlx	chr5	Chr5_101Mb	APH 0.6 uM 96h	APH 0.6 uM 96h	APH 0.6	3	F	2	0.6	ESC-NPC;NXP010; Aphidicolin 0.6 uM 96h
+PW135	APH concentration	B400_019	NPC	mouse	TLX/APH_concentration/PW135_B400_019_result.tlx	chr5	Chr5_101Mb	APH 0.3 uM 96h	APH 0.3 uM 96h	APH 0.3	1	F	2	0.3	ESC-NPC;NXP010; Aphidicolin 0.3 uM 96h
+PW136	APH concentration	B400_019	NPC	mouse	TLX/APH_concentration/PW136_B400_019_result.tlx	chr5	Chr5_101Mb	APH 0.3 uM 96h	APH 0.3 uM 96h	APH 0.3	2	F	2	0.3	ESC-NPC;NXP010; Aphidicolin 0.3 uM 96h
+PW137	APH concentration	B400_019	NPC	mouse	TLX/APH_concentration/PW137_B400_019_result.tlx	chr5	Chr5_101Mb	APH 0.3 uM 96h	APH 0.3 uM 96h	APH 0.3	3	F	2	0.3	ESC-NPC;NXP010; Aphidicolin 0.3 uM 96h
+PW138	APH concentration	B400_019	NPC	mouse	TLX/APH_concentration/PW138_B400_019_result.tlx	chr6	Chr6_70Mb	APH 0.3 uM 96h	APH 0.3 uM 96h	APH 0.3	1	F	2	0.3	ESC-NPC;NXP010; Aphidicolin 0.3 uM 96h
+PW139	APH concentration	B400_019	NPC	mouse	TLX/APH_concentration/PW139_B400_019_result.tlx	chr6	Chr6_70Mb	APH 0.3 uM 96h	APH 0.3 uM 96h	APH 0.3	2	F	2	0.3	ESC-NPC;NXP010; Aphidicolin 0.3 uM 96h
+PW140	APH concentration	B400_019	NPC	mouse	TLX/APH_concentration/PW140_B400_019_result.tlx	chr8	Chr8_61Mb	APH 0.3 uM 96h	APH 0.3 uM 96h	APH 0.3	1	F	2	0.3	ESC-NPC;NXP010; Aphidicolin 0.3 uM 96h
+PW141	APH concentration	B400_019	NPC	mouse	TLX/APH_concentration/PW141_B400_019_result.tlx	chr8	Chr8_61Mb	APH 0.3 uM 96h	APH 0.3 uM 96h	APH 0.3	2	F	2	0.3	ESC-NPC;NXP010; Aphidicolin 0.3 uM 96h
+PW142	APH concentration (experimental)	B400_019	NPC	mouse	TLX/APH_concentration/PW142_B400_019_result.tlx	chr8	Chr8_61Mb	APH 0.2 uM 96h	APH 0.2 uM 96h	APH 0.2	1	F	2	0.2	ESC-NPC;NXP010; Aphidicolin 0.2 uM 96h (test new aphidicolin)
+PW143	APH concentration (experimental)	B400_019	NPC	mouse	TLX/APH_concentration/PW143_B400_019_result.tlx	chr8	Chr8_61Mb	APH 0.4 uM 96h	APH 0.4 uM 96h	APH 0.4	1	F	2	0.4	ESC-NPC;NXP010; Aphidicolin 0.4 uM 96h (test new aphidicolin)
+PW144	APH concentration (experimental)	B400_019	NPC	mouse	TLX/APH_concentration/PW144_B400_019_result.tlx	chr8	Chr8_61Mb	APH 0.6 uM 96h	APH 0.6 uM 96h	APH 0.6	1	F	2	0.6	ESC-NPC;NXP010; Aphidicolin 0.6 uM 96h (test new aphidicolin)
+PW145	APH concentration (experimental)	B400_019	NPC	mouse	TLX/APH_concentration/PW145_B400_019_result.tlx	chr5	Chr5_101Mb	APH 0.3 uM 96h	APH 0.3 uM 96h	APH 0.3	1	F	2	0.3	ESC-NPC;NXP010; Aphidicolin 0.3 uM 96h (Home-made Pfu enzyme)
 GDM01	Doxycycline 10ug/ml	B400_019	ESC	mouse	TLX/GDM01_B400_019_result.tlx	chr6	Chr6_70Mb	Doxycycline 10ug/ml	Doxycycline 10ug/ml		1	F	2		ESC; TLCV2_Chr6-JM8/A4; Doxycycline 10ug/ml 36 hr
 GDM02	Doxycycline 10ug/ml	B400_019	ESC	mouse	TLX/GDM02_B400_019_result.tlx	chr6	Chr6_70Mb	Doxycycline 10ug/ml	Doxycycline 10ug/ml		2	F	2		ESC; TLCV2_Chr6-JM8/A4; Doxycycline 10ug/ml 36 hr
 GDM03	Doxycycline 10ug/ml	B400_019	ESC	mouse	TLX/GDM03_B400_019_result.tlx	chr6	Chr6_70Mb	Doxycycline 10ug/ml	Doxycycline 10ug/ml		1	T	2		ESC; TLCV2_Chr6-JM8/A4; untreated
 GDM04	Doxycycline 10ug/ml	B400_019	ESC	mouse	TLX/GDM04_B400_019_result.tlx	chr6	Chr6_70Mb	Doxycycline 10ug/ml	Doxycycline 10ug/ml		2	T	2		ESC; TLCV2_Chr6-JM8/A4; untreated
-PW146	APH concentration	B400_020	NPC	mouse	TLX/APH_concentration/PW146_B400_020_result.tlx	chr12	Chr12_13Mb	APH 0.3 uM 96h	APH 0.3 uM 96h	APH 0.3 uM 96h	1	F	2	0.3	ESC-NPC;NXP010;Aphidicolin 0.3 uM 96 hr
-PW147	APH concentration	B400_020	NPC	mouse	TLX/APH_concentration/PW147_B400_020_result.tlx	chr12	Chr12_13Mb	APH 0.3 uM 96h	APH 0.3 uM 96h	APH 0.3 uM 96h	2	F	2	0.3	ESC-NPC;NXP010;Aphidicolin 0.3 uM 96 hr
-PW148	APH concentration	B400_020	NPC	mouse	TLX/APH_concentration/PW148_B400_020_result.tlx	chr12	Chr12_13Mb	APH 0.3 uM 96h	APH 0.3 uM 96h	APH 0.3 uM 96h	3	F	2	0.3	ESC-NPC;NXP010;Aphidicolin 0.3 uM 96 hr
-PW149	APH concentration	B400_020	NPC	mouse	TLX/APH_concentration/PW149_B400_020_result.tlx	chr12	Chr12_13Mb	APH 0.4 uM 96h	APH 0.4 uM 96h	APH 0.4 uM 96h	1	F	2	0.4	ESC-NPC;NXP010;Aphidicolin 0.4 uM 96 hr
-PW150	APH concentration	B400_020	NPC	mouse	TLX/APH_concentration/PW150_B400_020_result.tlx	chr12	Chr12_13Mb	APH 0.4 uM 96h	APH 0.4 uM 96h	APH 0.4 uM 96h	2	F	2	0.4	ESC-NPC;NXP010;Aphidicolin 0.4 uM 96 hr
-PW151	APH concentration	B400_020	NPC	mouse	TLX/APH_concentration/PW151_B400_020_result.tlx	chr12	Chr12_13Mb	APH 0.6 uM 96h	APH 0.6 uM 96h	APH 0.6 uM 96h	1	F	2	0.6	ESC-NPC;NXP010;Aphidicolin 0.6 uM 96 hr
-PW152	APH concentration	B400_020	NPC	mouse	TLX/APH_concentration/PW152_B400_020_result.tlx	chr12	Chr12_13Mb	APH 0.6 uM 96h	APH 0.6 uM 96h	APH 0.6 uM 96h	2	F	2	0.6	ESC-NPC;NXP010;Aphidicolin 0.6 uM 96 hr
-PW153	APH concentration	B400_020	NPC	mouse	TLX/APH_concentration/PW153_B400_020_result.tlx	chr12	Chr12_13Mb	APH 0.6 uM 96h	APH 0.6 uM 96h	APH 0.6 uM 96h	3	F	2	0.6	ESC-NPC;NXP010;Aphidicolin 0.6 uM 96 hr
+PW146	APH concentration	B400_020	NPC	mouse	TLX/APH_concentration/PW146_B400_020_result.tlx	chr12	Chr12_13Mb	APH 0.3 uM 96h	APH 0.3 uM 96h	APH 0.3 uM 96h	1	F	2	0.3	ESC-NPC;NXP010;Aphidicolin 0.3 uM 96h
+PW147	APH concentration	B400_020	NPC	mouse	TLX/APH_concentration/PW147_B400_020_result.tlx	chr12	Chr12_13Mb	APH 0.3 uM 96h	APH 0.3 uM 96h	APH 0.3 uM 96h	2	F	2	0.3	ESC-NPC;NXP010;Aphidicolin 0.3 uM 96h
+PW148	APH concentration	B400_020	NPC	mouse	TLX/APH_concentration/PW148_B400_020_result.tlx	chr12	Chr12_13Mb	APH 0.3 uM 96h	APH 0.3 uM 96h	APH 0.3 uM 96h	3	F	2	0.3	ESC-NPC;NXP010;Aphidicolin 0.3 uM 96h
+PW149	APH concentration	B400_020	NPC	mouse	TLX/APH_concentration/PW149_B400_020_result.tlx	chr12	Chr12_13Mb	APH 0.4 uM 96h	APH 0.4 uM 96h	APH 0.4 uM 96h	1	F	2	0.4	ESC-NPC;NXP010;Aphidicolin 0.4 uM 96h
+PW150	APH concentration	B400_020	NPC	mouse	TLX/APH_concentration/PW150_B400_020_result.tlx	chr12	Chr12_13Mb	APH 0.4 uM 96h	APH 0.4 uM 96h	APH 0.4 uM 96h	2	F	2	0.4	ESC-NPC;NXP010;Aphidicolin 0.4 uM 96h
+PW151	APH concentration	B400_020	NPC	mouse	TLX/APH_concentration/PW151_B400_020_result.tlx	chr12	Chr12_13Mb	APH 0.6 uM 96h	APH 0.6 uM 96h	APH 0.6 uM 96h	1	F	2	0.6	ESC-NPC;NXP010;Aphidicolin 0.6 uM 96h
+PW152	APH concentration	B400_020	NPC	mouse	TLX/APH_concentration/PW152_B400_020_result.tlx	chr12	Chr12_13Mb	APH 0.6 uM 96h	APH 0.6 uM 96h	APH 0.6 uM 96h	2	F	2	0.6	ESC-NPC;NXP010;Aphidicolin 0.6 uM 96h
+PW153	APH concentration	B400_020	NPC	mouse	TLX/APH_concentration/PW153_B400_020_result.tlx	chr12	Chr12_13Mb	APH 0.6 uM 96h	APH 0.6 uM 96h	APH 0.6 uM 96h	3	F	2	0.6	ESC-NPC;NXP010;Aphidicolin 0.6 uM 96h
 VI067	Nrxn1 promoter/enhancer	B400_020	NPC	mouse	TLX/VI067_B400_020_result.tlx	chr17	Chr17_41Mb	DMSO	Allelic deletion (22)	DMSO	1	T	1	0	ESC-NPC;Nxp047;22;DMSO
 VI068	Nrxn1 promoter/enhancer	B400_020	NPC	mouse	TLX/VI068_B400_020_result.tlx	chr17	Chr17_41Mb	DMSO	Allelic deletion (22)	DMSO	2	T	1	0	ESC-NPC;Nxp047;22;DMSO
 VI069	Nrxn1 promoter/enhancer	B400_020	NPC	mouse	TLX/VI069_B400_020_result.tlx	chr17	Chr17_41Mb	DMSO	Allelic+promoter deletion (22/5)	DMSO	1	T	1	0	ESC-NPC;Nxp047;22-5;DMSO
 VI070	Nrxn1 promoter/enhancer	B400_020	NPC	mouse	TLX/VI070_B400_020_result.tlx	chr17	Chr17_41Mb	DMSO	Allelic+promoter deletion (22/5)	DMSO	2	T	1	0	ESC-NPC;Nxp047;22-5;DMSO
 VI071	Nrxn1 promoter/enhancer	B400_020	NPC	mouse	TLX/VI071_B400_020_result.tlx	chr17	Chr17_41Mb	DMSO	Allelic+promoter deletion (22/37)	DMSO	1	T	1	0	ESC-NPC;Nxp047;22-37;DMSO
-VI072	Nrxn1 promoter/enhancer	B400_020	NPC	mouse	TLX/VI072_B400_020_result.tlx	chr17	Chr17_41Mb	APH 0.5 uM 96h	Allelic deletion (22)	APH 0.5 uM 96h	1	F	1	0.5	ESC-NPC;Nxp047;22;Aphidicolin 0.5 uM 96 hr
-VI073	Nrxn1 promoter/enhancer	B400_020	NPC	mouse	TLX/VI073_B400_020_result.tlx	chr17	Chr17_41Mb	APH 0.5 uM 96h	Allelic deletion (22)	APH 0.5 uM 96h	2	F	1	0.5	ESC-NPC;Nxp047;22;Aphidicolin 0.5 uM 96 hr
-VI074	Nrxn1 promoter/enhancer	B400_020	NPC	mouse	TLX/VI074_B400_020_result.tlx	chr17	Chr17_41Mb	APH 0.5 uM 96h	Allelic+promoter deletion (22/5)	APH 0.5 uM 96h	1	F	1	0.5	ESC-NPC;Nxp047;22-5;Aphidicolin 0.5 uM 96 hr
-VI075	Nrxn1 promoter/enhancer	B400_020	NPC	mouse	TLX/VI075_B400_020_result.tlx	chr17	Chr17_41Mb	APH 0.5 uM 96h	Allelic+promoter deletion (22/5)	APH 0.5 uM 96h	2	F	1	0.5	ESC-NPC;Nxp047;22-5;Aphidicolin 0.5 uM 96 hr
-VI076	Nrxn1 promoter/enhancer	B400_020	NPC	mouse	TLX/VI076_B400_020_result.tlx	chr17	Chr17_41Mb	APH 0.5 uM 96h	Allelic+promoter deletion (22/37)	APH 0.5 uM 96h	1	F	1	0.5	ESC-NPC;Nxp047;22-37;Aphidicolin 0.5 uM 96 hr
-PW154_PW157	APH concentration	B400_021	NPC	mouse	TLX/APH_concentration/PW154_PW157_B400_021_result.tlx	chr5	Chr5_101Mb	APH 0.3 uM 96h	APH 0.3 uM 96h	APH 0.3 uM 96h	3	F	2	0.3	ESC-NPC;NXP010;Aphidicolin 0.3 uM 96 hr
-PW155	APH concentration	B400_021	NPC	mouse	TLX/APH_concentration/PW155_B400_021_result.tlx	chr6	Chr6_70Mb	APH 0.3 uM 96h	APH 0.3 uM 96h	APH 0.3 uM 96h	3	F	2	0.3	ESC-NPC;NXP010;Aphidicolin 0.3 uM 96 hr
-PW156_PW159	APH concentration	B400_021	NPC	mouse	TLX/APH_concentration/PW156_PW159_B400_021_result.tlx	chr8	Chr8_61Mb	APH 0.3 uM 96h	APH 0.3 uM 96h	APH 0.3 uM 96h	3	F	2	0.3	ESC-NPC;NXP010;Aphidicolin 0.3 uM 96 hr
-PW158	APH concentration	B400_021	NPC	mouse	TLX/APH_concentration/PW158_B400_021_result.tlx	chr6	Chr6_70Mb	APH 0.3 uM 96h	APH 0.3 uM 96h	APH 0.3 uM 96h	3	F	2	0.3	ESC-NPC;NXP010;Aphidicolin 0.3 uM 96 hr
-PW160	Wee1 concentration	B400_021	NPC	mouse	TLX/Wee1_concentration/PW160_B400_021_result.tlx	chr5	Chr5_101Mb	Wee1 0.125 uM	Wee1 0.125 uM	Wee1 0.125 uM	1	F	2	0.125	ESC-NPC;NXP010;Aphidicolin 0.3 uM 96 hr;Wee1 0.125 uM
-PW161	Wee1 concentration	B400_021	NPC	mouse	TLX/Wee1_concentration/PW161_B400_021_result.tlx	chr6	Chr6_70Mb	Wee1 0.125 uM	Wee1 0.125 uM	Wee1 0.125 uM	1	F	2	0.125	ESC-NPC;NXP010;Aphidicolin 0.3 uM 96 hr;Wee1 0.125 uM
-PW162	Wee1 concentration	B400_021	NPC	mouse	TLX/Wee1_concentration/PW162_B400_021_result.tlx	chr8	Chr8_61Mb	Wee1 0.125 uM	Wee1 0.125 uM	Wee1 0.125 uM	1	F	2	0.125	ESC-NPC;NXP010;Aphidicolin 0.3 uM 96 hr;Wee1 0.125 uM
-PW163	Wee1 concentration	B400_021	NPC	mouse	TLX/Wee1_concentration/PW163_B400_021_result.tlx	chr5	Chr5_101Mb	Wee1 0.25 uM	Wee1 0.25 uM	Wee1 0.25 uM	1	F	2	0.25	ESC-NPC;NXP010;Aphidicolin 0.3 uM 96 hr;Wee1 0.25 uM
-PW164	Wee1 concentration	B400_021	NPC	mouse	TLX/Wee1_concentration/PW164_B400_021_result.tlx	chr6	Chr6_70Mb	Wee1 0.25 uM	Wee1 0.25 uM	Wee1 0.25 uM	1	F	2	0.25	ESC-NPC;NXP010;Aphidicolin 0.3 uM 96 hr;Wee1 0.25 uM
-PW165	Wee1 concentration	B400_021	NPC	mouse	TLX/Wee1_concentration/PW165_B400_021_result.tlx	chr8	Chr8_61Mb	Wee1 0.25 uM	Wee1 0.25 uM	Wee1 0.25 uM	1	F	2	0.25	ESC-NPC;NXP010;Aphidicolin 0.3 uM 96 hr;Wee1 0.25 uM
-PW166	Wee1 concentration	B400_021	NPC	mouse	TLX/Wee1_concentration/PW166_B400_021_result.tlx	chr5	Chr5_101Mb	Wee1 0.5 uM	Wee1 0.5 uM	Wee1 0.5 uM	1	F	2	0.5	ESC-NPC;NXP010;Aphidicolin 0.3 uM 96 hr;Wee1 0.5 uM
-PW167	Wee1 concentration	B400_021	NPC	mouse	TLX/Wee1_concentration/PW167_B400_021_result.tlx	chr6	Chr6_70Mb	Wee1 0.5 uM	Wee1 0.5 uM	Wee1 0.5 uM	1	F	2	0.5	ESC-NPC;NXP010;Aphidicolin 0.3 uM 96 hr;Wee1 0.5 uM
-PW168	Wee1 concentration	B400_021	NPC	mouse	TLX/Wee1_concentration/PW168_B400_021_result.tlx	chr8	Chr8_61Mb	Wee1 0.5 uM	Wee1 0.5 uM	Wee1 0.5 uM	1	F	2	0.5	ESC-NPC;NXP010;Aphidicolin 0.3 uM 96 hr;Wee1 0.5 uM
-VI077	Nrxn1 promoter/enhancer	B400_021	NPC	mouse	TLX/VI077_B400_021_result.tlx	chr17	Chr17_41Mb	DMSO	Allelic deletion (22)	fndr_22	3	T	1	0.5	ESC-NPC;NXP047;DMSO
-VI078	Nrxn1 promoter/enhancer	B400_021	NPC	mouse	TLX/VI078_B400_021_result.tlx	chr17	Chr17_41Mb	APH 0.5 uM 96h	Allelic deletion (22)	fndr_22	3	F	1	0.5	ESC-NPC;NXP047;Aphidicolin 0.5 uM 96h
-VI079	Nrxn1 promoter/enhancer	B400_021	NPC	mouse	TLX/VI079_B400_021_result.tlx	chr17	Chr17_41Mb	DMSO	Allelic+promoter deletion (22/5)	fndr-prom_22-5	3	T	1	0.5	ESC-NPC;NXP047;DMSO
-VI080	Nrxn1 promoter/enhancer	B400_021	NPC	mouse	TLX/VI080_B400_021_result.tlx	chr17	Chr17_41Mb	APH 0.5 uM 96h	Allelic+promoter deletion (22/5)	fndr-prom_22-5	3	F	1	0.5	ESC-NPC;NXP047;Aphidicolin 0.5 uM 96h
-VI081	Nrxn1 promoter/enhancer	B400_021	NPC	mouse	TLX/VI081_B400_021_result.tlx	chr17	Chr17_41Mb	DMSO	Allelic+promoter deletion (22/37)	fndr-prom_22-37	3	T	1	0.5	ESC-NPC;NXP047;DMSO
-VI082	Nrxn1 promoter/enhancer	B400_021	NPC	mouse	TLX/VI082_B400_021_result.tlx	chr17	Chr17_41Mb	APH 0.5 uM 96h	Allelic+promoter deletion (22/37)	fndr-prom_22-37	3	F	1	0.5	ESC-NPC;NXP047;Aphidicolin 0.5 uM 96h
-VI083	Nrxn1 promoter/enhancer	B400_021	NPC	mouse	TLX/VI083_B400_021_result.tlx	chr17	Chr17_41Mb	DMSO	Allelic+promoter deletion (22/37)	fndr-prom_22-37	4	T	1	0.5	ESC-NPC;NXP047;DMSO
-VI084	Nrxn1 promoter/enhancer	B400_021	NPC	mouse	TLX/VI084_B400_021_result.tlx	chr17	Chr17_41Mb	APH 0.5 uM 96h	Allelic+promoter deletion (22/37)	fndr-prom_22-37	4	F	1	0.5	ESC-NPC;NXP047;Aphidicolin 0.5 uM 96h
+VI072	Nrxn1 promoter/enhancer	B400_020	NPC	mouse	TLX/VI072_B400_020_result.tlx	chr17	Chr17_41Mb	APH 0.5 uM 96h	Allelic deletion (22)	APH 0.5 uM 96h	1	F	1	0.5	ESC-NPC;Nxp047;22;Aphidicolin 0.5 uM 96h
+VI073	Nrxn1 promoter/enhancer	B400_020	NPC	mouse	TLX/VI073_B400_020_result.tlx	chr17	Chr17_41Mb	APH 0.5 uM 96h	Allelic deletion (22)	APH 0.5 uM 96h	2	F	1	0.5	ESC-NPC;Nxp047;22;Aphidicolin 0.5 uM 96h
+VI074	Nrxn1 promoter/enhancer	B400_020	NPC	mouse	TLX/VI074_B400_020_result.tlx	chr17	Chr17_41Mb	APH 0.5 uM 96h	Allelic+promoter deletion (22/5)	APH 0.5 uM 96h	1	F	1	0.5	ESC-NPC;Nxp047;22-5;Aphidicolin 0.5 uM 96h
+VI075	Nrxn1 promoter/enhancer	B400_020	NPC	mouse	TLX/VI075_B400_020_result.tlx	chr17	Chr17_41Mb	APH 0.5 uM 96h	Allelic+promoter deletion (22/5)	APH 0.5 uM 96h	2	F	1	0.5	ESC-NPC;Nxp047;22-5;Aphidicolin 0.5 uM 96h
+VI076	Nrxn1 promoter/enhancer	B400_020	NPC	mouse	TLX/VI076_B400_020_result.tlx	chr17	Chr17_41Mb	APH 0.5 uM 96h	Allelic+promoter deletion (22/37)	APH 0.5 uM 96h	1	F	1	0.5	ESC-NPC;Nxp047;22-37;Aphidicolin 0.5 uM 96h
+PW154_PW157	APH concentration	B400_021	NPC	mouse	TLX/APH_concentration/PW154_PW157_B400_021_result.tlx	chr5	Chr5_101Mb	APH 0.3 uM 96h	APH 0.3 uM 96h	APH 0.3 uM 96h	3	F	2	0.3	ESC-NPC;NXP010;Aphidicolin 0.3 uM 96h
+PW155	APH concentration	B400_021	NPC	mouse	TLX/APH_concentration/PW155_B400_021_result.tlx	chr6	Chr6_70Mb	APH 0.3 uM 96h	APH 0.3 uM 96h	APH 0.3 uM 96h	3	F	2	0.3	ESC-NPC;NXP010;Aphidicolin 0.3 uM 96h
+PW156_PW159	APH concentration	B400_021	NPC	mouse	TLX/APH_concentration/PW156_PW159_B400_021_result.tlx	chr8	Chr8_61Mb	APH 0.3 uM 96h	APH 0.3 uM 96h	APH 0.3 uM 96h	3	F	2	0.3	ESC-NPC;NXP010;Aphidicolin 0.3 uM 96h
+PW158	APH concentration	B400_021	NPC	mouse	TLX/APH_concentration/PW158_B400_021_result.tlx	chr6	Chr6_70Mb	APH 0.3 uM 96h	APH 0.3 uM 96h	APH 0.3 uM 96h	3	F	2	0.3	ESC-NPC;NXP010;Aphidicolin 0.3 uM 96h
+PW160	Wee1 concentration	B400_021	NPC	mouse	TLX/Wee1_concentration/PW160_B400_021_result.tlx	chr5	Chr5_101Mb	Wee1 0.125 uM	Wee1 0.125 uM	Wee1 0.125 uM	1	F	2	0.125	ESC-NPC;NXP010;Aphidicolin 0.3 uM 96h;Wee1 0.125 uM
+PW161	Wee1 concentration	B400_021	NPC	mouse	TLX/Wee1_concentration/PW161_B400_021_result.tlx	chr6	Chr6_70Mb	Wee1 0.125 uM	Wee1 0.125 uM	Wee1 0.125 uM	1	F	2	0.125	ESC-NPC;NXP010;Aphidicolin 0.3 uM 96h;Wee1 0.125 uM
+PW162	Wee1 concentration	B400_021	NPC	mouse	TLX/Wee1_concentration/PW162_B400_021_result.tlx	chr8	Chr8_61Mb	Wee1 0.125 uM	Wee1 0.125 uM	Wee1 0.125 uM	1	F	2	0.125	ESC-NPC;NXP010;Aphidicolin 0.3 uM 96h;Wee1 0.125 uM
+PW163	Wee1 concentration	B400_021	NPC	mouse	TLX/Wee1_concentration/PW163_B400_021_result.tlx	chr5	Chr5_101Mb	Wee1 0.25 uM	Wee1 0.25 uM	Wee1 0.25 uM	1	F	2	0.25	ESC-NPC;NXP010;Aphidicolin 0.3 uM 96h;Wee1 0.25 uM
+PW164	Wee1 concentration	B400_021	NPC	mouse	TLX/Wee1_concentration/PW164_B400_021_result.tlx	chr6	Chr6_70Mb	Wee1 0.25 uM	Wee1 0.25 uM	Wee1 0.25 uM	1	F	2	0.25	ESC-NPC;NXP010;Aphidicolin 0.3 uM 96h;Wee1 0.25 uM
+PW165	Wee1 concentration	B400_021	NPC	mouse	TLX/Wee1_concentration/PW165_B400_021_result.tlx	chr8	Chr8_61Mb	Wee1 0.25 uM	Wee1 0.25 uM	Wee1 0.25 uM	1	F	2	0.25	ESC-NPC;NXP010;Aphidicolin 0.3 uM 96h;Wee1 0.25 uM
+PW166	Wee1 concentration	B400_021	NPC	mouse	TLX/Wee1_concentration/PW166_B400_021_result.tlx	chr5	Chr5_101Mb	Wee1 0.5 uM	Wee1 0.5 uM	Wee1 0.5 uM	1	F	2	0.5	ESC-NPC;NXP010;Aphidicolin 0.3 uM 96h;Wee1 0.5 uM
+PW167	Wee1 concentration	B400_021	NPC	mouse	TLX/Wee1_concentration/PW167_B400_021_result.tlx	chr6	Chr6_70Mb	Wee1 0.5 uM	Wee1 0.5 uM	Wee1 0.5 uM	1	F	2	0.5	ESC-NPC;NXP010;Aphidicolin 0.3 uM 96h;Wee1 0.5 uM
+PW168	Wee1 concentration	B400_021	NPC	mouse	TLX/Wee1_concentration/PW168_B400_021_result.tlx	chr8	Chr8_61Mb	Wee1 0.5 uM	Wee1 0.5 uM	Wee1 0.5 uM	1	F	2	0.5	ESC-NPC;NXP010;Aphidicolin 0.3 uM 96h;Wee1 0.5 uM
+VI077	Nrxn1 promoter/enhancer	B400_021	NPC	mouse	TLX/VI077_B400_021_result.tlx	chr17	Chr17_41Mb	DMSO	Allelic deletion (22)	fndr_22	3	T	1	0.5	ESC-NPC;Nxp047;22;DMSO
+VI078	Nrxn1 promoter/enhancer	B400_021	NPC	mouse	TLX/VI078_B400_021_result.tlx	chr17	Chr17_41Mb	APH 0.5 uM 96h	Allelic deletion (22)	fndr_22	3	F	1	0.5	ESC-NPC;Nxp047;22;Aphidicolin 0.5 uM 96h
+VI079	Nrxn1 promoter/enhancer	B400_021	NPC	mouse	TLX/VI079_B400_021_result.tlx	chr17	Chr17_41Mb	DMSO	Allelic+promoter deletion (22/5)	fndr-prom_22-5	3	T	1	0.5	ESC-NPC;Nxp047;22-5;DMSO
+VI080	Nrxn1 promoter/enhancer	B400_021	NPC	mouse	TLX/VI080_B400_021_result.tlx	chr17	Chr17_41Mb	APH 0.5 uM 96h	Allelic+promoter deletion (22/5)	fndr-prom_22-5	3	F	1	0.5	ESC-NPC;Nxp047;22-5;Aphidicolin 0.5 uM 96h
+VI081	Nrxn1 promoter/enhancer	B400_021	NPC	mouse	TLX/VI081_B400_021_result.tlx	chr17	Chr17_41Mb	DMSO	Allelic+promoter deletion (22/37)	fndr-prom_22-37	3	T	1	0.5	ESC-NPC;Nxp047;22-37;DMSO
+VI082	Nrxn1 promoter/enhancer	B400_021	NPC	mouse	TLX/VI082_B400_021_result.tlx	chr17	Chr17_41Mb	APH 0.5 uM 96h	Allelic+promoter deletion (22/37)	fndr-prom_22-37	3	F	1	0.5	ESC-NPC;Nxp047;22-37;Aphidicolin 0.5 uM 96h
+VI083	Nrxn1 promoter/enhancer	B400_021	NPC	mouse	TLX/VI083_B400_021_result.tlx	chr17	Chr17_41Mb	DMSO	Allelic+promoter deletion (22/37)	fndr-prom_22-37	4	T	1	0.5	ESC-NPC;Nxp047;22-37;DMSO
+VI084	Nrxn1 promoter/enhancer	B400_021	NPC	mouse	TLX/VI084_B400_021_result.tlx	chr17	Chr17_41Mb	APH 0.5 uM 96h	Allelic+promoter deletion (22/37)	fndr-prom_22-37	4	F	1	0.5	ESC-NPC;Nxp047;22-37;Aphidicolin 0.5 uM 96h
 VI085	Nrxn1 promoter/enhancer	B400_022	NPC	mouse	TLX/VI085_B400_022_result.tlx	chr17	Chr17_41Mb	DMSO	Parental cell (NXP047)	NXP047	3	T	2	0	ESC-NPC;NXP047;DMSO
-VI086	Nrxn1 promoter/enhancer	B400_022	NPC	mouse	TLX/VI086_B400_022_result.tlx	chr17	Chr17_41Mb	APH 0.5 uM 96h	Parental cell (NXP047)	NXP047	3	F	2	0.5	ESC-NPC;Nxp047; Aphidicolin 0.5 uM 96 hr
+VI086	Nrxn1 promoter/enhancer	B400_022	NPC	mouse	TLX/VI086_B400_022_result.tlx	chr17	Chr17_41Mb	APH 0.5 uM 96h	Parental cell (NXP047)	NXP047	3	F	2	0.5	ESC-NPC;Nxp047; Aphidicolin 0.5 uM 96h
 VI087	Nrxn1 promoter/enhancer	B400_022	NPC	mouse	TLX/VI087_B400_022_result.tlx	chr17	Chr17_41Mb	DMSO	Parental cell (NXP047)	NXP047	4	T	2	0	ESC-NPC;NXP047;DMSO
-VI088	Nrxn1 promoter/enhancer	B400_022	NPC	mouse	TLX/VI088_B400_022_result.tlx	chr17	Chr17_41Mb	APH 0.5 uM 96h	Parental cell (NXP047)	NXP047	4	F	2	0.5	ESC-NPC;Nxp047; Aphidicolin 0.5 uM 96 hr
-SRR2820416	Wei et al. Cell 2016	Wei2016_Chr12	NPC	mouse	TLX/Wei2016/SRR2820416_WEI2016_result.tlx	chr12	Chr12_13Mb	APH 0.5uM	chr12	chr12	1	F	2	0.5	From Wei et al. Cell 2016; X4p53_Chr12_sgRNA_1_APH_ExpA	From Wei et al. Cell 2016; X4p53_Chr12_sgRNA_1_APH_ExpAX4p53_Chr12_sgRNA_1_APH_ExpA
-SRR2820417	Wei et al. Cell 2016	Wei2016_Chr12	NPC	mouse	TLX/Wei2016/SRR2820417_WEI2016_result.tlx	chr12	Chr12_13Mb	APH 0.5uM	chr12	chr12	2	F	2	0.5	From Wei et al. Cell 2016; X4p53_Chr12_sgRNA_1_APH_ExpB	From Wei et al. Cell 2016; X4p53_Chr12_sgRNA_1_APH_ExpBX4p53_Chr12_sgRNA_1_APH_ExpB
-SRR2820418	Wei et al. Cell 2016	Wei2016_Chr12	NPC	mouse	TLX/Wei2016/SRR2820418_WEI2016_result.tlx	chr12	Chr12_13Mb	APH 0.5uM	chr12	chr12	3	F	2	0.5	From Wei et al. Cell 2016; X4p53_Chr12_sgRNA_1_APH_ExpC	From Wei et al. Cell 2016; X4p53_Chr12_sgRNA_1_APH_ExpCX4p53_Chr12_sgRNA_1_APH_ExpC
-SRR2820463	Wei et al. Cell 2016	Wei2016_Chr15	NPC	mouse	TLX/Wei2016/SRR2820463_WEI2016_result.tlx	chr15	Chr15_62Mb	APH 0.5uM	chr15	chr15	1	F	2	0.5	From Wei et al. Cell 2016; X4p53_Chr15_Myc_SgRNA_APH_ExpA	From Wei et al. Cell 2016; X4p53_Chr15_Myc_SgRNA_APH_ExpAX4p53_Chr15_Myc_SgRNA_APH_ExpA
-SRR2820464	Wei et al. Cell 2016	Wei2016_Chr15	NPC	mouse	TLX/Wei2016/SRR2820464_WEI2016_result.tlx	chr15	Chr15_62Mb	APH 0.5uM	chr15	chr15	2	F	2	0.5	From Wei et al. Cell 2016; X4p53_Chr15_Myc_SgRNA_APH_ExpB	From Wei et al. Cell 2016; X4p53_Chr15_Myc_SgRNA_APH_ExpBX4p53_Chr15_Myc_SgRNA_APH_ExpB
-SRR2820466	Wei et al. Cell 2016	Wei2016_Chr15	NPC	mouse	TLX/Wei2016/SRR2820466_WEI2016_result.tlx	chr15	Chr15_62Mb	APH 0.5uM	chr15	chr15	3	F	2	0.5	From Wei et al. Cell 2016; X4p53_Chr15_Myc_SgRNA_APH_ExpC	From Wei et al. Cell 2016; X4p53_Chr15_Myc_SgRNA_APH_ExpCX4p53_Chr15_Myc_SgRNA_APH_ExpC
-SRR2820474	Wei et al. Cell 2016	Wei2016_Chr16	NPC	mouse	TLX/Wei2016/SRR2820474_WEI2016_result.tlx	chr16	Chr16_39Mb	APH 0.5uM	chr16	chr16	1	F	2	0.5	From Wei et al. Cell 2016; X4p53_Chr16_sgRNA_2_APH_ExpA	From Wei et al. Cell 2016; X4p53_Chr16_sgRNA_2_APH_ExpAX4p53_Chr16_sgRNA_2_APH_ExpA
-SRR2820475	Wei et al. Cell 2016	Wei2016_Chr16	NPC	mouse	TLX/Wei2016/SRR2820475_WEI2016_result.tlx	chr16	Chr16_39Mb	APH 0.5uM	chr16	chr16	2	F	2	0.5	From Wei et al. Cell 2016; X4p53_Chr16_sgRNA_2_APH_ExpB	From Wei et al. Cell 2016; X4p53_Chr16_sgRNA_2_APH_ExpBX4p53_Chr16_sgRNA_2_APH_ExpB
-SRR2820476	Wei et al. Cell 2016	Wei2016_Chr16	NPC	mouse	TLX/Wei2016/SRR2820476_WEI2016_result.tlx	chr16	Chr16_39Mb	APH 0.5uM	chr16	chr16	3	F	2	0.5	From Wei et al. Cell 2016; X4p53_Chr16_sgRNA_2_APH_ExpC	From Wei et al. Cell 2016; X4p53_Chr16_sgRNA_2_APH_ExpCX4p53_Chr16_sgRNA_2_APH_ExpC
-SRR2820477	Wei et al. Cell 2016	Wei2016_Chr16	NPC	mouse	TLX/Wei2016/SRR2820477_WEI2016_result.tlx	chr16	Chr16_39Mb	APH 0.5uM	chr16	chr16	4	F	2	0.5	From Wei et al. Cell 2016; X4p53_Chr16_sgRNA_2_APH_ExpD	From Wei et al. Cell 2016; X4p53_Chr16_sgRNA_2_APH_ExpDX4p53_Chr16_sgRNA_2_APH_ExpD
+VI088	Nrxn1 promoter/enhancer	B400_022	NPC	mouse	TLX/VI088_B400_022_result.tlx	chr17	Chr17_41Mb	APH 0.5 uM 96h	Parental cell (NXP047)	NXP047	4	F	2	0.5	ESC-NPC;Nxp047; Aphidicolin 0.5 uM 96h
+SRR2820416	Wei et al. Cell 2016	Wei2016_Chr12	NPC	mouse	TLX/Wei2016/SRR2820416_WEI2016_result.tlx	chr12	Chr12_13Mb	APH 0.5uM	chr12	chr12	1	F	2	0.5	From Wei et al. Cell 2016; X4p53_Chr12_sgRNA_1_APH_ExpA
+SRR2820417	Wei et al. Cell 2016	Wei2016_Chr12	NPC	mouse	TLX/Wei2016/SRR2820417_WEI2016_result.tlx	chr12	Chr12_13Mb	APH 0.5uM	chr12	chr12	2	F	2	0.5	From Wei et al. Cell 2016; X4p53_Chr12_sgRNA_1_APH_ExpB
+SRR2820418	Wei et al. Cell 2016	Wei2016_Chr12	NPC	mouse	TLX/Wei2016/SRR2820418_WEI2016_result.tlx	chr12	Chr12_13Mb	APH 0.5uM	chr12	chr12	3	F	2	0.5	From Wei et al. Cell 2016; X4p53_Chr12_sgRNA_1_APH_ExpC
+SRR2820463	Wei et al. Cell 2016	Wei2016_Chr15	NPC	mouse	TLX/Wei2016/SRR2820463_WEI2016_result.tlx	chr15	Chr15_62Mb	APH 0.5uM	chr15	chr15	1	F	2	0.5	From Wei et al. Cell 2016; X4p53_Chr15_Myc_SgRNA_APH_ExpA
+SRR2820464	Wei et al. Cell 2016	Wei2016_Chr15	NPC	mouse	TLX/Wei2016/SRR2820464_WEI2016_result.tlx	chr15	Chr15_62Mb	APH 0.5uM	chr15	chr15	2	F	2	0.5	From Wei et al. Cell 2016; X4p53_Chr15_Myc_SgRNA_APH_ExpB
+SRR2820466	Wei et al. Cell 2016	Wei2016_Chr15	NPC	mouse	TLX/Wei2016/SRR2820466_WEI2016_result.tlx	chr15	Chr15_62Mb	APH 0.5uM	chr15	chr15	3	F	2	0.5	From Wei et al. Cell 2016; X4p53_Chr15_Myc_SgRNA_APH_ExpC
+SRR2820474	Wei et al. Cell 2016	Wei2016_Chr16	NPC	mouse	TLX/Wei2016/SRR2820474_WEI2016_result.tlx	chr16	Chr16_39Mb	APH 0.5uM	chr16	chr16	1	F	2	0.5	From Wei et al. Cell 2016; X4p53_Chr16_sgRNA_2_APH_ExpA
+SRR2820475	Wei et al. Cell 2016	Wei2016_Chr16	NPC	mouse	TLX/Wei2016/SRR2820475_WEI2016_result.tlx	chr16	Chr16_39Mb	APH 0.5uM	chr16	chr16	2	F	2	0.5	From Wei et al. Cell 2016; X4p53_Chr16_sgRNA_2_APH_ExpB
+SRR2820476	Wei et al. Cell 2016	Wei2016_Chr16	NPC	mouse	TLX/Wei2016/SRR2820476_WEI2016_result.tlx	chr16	Chr16_39Mb	APH 0.5uM	chr16	chr16	3	F	2	0.5	From Wei et al. Cell 2016; X4p53_Chr16_sgRNA_2_APH_ExpC
+SRR2820477	Wei et al. Cell 2016	Wei2016_Chr16	NPC	mouse	TLX/Wei2016/SRR2820477_WEI2016_result.tlx	chr16	Chr16_39Mb	APH 0.5uM	chr16	chr16	4	F	2	0.5	From Wei et al. Cell 2016; X4p53_Chr16_sgRNA_2_APH_ExpD
 SRR2820419	Wei et al. Cell 2016	Wei2016_Chr12	NPC	mouse	TLX/Wei2016/SRR2820419_WEI2016_result.tlx	chr12	Chr12_13Mb	DMSO	chr12	chr12	1	T	2	0	From Wei et al. Cell 2016; X4p53_Chr12_sgRNA_1_DMSO_ExpA
 SRR2820420	Wei et al. Cell 2016	Wei2016_Chr12	NPC	mouse	TLX/Wei2016/SRR2820420_WEI2016_result.tlx	chr12	Chr12_13Mb	DMSO	chr12	chr12	2	T	2	0	From Wei et al. Cell 2016; X4p53_Chr12_sgRNA_1_DMSO_ExpB
 SRR2820421	Wei et al. Cell 2016	Wei2016_Chr12	NPC	mouse	TLX/Wei2016/SRR2820421_WEI2016_result.tlx	chr12	Chr12_13Mb	DMSO	chr12	chr12	3	T	2	0	From Wei et al. Cell 2016; X4p53_Chr12_sgRNA_1_DMSO_ExpC
@@ -473,4 +473,3 @@ SRR2820470	Wei et al. Cell 2016	Wei2016_Chr15	NPC	mouse	TLX/Wei2016/SRR2820470_W
 SRR2820478	Wei et al. Cell 2016	Wei2016_Chr16	NPC	mouse	TLX/Wei2016/SRR2820478_WEI2016_result.tlx	chr16	Chr16_39Mb	DMSO	chr16	chr16	1	T	2	0	From Wei et al. Cell 2016; X4p53_Chr16_sgRNA_2_DMSO_ExpA
 SRR2820479	Wei et al. Cell 2016	Wei2016_Chr16	NPC	mouse	TLX/Wei2016/SRR2820479_WEI2016_result.tlx	chr16	Chr16_39Mb	DMSO	chr16	chr16	2	T	2	0	From Wei et al. Cell 2016; X4p53_Chr16_sgRNA_2_DMSO_ExpB
 SRR2820480	Wei et al. Cell 2016	Wei2016_Chr16	NPC	mouse	TLX/Wei2016/SRR2820480_WEI2016_result.tlx	chr16	Chr16_39Mb	DMSO	chr16	chr16	3	T	2	0	From Wei et al. Cell 2016; X4p53_Chr16_sgRNA_2_DMSO_ExpC
-

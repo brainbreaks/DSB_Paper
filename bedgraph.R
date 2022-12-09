@@ -27,7 +27,7 @@ bedgraph = function()
   # Get offtargets
   #
   libfactors_offtargets_df = tlx_libfactors(tlx_used_df, normalize_within="none", normalize_between="group", normalization_target="min")
-  params_offtargets = macs2_params(extsize=50, exttype="opposite", llocal=1e7, minqvalue=0.05, effective_size=1.87e9, maxgap=1e3, minlen=10)
+  params_offtargets = macs2_params(extsize=50, exttype="opposite", minqvalue=0.05, effective_size=1.87e9, maxgap=1e3, minlen=10)
   tlx_offtarget_df = tlx_used_df %>%
     dplyr::filter(tlx_is_bait_chrom & !tlx_is_bait_junction) %>%
     dplyr::mutate(tlx_group=bait_chrom, tlx_control=F)
@@ -58,7 +58,7 @@ bedgraph = function()
     tlx_mark_offtargets(offtargets_df, offtarget_region=1e5, bait_region=1e5) %>%
     dplyr::filter(!tlx_is_offtarget & !tlx_is_bait_junction & tlx_is_bait_chrom)
 
-  params_clean = macs2_params(extsize=5e4, exttype="symmetrical", llocal=1e7, minqvalue=0.01, effective_size=1.87e9, maxgap=2e5, minlen=1e5)
+  params_clean = macs2_params(extsize=5e4, exttype="symmetrical", minqvalue=0.01, effective_size=1.87e9, maxgap=2e5, minlen=1e5)
   tlxcov_clean_df = tlx_clean_df %>%
     tlx_coverage(group="group", extsize=params_clean$extsize, exttype=params_clean$exttype, libfactors_df=libfactors_df, ignore.strand=F)
   tlxcov_write_bedgraph(tlxcov_clean_df, path="reports/all/all", group="all")

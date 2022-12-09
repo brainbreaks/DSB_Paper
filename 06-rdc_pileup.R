@@ -4,9 +4,10 @@ library(ggplot2)
 library(cowplot)
 library(stringr)
 devtools::load_all('breaktools/')
+source("00-utils.R")
 
 
-main = function()
+rdc_pileup = function()
 {
   #
   # Load offtargets
@@ -28,20 +29,21 @@ main = function()
   #
   # Load samples data
   #
-  samples_df = tlx_read_samples(annotation_path="data/htgts_samples.tsv", samples_path="data") %>%
-    dplyr::filter(!control & tlx_exists & celltype=="NPC" & organism=="mouse" & sample!="VI035" & (
-      grepl("(Csmd1|Ctnna2|Nrxn1) promoter/enhancer", experiment) |
-      grepl("concentration", experiment) & concentration == 0.4 |
-      grepl("Wei", experiment))
-    ) %>%
-    dplyr::mutate(group="Inter")
+
+  samples_df = tlx_read_paper_samples("data/htgts_samples.tsv", "data")  %>%
+    dplyr::filter(!control) %>%
+    dplyr::filter(
+      grepl("(Ctnna2|Nrxn1) promoter/enhancer", experiment) |
+      grepl("concentration", experiment) & concentration %in% 0.4 |
+      grepl("Wei|Tena", experiment)
+    ) %>% dplyr::mutate(group="Inter")
 
   #
   # Load TLX
   #
   tlx_all_df = tlx_read_many(samples_df, threads=16) %>%
     tlx_extract_bait(bait_size=19, bait_region=12e6) %>%
-    tlx_calc_copynumber(bowtie2_index="genomes/mm10/mm10", max_hits=100, threads=8) %>%
+    tlx_calc_copynumber(bowtie2_index="genomes/mm10/mm10", max_hits=100, threads=16) %>%
     tlx_mark_offtargets(offtargets_df, offtarget_region=1e5, bait_region=1e4)
   libfactors_df = tlx_all_df %>% tlx_libsizes()
 
@@ -52,13 +54,6 @@ main = function()
     dplyr::mutate(dbscan_cluster=dbscan::dbscan(matrix(Junction), minPts=5, eps=30)$cluster) %>%
     dplyr::filter(dbscan_cluster==0) %>%
     dplyr::ungroup()
-  #
-  # tlx_viz_df = tlx_df %>%
-  #   dplyr::mutate(tlx_group=ifelse(tlx_is_bait_chrom, "Inter", "Intra")) %>%
-  #   dplyr::filter(tlx_group=="Inter")
-  #   dplyr::filter(!tlx_is_offtarget & !tlx_is_bait_junction & !(alleles==1 & grepl("promoter/enhancer", experiment) & tlx_is_bait_chrom))
-
-  # chr3:55,437,747-56,276,704
 
   #
   # Load GRO-seq data
@@ -92,61 +87,50 @@ main = function()
         readr::write_tsv(paste0(z$tlx_group[1], "_", z$tlx_strand[1], ".bedgraph"), col_names=F)
     })(.))
 
+
+  plot_viewport = 7e5
+  plot_center_strategy = "collision"
+
   #
   # Find middle of RDC
   #
-  collision_df = readr::read_tsv("data/replication_collisions_NPC.tsv")
-  collision_df = readr::read_tsv("data/rdc.tsv") %>%
-    # dplyr::filter(grepl("RDC-chr12-53.7", rdc_name)) %>%
-    dplyr::filter(tlx_group=="APH-Inter" & rdc_subset=="Wei+DKFZ" & rdc_is_significant) %>%
-    dplyr::mutate(rdc_region_start=rdc_extended_start-rdc_extended_length/4, rdc_region_end=rdc_extended_end+rdc_extended_length/4) %>%
-    df2ranges(rdc_chrom, rdc_region_start, rdc_region_end) %>%
-    innerJoinByOverlaps(tlx_viz_df %>% dplyr::filter(tlx_group=="Inter") %>% dplyr::select(-tlx_group) %>% df2ranges(Rname, Junction, Junction)) %>%
-    dplyr::arrange(rdc_name, Rname, Junction) %>%
-    dplyr::group_by(collision_chrom=rdc_chrom, rdc_name) %>%
-    dplyr::summarise(
-      collision_tz=Junction,
-      sum_minus=sum(tlx_strand=="-"),
-      sum_plus=sum(tlx_strand=="+"),
-      count_minus=cumsum(tlx_strand=="-"),
-      count_plus=sum(tlx_strand=="+")-cumsum(tlx_strand=="+"),
-      # proportion=abs(log2(count_minus/count_plus)),
-      # proportion=abs(log2((count_plus/sum_minus)/(count_plus/sum_plus))),
-      proportion=count_minus/sum_minus*count_plus/sum_plus,
-      empty=""
-    ) %>%
-    # dplyr::summarise(proportion=abs(log2((cumsum(tlx_strand=="-")/sum(tlx_strand=="-"))/((sum(tlx_strand=="+")-cumsum(tlx_strand=="+"))/sum(tlx_strand=="+"))))) %>%
-    dplyr::filter(!is.infinite(proportion)) %>%
-    dplyr::group_by(rdc_name) %>%
-    dplyr::arrange(dplyr::desc(proportion)) %>%
-    dplyr::slice(1) %>%
-    dplyr::ungroup() %>%
-    dplyr::select(collision_chrom, collision_tz)
+  if(plot_center_strategy=="between peaks") {
+    # Visually detect center between telomeric and centromeric peaks
+    collision_df = readr::read_tsv("data/rdc.tsv") %>%
+      # dplyr::filter(grepl("RDC-chr12-53.7", rdc_name)) %>%
+      dplyr::filter(tlx_group=="APH-Inter" & rdc_subset=="Wei+DKFZ" & rdc_is_significant) %>%
+      dplyr::mutate(rdc_region_start=rdc_extended_start-rdc_extended_length/4, rdc_region_end=rdc_extended_end+rdc_extended_length/4) %>%
+      df2ranges(rdc_chrom, rdc_region_start, rdc_region_end) %>%
+      innerJoinByOverlaps(tlx_viz_df %>% dplyr::filter(tlx_group=="Inter") %>% dplyr::select(-tlx_group) %>% df2ranges(Rname, Junction, Junction)) %>%
+      dplyr::arrange(rdc_name, Rname, Junction) %>%
+      dplyr::group_by(collision_chrom=rdc_chrom, rdc_name) %>%
+      dplyr::summarise(
+        collision_tz=Junction,
+        sum_minus=sum(tlx_strand=="-"),
+        sum_plus=sum(tlx_strand=="+"),
+        count_minus=cumsum(tlx_strand=="-"),
+        count_plus=sum(tlx_strand=="+")-cumsum(tlx_strand=="+"),
+        # proportion=abs(log2(count_minus/count_plus)),
+        # proportion=abs(log2((count_plus/sum_minus)/(count_plus/sum_plus))),
+        proportion=count_minus/sum_minus*count_plus/sum_plus,
+        empty=""
+      ) %>%
+      # dplyr::summarise(proportion=abs(log2((cumsum(tlx_strand=="-")/sum(tlx_strand=="-"))/((sum(tlx_strand=="+")-cumsum(tlx_strand=="+"))/sum(tlx_strand=="+"))))) %>%
+      dplyr::filter(!is.infinite(proportion)) %>%
+      dplyr::group_by(rdc_name) %>%
+      dplyr::arrange(dplyr::desc(proportion)) %>%
+      dplyr::slice(1) %>%
+      dplyr::ungroup() %>%
+      dplyr::select(collision_chrom, collision_tz)
+  } else {
+    if(plot_center_strategy=="collision") {
+      # Collissions as predicted by tzNN
+      collision_df = readr::read_tsv("data/replication_collisions_NPC.tsv")
+    } else {
+      stop("Unsupported value of 'plot_center_strategy'")
+    }
+  }
 
-
-  # collision_df = readr::read_tsv("data/rdc.tsv") %>%
-  #   dplyr::filter(tlx_group=="APH-Inter" & rdc_subset=="Wei+DKFZ" & rdc_is_significant) %>%
-  #   # dplyr::filter(grepl("RDC-chr3-148.9", rdc_name)) %>%
-  #   dplyr::mutate(rdc_region_start=rdc_extended_start-rdc_extended_length/4, rdc_region_end=rdc_extended_end+rdc_extended_length/4) %>%
-  #   df2ranges(rdc_chrom, rdc_region_start, rdc_region_end) %>%
-  #   innerJoinByOverlaps(tlxcov_viz_df %>% dplyr::filter(tlx_group=="Inter") %>% dplyr::select(-tlx_group) %>% df2ranges(tlxcov_chrom, tlxcov_start, tlxcov_end)) %>%
-  #   dplyr::arrange(rdc_name, tlxcov_chrom, tlxcov_start) %>%
-  #   dplyr::group_by(collision_chrom=tlxcov_chrom, tlx_strand, rdc_name, rdc_chrom, rdc_region_start, rdc_region_end) %>%
-  #   dplyr::do((function(z) {
-  #     zz<<-z
-  #     z.model = loess(tlxcov_pileup ~ tlxcov_start, data=z)
-  #     z_smooth = data.frame(tlxcov_start=seq(z$rdc_region_start[1], z$rdc_region_end[2], by=5000))
-  #     z_smooth$tlxcov_pileup = predict(z.model, z_smooth)
-  #     z_smooth
-  #   })(.))
-
-
-# collision_df %>%
-#   dplyr::select(collision_chrom, collision_tz, collision_tz) %>%
-#   readr::write_tsv("collision.bed", col_names=F)
-
-
-  plot_viewport = 7e5
 
   #
   # Load RDC and add the most middle termination site position
@@ -215,7 +199,6 @@ main = function()
     # dplyr::filter(rdc_name=="RDC_166" & tlx_group=="Inter") %>%
     dplyr::group_split(tlx_group) %>%
     lapply(function(rdc2tlxcov_ggplot.s) {
-      ll <<- rdc2tlxcov_ggplot
       rdc2tlxcov_ggplot.s <<- rdc2tlxcov_ggplot.s
       key = rdc2tlxcov_ggplot.s %>% dplyr::distinct(tlx_group)
       rdc_filter.s = rdc2tlxcov_ggplot.s %>% dplyr::distinct(rdc_name)
@@ -226,7 +209,7 @@ main = function()
       rdc2genes_ggplot.s[rdc2genes_ggplot.s$rdc_gene_strand=="-",c("segment_start", "segment_end")] = -rdc2genes_ggplot.s[rdc2genes_ggplot.s$rdc_gene_strand=="-",c("segment_start", "segment_end")]
 
       rdc2replication_ggplot.s = rdc2replication_ggplot %>%
-        dplyr::inner_join(rdc_filter.s, by=c("rdc_name"))
+        dplyr::inner_join(rdc_filter.s, by="rdc_name")
       rdc2replication_ggplot.s[rdc2replication_ggplot.s$rdc_gene_strand=="-",c("replication_rel_start", "replication_rel_end")] = -rdc2replication_ggplot.s[rdc2replication_ggplot.s$rdc_gene_strand=="-",c("replication_rel_start", "replication_rel_end")]
 
       rdc2tlxcov_ggplot.s = rdc2tlxcov_ggplot.s %>%
@@ -238,7 +221,6 @@ main = function()
       rdc2groseq_ggplot.s = rdc2groseq_ggplot %>%
         dplyr::inner_join(rdc_filter.s, by="rdc_name")
       rdc2groseq_ggplot.s[rdc2groseq_ggplot.s$rdc_gene_strand=="-",c("groseq_rel_start", "groseq_rel_end")] = -rdc2groseq_ggplot.s[rdc2groseq_ggplot.s$rdc_gene_strand=="-",c("groseq_rel_start", "groseq_rel_end")]
-
 
       strand_colors = c("+"="#FF0000", "-"="#0000FF")
       y_dist = 1.5

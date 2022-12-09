@@ -28,7 +28,7 @@ main = function()
   #
   # Automatically find RDC
   #
-  params = macs2_params(extsize=5e4, exttype="symmetrical", llocal=1e7, minqvalue=0.01, effective_size=1.87e9, maxgap=1e6, minlen=1e5)
+  params = macs2_params(extsize=5e4, exttype="symmetrical", minqvalue=0.01, effective_size=1.87e9, maxgap=1e6, minlen=1e5)
   tlx_rdc_df = tlx_df %>% dplyr::filter(!tlx_control)
   libfactors_rdc_df = tlx_rdc_df %>%
     dplyr::mutate(tlx_group="all") %>%

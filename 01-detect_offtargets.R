@@ -5,6 +5,7 @@ library(randomcoloR)
 library(ComplexHeatmap)
 library(igraph)
 devtools::load_all("breaktools/")
+source("00-utils.R")
 
 
 detect_offtargets = function()
@@ -18,25 +19,23 @@ detect_offtargets = function()
   baits_df = readr::read_tsv("data/dkfz_baits.tsv")
 
   #
-  # Load samples ()
+  # Load samples
   #
-  samples_df = tlx_read_samples(annotation_path="data/htgts_samples.tsv", samples_path="data") %>%
-    dplyr::filter(tlx_exists & celltype=="NPC" & organism=="mouse" & sample!="VI035" & (
-      grepl("(Csmd1|Ctnna2|Nrxn1) promoter/enhancer", experiment) |
-      grepl("concentration", experiment) |
-      grepl("Wei|Tena", experiment))
-    )
+  samples_df = tlx_read_paper_samples(annotation_path="data/htgts_samples.tsv", data_path="data")
 
-  tlx_all_df = tlx_read_many(samples_df, threads=8) %>%
+  #
+  # Read TLX data
+  #
+  tlx_all_df = tlx_read_many(samples_df, threads=16) %>%
     tlx_extract_bait(bait_size=19, bait_region=12e6) %>%
-    tlx_calc_copynumber(bowtie2_index="genomes/mm10/mm10", max_hits=100, threads=8)
+    tlx_calc_copynumber(bowtie2_index="genomes/mm10/mm10", max_hits=100, threads=16)
 
   libfactors_df = tlx_all_df %>% tlx_libsizes()
 
   #
   # Set-up parameters
   #
-  offtargets_params = macs2_params(extsize=150, exttype="opposite", llocal=1e7, minpvalue=0.01, effective_size=1.87e9, seedlen=2, seedgap=10, maxgap=10, minlen=2, baseline=2)
+  offtargets_params = macs2_params(extsize=150, exttype="opposite", minpvalue=0.01, effective_size=1.87e9, seedlen=2, seedgap=10, maxgap=10, minlen=2, baseline=2)
 
   #
   # Filter out data suitable for analysis

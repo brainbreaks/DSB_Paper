@@ -29,11 +29,11 @@ detect_rdc = function()
   #
   # Load samples data
   #
-  samples_df = tlx_read_samples(annotation_path="data/htgts_samples.tsv", samples_path="data") %>%
-    dplyr::filter(tlx_exists & celltype=="NPC" & organism=="mouse" & sample!="VI035" & (
-      grepl("(Csmd1|Ctnna2|Nrxn1) promoter/enhancer", experiment) |
+  samples_df = tlx_read_paper_samples("data/htgts_samples.tsv", "data") %>%
+    dplyr::filter(
+      grepl("(Ctnna2|Nrxn1) promoter/enhancer", experiment) |
       grepl("concentration", experiment) & concentration %in% c(0, 0.4) |
-      grepl("Wei", experiment))
+      grepl("Wei|Tena", experiment)
     )
 
   #
@@ -41,7 +41,7 @@ detect_rdc = function()
   #
   tlx_all_df = tlx_read_many(samples_df, threads=16) %>%
     tlx_extract_bait(bait_size=19, bait_region=12e6) %>%
-    tlx_calc_copynumber(bowtie2_index="genomes/mm10/mm10", max_hits=100, threads=8) %>%
+    tlx_calc_copynumber(bowtie2_index="genomes/mm10/mm10", max_hits=100, threads=16) %>%
     tlx_mark_offtargets(offtargets_df, offtarget_region=1e5, bait_region=1e4)
   libfactors_df = tlx_all_df %>% tlx_libsizes()
 
@@ -50,8 +50,8 @@ detect_rdc = function()
   #
   tlx_rdc_all_df = tlx_all_df %>%
     tlx_remove_rand_chromosomes() %>%
-    dplyr::filter(tlx_copynumber==1) %>%
-    dplyr::filter(!tlx_duplicated & !tlx_is_bait_junction & !tlx_is_offtarget & (!grepl("prom", group) | !tlx_is_bait_chrom)) %>%
+    dplyr::filter(tlx_copynumber==1 & !tlx_duplicated & !tlx_is_bait_junction & !tlx_is_offtarget) %>%
+    dplyr::filter(!grepl("prom", group) | !tlx_is_bait_chrom) %>%
     dplyr::mutate(tlx_group=dplyr::case_when(
       !tlx_control & tlx_is_bait_chrom ~ "APH-Intra",
       !tlx_control & !tlx_is_bait_chrom ~ "APH-Inter",
@@ -75,41 +75,7 @@ detect_rdc = function()
     scale_y_continuous(labels = scales::label_percent())
   dev.off()
 
-  #
-  # Evaluate extsize
-  #
-  if(F) {
-    extsize_df = data.frame(extsize=c(seq(100, 500, 100), seq(1000, 9000, 1000), seq(10000, 90000, 10000), seq(1e5, 3e5, 5e5))) %>%
-      dplyr::rowwise() %>%
-      dplyr::do((function(z){
-        zz<<-z
-        params_extsize = macs2_params(extsize=z$extsize, exttype="symmetrical", llocal=1e7, minqvalue=0.01, effective_size=1.87e9, maxgap=2e5, minlen=2e5, baseline=2)
-        tlxcov_rdc_df = tlx_rdc_df %>%
-          dplyr::filter(!tlx_is_bait_junction & (!grepl("prom", group) | !tlx_is_bait_chrom)) %>%
-          tlx_coverage(group="group", extsize=params_extsize$extsize, exttype=params_extsize$exttype, libfactors_df=libfactors_df, ignore.strand=T)
-        macs_rdc = tlxcov_macs2(tlxcov_rdc_df, group="group", params=params_extsize)
-        macs_rdc$islands %>%
-          tidyr::crossing(as.data.frame(z))
-      })(.)) %>%
-      dplyr::ungroup()
-    extsize_sumdf = extsize_df %>%
-      dplyr::group_by(extsize, tlx_group) %>%
-      dplyr::summarize(count=dplyr::n(), width=mean(island_end-island_start))
-    pdf("reports/extsize_selection.pdf", width=11.69, height=8.27, paper="a4r")
-    ggplot(extsize_sumdf) +
-      geom_line(aes(x=extsize, y=count)) +
-      geom_vline(xintercept=5e4, color="#FF0000") +
-      geom_smooth(aes(x=extsize, y=count)) +
-      labs(y="RDC count") +
-      facet_wrap(~tlx_group, scales="free")
-    ggplot(extsize_sumdf) +
-      geom_line(aes(x=extsize, y=width)) +
-      geom_vline(xintercept=5e4, color="#FF0000") +
-      geom_smooth(aes(x=extsize, y=width)) +
-      labs(y="RDC width") +
-      facet_wrap(~tlx_group, scales="free")
-    dev.off()
-  }
+
   #
   # Detect RDC. Split coverage into telomeric, centromeric and combined and detect islands for each of the 3 subsets
   #
@@ -122,7 +88,7 @@ detect_rdc = function()
       dplyr::sample_frac(sample_frac) %>%
       dplyr::ungroup()
 
-    params_rdc = macs2_params(extsize=5e4, exttype="symmetrical", llocal=1e7, minpvalue=0.01, maxgap=100e3, minlen=100e3, seedlen=50e3, seedgap=10e3, baseline=2)
+    params_rdc = macs2_params(extsize=5e4, exttype="symmetrical", minpvalue=0.01, maxgap=100e3, minlen=100e3, seedlen=50e3, seedgap=10e3, baseline=2)
     tlxcov_rdc_df = tlx_rdc_df %>% tlx_coverage(group="group", extsize=params_rdc$extsize, exttype=params_rdc$exttype, libfactors_df=libfactors_df, ignore.strand=T, recalculate_duplicate_samples=F)
     tlxcov_rdc_strand_df = tlx_rdc_df %>% tlx_coverage(group="group", extsize=params_rdc$extsize, exttype=params_rdc$exttype, libfactors_df=libfactors_df, ignore.strand=F, recalculate_duplicate_samples=F)
     tlxcov_rdc_combined_df = dplyr::bind_rows(tlxcov_rdc_strand_df, tlxcov_rdc_df)
@@ -259,28 +225,28 @@ detect_rdc = function()
     leftJoinByOverlaps(rdc_groups_df %>%
       dplyr::select(group_chrom=rdc_chrom, group_translocation=tlx_translocation, group_start=rdc_extended_start, group_end=rdc_extended_end, rdc_group, rdc_peak_shape, rdc_is_biphasic, rdc_DRIP_peaks, rdc_forks, rdc_sizesize) %>%
       df2ranges(group_chrom, group_start, group_end)) %>%
-    group_by_at(colnames(rdc_df)) %>%
-    # dplyr::filter(rdc_name=="RDC-chr14-122.4") %>%
-    # group_by(rdc_name) %>%
-    dplyr::summarise(
-      rdc_group=dplyr::case_when(
-        any(group_translocation==tlx_group & !is.na(rdc_group)) ~ rdc_group[group_translocation==tlx_group & !is.na(rdc_group)][1],
-        any(!is.na(rdc_group)) ~ na.omit(rdc_group)[1]),
-      rdc_peak_shape=dplyr::case_when(
-        any(group_translocation==tlx_group & !is.na(rdc_peak_shape)) ~ rdc_peak_shape[group_translocation==tlx_group & !is.na(rdc_peak_shape)][1],
-        any(!is.na(rdc_peak_shape)) ~ na.omit(rdc_peak_shape)[1]),
-      rdc_is_biphasic=dplyr::case_when(
-        any(group_translocation==tlx_group & !is.na(rdc_is_biphasic)) ~ rdc_is_biphasic[group_translocation==tlx_group & !is.na(rdc_is_biphasic)][1]=="1",
-        any(!is.na(rdc_is_biphasic)) ~ na.omit(rdc_is_biphasic)[1]=="1"),
-      rdc_DRIP_peaks=dplyr::case_when(
-        any(group_translocation==tlx_group & !is.na(rdc_DRIP_peaks)) ~ rdc_DRIP_peaks[group_translocation==tlx_group & !is.na(rdc_DRIP_peaks)][1],
-        any(!is.na(rdc_DRIP_peaks)) ~ na.omit(rdc_DRIP_peaks)[1]),
-      rdc_forks=dplyr::case_when(
-        any(group_translocation==tlx_group & !is.na(rdc_forks)) ~ rdc_forks[group_translocation==tlx_group & !is.na(rdc_forks)][1],
-        any(!is.na(rdc_forks)) ~ na.omit(rdc_forks)[1]),
-      rdc_sizesize=dplyr::case_when(
-        any(group_translocation==tlx_group & !is.na(rdc_sizesize)) ~ rdc_sizesize[group_translocation==tlx_group & !is.na(rdc_sizesize)][1],
-        any(!is.na(rdc_sizesize)) ~ na.omit(rdc_sizesize)[1]))
+      group_by_at(colnames(rdc_df)) %>%
+      # dplyr::filter(rdc_name=="RDC-chr14-122.4") %>%
+      # group_by(rdc_name) %>%
+      dplyr::summarise(
+        rdc_group=dplyr::case_when(
+          any(group_translocation==tlx_group & !is.na(rdc_group)) ~ rdc_group[group_translocation==tlx_group & !is.na(rdc_group)][1],
+          any(!is.na(rdc_group)) ~ na.omit(rdc_group)[1]),
+        rdc_peak_shape=dplyr::case_when(
+          any(group_translocation==tlx_group & !is.na(rdc_peak_shape)) ~ rdc_peak_shape[group_translocation==tlx_group & !is.na(rdc_peak_shape)][1],
+          any(!is.na(rdc_peak_shape)) ~ na.omit(rdc_peak_shape)[1]),
+        rdc_is_biphasic=dplyr::case_when(
+          any(group_translocation==tlx_group & !is.na(rdc_is_biphasic)) ~ rdc_is_biphasic[group_translocation==tlx_group & !is.na(rdc_is_biphasic)][1]=="1",
+          any(!is.na(rdc_is_biphasic)) ~ na.omit(rdc_is_biphasic)[1]=="1"),
+        rdc_DRIP_peaks=dplyr::case_when(
+          any(group_translocation==tlx_group & !is.na(rdc_DRIP_peaks)) ~ rdc_DRIP_peaks[group_translocation==tlx_group & !is.na(rdc_DRIP_peaks)][1],
+          any(!is.na(rdc_DRIP_peaks)) ~ na.omit(rdc_DRIP_peaks)[1]),
+        rdc_forks=dplyr::case_when(
+          any(group_translocation==tlx_group & !is.na(rdc_forks)) ~ rdc_forks[group_translocation==tlx_group & !is.na(rdc_forks)][1],
+          any(!is.na(rdc_forks)) ~ na.omit(rdc_forks)[1]),
+        rdc_sizesize=dplyr::case_when(
+          any(group_translocation==tlx_group & !is.na(rdc_sizesize)) ~ rdc_sizesize[group_translocation==tlx_group & !is.na(rdc_sizesize)][1],
+          any(!is.na(rdc_sizesize)) ~ na.omit(rdc_sizesize)[1]))
 
   #
   # Export RDC
@@ -296,6 +262,22 @@ detect_rdc = function()
         dplyr::select(rdc_chrom, rdc_extended_start, rdc_extended_end, rdc_display_name, rdc_score, rdc_gene_strand, rdc_start, rdc_end) %>%
         readr::write_tsv(paste0("reports/02-detect_rdc/rdc-", df$tlx_group[1], "_", df$rdc_subset[1], ".bed"), col_names=F)
     })(.))
+
+  # rdc_old_df = readr::read_tsv(file="data/rdc (5th copy).tsv")
+  # overlap = rdc_old_df %>%
+  #   dplyr::filter(tlx_group=="APH-Inter" & rdc_subset=="Wei+DKFZ" & rdc_is_significant) %>%
+  #   dplyr::select(old_chrom=rdc_chrom, old_extended_start=rdc_extended_start, old_extended_end=rdc_extended_end) %>%
+  #   df2ranges(old_chrom, old_extended_start, old_extended_end) %>%
+  #   fullJoinByOverlaps(rdc_df %>% dplyr::filter(tlx_group=="APH-Inter" & rdc_subset=="Wei+DKFZ" & rdc_is_significant) %>% df2ranges(rdc_chrom, rdc_extended_start, rdc_extended_end)) %>%
+  #   dplyr::mutate(rdc_id=1:dplyr::n())
+  #
+  #   odf_list = list(
+  #     old=overlap$rdc_id[!is.na(overlap$old_chrom)],
+  #     new=overlap$rdc_id[!is.na(overlap$rdc_chrom)]
+  #   )
+  #   ggvenn::ggvenn(odf_list, fill_color=RColorBrewer::brewer.pal(8, "Pastel2")[1:length(odf_list)], stroke_size=0.5, set_name_size=2, show_percentage=F) +
+  #     theme(plot.margin=unit(rep(8, 4), "pt"))
+
 
   #
   # Write debugging information from RDC calling

@@ -41,7 +41,7 @@ proportions = function()
   #
   # TLX coverage
   #
-  params = macs2_params(extsize=1e5, exttype="symmetrical", llocal=1e7, minqvalue=0.01, effective_size=1.87e9, maxgap=2e5, minlen=1e5)
+  params = macs2_params(extsize=1e5, exttype="symmetrical", minqvalue=0.01, effective_size=1.87e9, maxgap=2e5, minlen=1e5)
   tlxcov_df = tlx_prop_df %>%
     tlx_coverage(group="group", extsize=params$extsize, exttype=params$exttype, libfactors_df=libfactors_df, ignore.strand=F)
   tlxcov_ranges = tlxcov_df %>% df2ranges(tlxcov_chrom, tlxcov_start, tlxcov_end)

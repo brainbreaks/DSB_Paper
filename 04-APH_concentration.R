@@ -9,7 +9,6 @@ source("00-utils.R")
 APH_concentration = function()
 {
   debug = F
-  # group_palette = c("APH 0.2 uM 96h"="#C6DBEF", "APH 0.3 uM 96h"="#6DAACE", "APH 0.4 uM 96h"="#317BA5", "APH 0.6 uM 96h"="#335E9D", "DMSO"="#CCCCCC")
   group_palette = c("APH 0.2 uM 96h"="#C49A6C", "APH 0.3 uM 96h"="#C49A6C", "APH 0.4 uM 96h"="#C49A6C", "APH 0.6 uM 96h"="#C49A6C", "DMSO"="#CCCCCC")
   region_palette = c("RDC"="#00B9D3", "Gene > 100kb"="#D34B00", "Gene < 100kb"="#D39B00")
   params_concentration = macs2_params(extsize=50e3, exttype="symmetrical")
@@ -27,9 +26,8 @@ APH_concentration = function()
   #
   # Repliseq data
   #
-  replication_df = readr::read_tsv("data/replication_reduced_subsets.tsv")
-  replication_ranges = replication_df %>%
-    df2ranges(replication_chrom, pmin(replication_start, replication_end), pmax(replication_start, replication_end))
+  forks_df = readr::read_tsv("data/replication_forks_NPC.tsv") %>%
+    dplyr::mutate(fork_strand=ifelse(fork_direction=="telomeric", "+", "-"))
 
   #
   # Load GRO-seq data
@@ -53,8 +51,8 @@ APH_concentration = function()
   #
   # Read TLX
   #
-  samples_df = tlx_read_samples(annotation_path="data/htgts_samples.tsv", samples_path="data") %>%
-    dplyr::filter(grepl("APH concentration", experiment)) %>%
+  samples_df = tlx_read_paper_samples("data/htgts_samples.tsv", "data") %>%
+    dplyr::filter(experiment=="APH concentration") %>%
     dplyr::mutate(control=F)
 
   #
@@ -75,11 +73,7 @@ APH_concentration = function()
     dplyr::group_by(tlx_sample) %>%
     dplyr::filter(dplyr::n()>5000) %>%
     dplyr::ungroup() %>%
-    # dplyr::filter(!tlx_is_offtarget) %>%
     dplyr::mutate(tlx_group=paste0(tlx_group, " (", ifelse(tlx_is_bait_chrom, "Intra", "Inter"), ")")) %>%
-    # dplyr::group_by(tlx_is_bait_chrom, Rname) %>%
-    # dplyr::mutate(dbscan_cluster=dbscan::dbscan(matrix(Junction), minPts=20, eps=100)$cluster) %>%
-    # dplyr::mutate(tlx_strand=ifelse(dbscan_cluster==0, tlx_strand, "cluster")) %>%
     dplyr::arrange(match(concentration, c(0.2, 0.3,0.4,0.6,0))) %>%
     dplyr::mutate(tlx_translocation=gsub(".*(Inter|Intra).*", "\\1", tlx_group), tlx_concentration=gsub("(.*96h|DMSO) .*", "\\1", tlx_group)) %>%
     dplyr::mutate(tlx_concentration=factor(tlx_concentration, unique(tlx_concentration)))
@@ -133,11 +127,11 @@ APH_concentration = function()
     innerJoinByOverlaps(tlx_concentration_df %>% df2ranges(Rname, Junction, Junction)) %>%
     dplyr::filter(!tlx_is_offtarget) %>%
     df2ranges(rdc_chrom, Junction, Junction) %>%
-    innerJoinByOverlaps(replication_ranges) %>%
+    innerJoinByOverlaps(forks_df %>% df2ranges(fork_chrom, fork_start, fork_end)) %>%
     dplyr::mutate(
-      collision=dplyr::case_when(rdc_gene_strand==replication_strand~"co-directional", T~"head-on"),
-      replication_overlap_start=pmax(rdc_start, pmin(replication_end, replication_start)),
-      replication_overlap_end=pmin(rdc_end, pmax(replication_end, replication_start)),
+      collision=dplyr::case_when(rdc_gene_strand==fork_strand~"co-directional", T~"head-on"),
+      replication_overlap_start=pmax(rdc_start, fork_start),
+      replication_overlap_end=pmin(rdc_end, fork_end),
       replication_overlap_length=replication_overlap_end-replication_overlap_start
     ) %>%
     dplyr::ungroup() %>%
@@ -169,7 +163,7 @@ APH_concentration = function()
       junctions_telomeric_count.co_directional=sum(junctions_sense_count[collision=="co-directional"]),
       junctions_centromeric_count.head_on=sum(junctions_anti_count[collision=="head-on"]),
       junctions_centromeric_count.co_directional=sum(junctions_anti_count[collision=="co-directional"])) %>%
-      readr::write_tsv("APH_junctions_count.tsv")
+      readr::write_tsv("reports/04-concentration/APH_junctions_count.tsv")
 
 
   genes_nonrdc_df = genes_df %>%
@@ -258,7 +252,7 @@ APH_concentration = function()
       geom_segment(aes(x=as.numeric(tlx_concentration)+x/6,y=ymin,xend=as.numeric(tlx_concentration)+x/6,yend=ymax), data=tlx_count_stat, size=0.2) +
       geom_segment(aes(x=as.numeric(tlx_concentration)+x/6,y=ymin,xend=as.numeric(tlx_concentration)+x/6-0.05,yend=ymin), data=tlx_count_stat, size=0.2) +
       geom_segment(aes(x=as.numeric(tlx_concentration)+x/6,y=ymax,xend=as.numeric(tlx_concentration)+x/6-0.05,yend=ymax), data=tlx_count_stat, size=0.2) +
-      geom_text(aes(x=as.numeric(tlx_concentration)+x/6, y=ymax/2+ymin/2, label=p.signif), data=tlx_count_stat, hjust=-0.5) +
+      geom_text(aes(x=as.numeric(tlx_concentration)+x/6, y=ymax/2+ymin/2, label=p.signif), data=tlx_count_stat, hjust=-0.1) +
       labs(y="Offtarget−normalized translocations count\ndevided by DMSO translocations count (per each RDC), log2", color="Subset") +
       scale_x_continuous(breaks=1:nlevels(tlx_count_sumdf$tlx_concentration), labels=levels(tlx_count_sumdf$tlx_concentration)) +
       scale_color_manual(values=region_palette) +
@@ -330,25 +324,6 @@ APH_concentration = function()
       theme_paper(base_size=12) +
       theme_x_factors(size=10) +
       theme(legend.key.size=unit(1.2, 'cm'))
-
-  # x = tlx_proportion_df %>%
-  #   # dplyr::mutate(n=ifelse(replication_strand=="+", n_anti, n_sense)) %>%
-  #   # dplyr::mutate(n=ifelse(replication_strand=="+", n_sense, n_anti)) %>%
-  #   reshape2::dcast(tlx_group+tlx_concentration+tlx_translocation+rdc_name+rdc_gene_strand~collision, value.var="n") %>%
-  #   # dplyr::mutate(`co-directional`=tidyr::replace_na(`co-directional`, 1), `head-on`=tidyr::replace_na(`head-on`, 1)) %>%
-  #   dplyr::mutate(prop=log2(`co-directional`/`head-on`))
-  # ggplot(x, aes(y=prop, x=tlx_concentration)) +
-  #   geom_hline(yintercept=0, linetype="dashed") +
-  #   geom_boxplot(aes(fill=rdc_gene_strand), outlier.shape=NA, outlier.alpha=0, pattern_fill="#000000", pattern_color="#00000000", pattern_spacing=0.01) +
-  #   # geom_point(aes(x=tlx_concentration), position=position_jitterdodge(jitter.width=0.1, jitter.height=0), shape=1, alpha=0.8) +
-  #   labs(pattern="Gene strand", y="Proportion of right-moving fork breaks, cent/(cent+tel)\nMost genes will have a head-on area and co-directional area", size="No. of breaks", fill="APH concentration") +
-  #   # scale_fill_manual(values=group_palette, guide=guide_legend(override.aes=list(pattern="none"))) +
-  #   facet_grid(~tlx_translocation) +
-  #   scale_y_continuous(labels=scales::percent, n.breaks=10) +
-  #   theme_paper(base_size=12) +
-  #   theme_x_factors(size=10) +
-  #   theme(legend.key.size=unit(1.2, 'cm'))
-
 
   #
   # 4. Plot proportion of junctions in each concentration

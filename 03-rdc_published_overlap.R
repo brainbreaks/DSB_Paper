@@ -3,6 +3,7 @@ library(dplyr)
 library(ggplot2)
 library(grid)
 devtools::load_all("breaktools/")
+source("00-utils.R")
 
 rdc_published_overlap = function()
 {
@@ -67,7 +68,7 @@ rdc_published_overlap = function()
     df2ranges(rdc_reduced_chrom, rdc_reduced_start, rdc_reduced_end) %>%
     innerJoinByOverlaps(allrdc_ranges)
 
-  pdf("reports/03-rdc_published_overlap/wei2018-venn.pdf", width=8.27, height=8.27)
+  pdf("reports/03-rdc_published_overlap/wei2018-venn-new.pdf", width=8.27, height=8.27)
   overlaps_venn1 = overlaps_df %>%
     dplyr::filter(rdc_subset %in% c("Wei+DKFZ", "DKFZ")) %>%
     dplyr::filter(rdc_is_significant) %>%

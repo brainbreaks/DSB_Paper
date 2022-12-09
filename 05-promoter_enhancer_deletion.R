@@ -3,19 +3,18 @@ library(dplyr)
 library(ggplot2)
 library(stringr)
 devtools::load_all('breaktools/')
+source("00-utils.R")
 
 
-main = function()
+promoter_enhancer_deletion = function()
 {
   dir.create("reports/05-promoter_enhancer_deletion", recursive=T, showWarnings=F)
 
   #
   # Read TLX files
   #
-  selected_lineages = c("47/5", "18/4", "38/3", "22", "22/5", "22/37", "73/16", "13/12", "37/8")
-  samples_df = tlx_read_samples("data/htgts_samples.tsv", "data") %>%
+  samples_df = tlx_read_paper_samples("data/htgts_samples.tsv", "data") %>%
     dplyr::filter(grepl("(Ctnna2|Nrxn1) promoter/enhancer", experiment)) %>%
-    dplyr::filter(grepl("NXP010|NXP047", group) | grepl(paste0("\\((", paste(selected_lineages, collapse="|"), ")\\)"), group)) %>%
     dplyr::mutate(group=dplyr::case_when(
       control~"DMSO",
       grepl("NXP010|NXP047", group)~"WT",
@@ -27,7 +26,7 @@ main = function()
     dplyr::mutate(treatment=ifelse(control, "DMSO", "APH"))
 
 
-  tlx_all_df = tlx_read_many(samples_df, threads=10) %>%
+  tlx_all_df = tlx_read_many(samples_df, threads=16) %>%
     tlx_extract_bait(bait_size=19, bait_region=12e6) %>%
     tlx_calc_copynumber(bowtie2_index="genomes/mm10/mm10", max_hits=100, threads=24)
   tlx_df = tlx_all_df %>%

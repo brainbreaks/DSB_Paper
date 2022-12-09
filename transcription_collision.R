@@ -17,8 +17,8 @@ library(Rtsne)
 library(pracma)
 library(ggiraph)
 library(ggannotate)
-devtools::load_all('~/Workspace/breaktools/')
-setwd("~/Workspace/Everything")
+devtools::load_all('breaktools/')
+# setwd("~/Workspace/Everything")
 
 correct_annotation_chrom = function() {
   rdc_df = readr::read_tsv("~/Workspace/Datasets/HTGTS/rdc_pnas_mm10.tsv")
