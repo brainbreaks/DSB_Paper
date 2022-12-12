@@ -10,12 +10,14 @@ source("00-utils.R")
 
 export_files_to_ncbi = function()
 {
+  dir.create("reports/00-upload_ncbi", recursive=T, showWarnings=F)
+
   #
   # Load samples data
   #
-  samples_df = tlx_read_paper_samples("data/htgts_samples.tsv", "data") %>%
-    dplyr::filter(celltype=="NPC" & organism=="mouse" & sample!="VI035" & (experiment=="APH concentration" | grepl(".*\\((22|22/37|22/5|47/5|18/4|38/3)\\)", group)))
-    # dplyr::filter(celltype=="NPC" & organism=="mouse" & sample!="VI035" & grepl("(Ctnna2|Nrxn1) promoter/enhancer|APH concentration$", experiment) | grepl(".*\\((22|22/37|22/5|47/5|18/4|38/3)\\)", group))
+  samples_df = tlx_read_paper_samples("data/htgts_samples.tsv", "data/Datasets") %>%
+    dplyr::filter(!grepl("Wei|Tena", experiment))
+
   #
   # Load information about sequencer for each run
   #
@@ -73,9 +75,17 @@ export_files_to_ncbi = function()
       raw_file1=paste0(sample_id, "_R1", raw_extention),
       raw_file2=paste0(sample_id, "_R2", raw_extention),
       tlx_local_path=path,
+      tlx_clean_local_path=paste0("reports/00-upload_ncbi/TLX/", sample_id, ".tlx"),
       tlx_file=paste0(sample_id, ".tlx")
     )
 
+
+  #
+  # Remove Psyx from TLX files
+  #
+  geo_samples_df %>%
+    dplyr::group_by(tlx_local_path) %>%
+    dplyr::summarize(return=system(paste0("sed '/phiX/d' ", tlx_local_path, "  > ", tlx_clean_local_path)))
 
   #
   # Do a sanity check
@@ -99,7 +109,7 @@ export_files_to_ncbi = function()
       error = paste0(error, "\n", unique(current_error))
     }
 
-    file_sizes_df = dplyr::bind_rows(file.info(c(geo_samples_df$raw_local_path1, geo_samples_df$raw_local_path2, geo_samples_df$tlx_local_path))) %>%
+    file_sizes_df = dplyr::bind_rows(file.info(c(geo_samples_df$raw_local_path1, geo_samples_df$raw_local_path2, geo_samples_df$tlx_clean_local_path))) %>%
       tibble::rownames_to_column("file_path") %>%
       dplyr::mutate(filetype=gsub(".*\\.(.*)$", "\\1", as.character(file_path))) %>%
       dplyr::mutate(size_validation=dplyr::case_when(
@@ -117,8 +127,8 @@ export_files_to_ncbi = function()
       error = paste0(error, "\n", current_error)
     }
 
-    if(any(duplicated(geo_samples_df$tlx_local_path))) {
-      current_error = paste0("Duplicate tlx_local_path: ", paste(geo_samples_df$tlx_local_path[duplicated(geo_samples_df$tlx_local_path)], collapse=", "))
+    if(any(duplicated(geo_samples_df$tlx_clean_local_path))) {
+      current_error = paste0("Duplicate tlx_clean_local_path: ", paste(geo_samples_df$tlx_clean_local_path[duplicated(geo_samples_df$tlx_clean_local_path)], collapse=", "))
       error = paste0(error, "\n", current_error)
     }
 
@@ -138,14 +148,28 @@ export_files_to_ncbi = function()
   geo_md5_df=dplyr::bind_rows(
     geo_samples_df %>% dplyr::select(local_path=raw_local_path1, file=raw_file1),
     geo_samples_df %>% dplyr::select(local_path=raw_local_path2, file=raw_file2),
-    geo_samples_df %>% dplyr::select(local_path=tlx_local_path, file=tlx_file)) %>%
+    geo_samples_df %>% dplyr::select(local_path=tlx_clean_local_path, file=tlx_file)) %>%
     dplyr::mutate(md5=tools::md5sum(local_path)) %>%
     dplyr::select(`file name`=file, `file checksum`=md5)
 
 
-  excel_path = "reports/00-upload_ncbi/ncbi.xlsx"
+  cmd_ftpcopy = c(
+    "ftp ftp-private.ncbi.nlm.nih.gov",
+    "cd uploads/ch164594_Y54fyeWG",
+    "",
+    paste0("mput ", getwd(), "/reports/00-upload_ncbi/TLX/*.tlx"),
+    "",
+    paste("put", c(geo_samples_df$raw_local_path1, geo_samples_df$raw_local_path2), c(geo_samples_df$raw_file1, geo_samples_df$raw_file2)),
+    "",
+    "bye"
+  )
+  writeLines(cmd_ftpcopy, con="reports/00-upload_ncbi/upload.ftp")
+  writeLines("cat upload.ftp | ftp", con="reports/00-upload_ncbi/upload.sh")
+
+  excel_path = "reports/00-Wei_NCBI_upload/ncbi.xlsx"
   dir.create(dirname(excel_path), recursive=T, showWarnings=F)
   xlsx::write.xlsx(geo_samples_export_df, excel_path, sheetName="2-1. Metadata Template",  col.names=T, row.names=F, append=F)
   xlsx::write.xlsx(geo_paired_export_df, excel_path, sheetName="2-2. PAIRED-END EXPERIMENTS",  col.names=T, row.names=F, append=T)
   xlsx::write.xlsx(geo_md5_df, excel_path, sheetName="3. MD5 Checksums",  col.names=T, row.names=F, append=T)
+
 }

@@ -1,20 +1,26 @@
-source("01-detect_offtargets.R")
+# Remove cache if you prefer to recalculate all the alignments
+# unlink("tmp", recursive=T, force=T)
+
+source("02-detect_offtargets.R")
 detect_offtargets()
 
-source("02-detect_rdc.R")
+source("03-detect_rdc.R")
 detect_rdc()
 
-source("03-rdc_published_overlap.R")
+source("04-rdc_published_overlap.R")
 rdc_published_overlap()
 
-source("04-APH_concentration.R")
+source("05-APH_concentration.R")
 APH_concentration()
 
-source("05-promoter_enhancer_deletion.R")
+source("06-promoter_enhancer_deletion.R")
 promoter_enhancer_deletion()
 
-source("06-rdc_pileup.R")
+source("07-rdc_pileup.R")
 rdc_pileup()
 
-source("07-multiomic_examples.R")
+source("08-multiomic_examples.R")
 multiomics_examples()
+
+source("09-replication_fork_length.R")
+replication_fork_length()
