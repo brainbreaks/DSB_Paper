@@ -58,4 +58,5 @@ We want to prove that one of the reasons for RDC formation is head-on collission
       #id4[TTS]-->id5{TTS enrichment}
       C-->D;
 
-*TTS - Transcription termination site
+*TTS - Transcription termination site ()
+ 
