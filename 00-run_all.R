@@ -27,12 +27,12 @@ source("06-promoter_enhancer_deletion.R")
 promoter_enhancer_deletion()
 gc()
 
-source("07-rdc_pileup.R")
-rdc_pileup()
+source("07-multiomic_examples.R")
+multiomics_examples()
 gc()
 
-source("08-multiomic_examples.R")
-multiomics_examples()
+source("08-rdc_pileup.R")
+rdc_pileup()
 gc()
 
 source("09-replication_fork_length.R")

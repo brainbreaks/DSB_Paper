@@ -468,7 +468,7 @@ pretrube_mirror = function(m) {
     array(m[,dim(m)[2]:1,], dim=dim(m))
 }
 
-find_tz_between_iz = function(colfork_ranges, iz_ranges, rfd_ranges, debug=F, loess_span=0.2) {
+find_tz_between_iz = function(colfork_ranges, iz_ranges, rfd_ranges, training_binsize, debug=F, loess_span=0.2) {
   #
   # Find termination zones
   #
@@ -605,11 +605,6 @@ tzNN_prepare_training_data = function()
       readr::write_tsv("reports/01-replication_fork_nn/labels-00-repliseq.igv", col_names=T, append=T)
   }
 
-  repliseq_zhaoESC_df %>%
-    dplyr::filter(repliseq_chrom=="chr4" & repliseq_start==150000000)
-  x %>%
-    dplyr::filter(repliseq_chrom=="chr4" & repliseq_start==150000000)
-
   #
   # Combine all datasets and calculate average fraction for each locus
   #
@@ -669,7 +664,7 @@ tzNN_prepare_training_data = function()
   #
   tz_step1_df = colfork_df %>%
     df2ranges(colfork_chrom, colfork_start, colfork_end) %>%
-    find_tz_between_iz(iz_ranges, rfd_ranges, debug=F)
+    find_tz_between_iz(iz_ranges, rfd_ranges, training_binsize=training_binsize, debug=F)
 
   if(debug) {
     tz_step1_df %>%
