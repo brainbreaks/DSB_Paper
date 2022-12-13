@@ -34,6 +34,7 @@ dir.create("tmp", recursive=T, showWarnings=F)
 
 #
 # Download TLX files from NCBI
+# https://drive.google.com/u/0/uc?id=1gUVUePDl89nnYBTb4ZjL03l8NaLdytdB&export=download
 #
 unzip("data/data.zip", exdir="data/")
 dir.create("data/TLX", recursive=T, showWarnings=F)
