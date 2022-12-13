@@ -11,7 +11,6 @@ library(reticulate)
 library(keras)
 library(abind)
 devtools::load_all('breaktools/')
-source("tzNN_utils.R")
 source("00-utils.R")
 
 
@@ -421,6 +420,33 @@ predict_model = function(model, repliseq_df, binsize=50e3, binspersample=30, bin
 
 
   list(all=predictions_df, significant=predictions_significant_df, forks=forks_df, collisions=collisions_df, regions=prediction_regions_df)
+}
+
+tzNN_noise_add = function(mtx, noise_df) {
+  mtx_colnames = colnames(mtx)
+  colnames(mtx) = as.character(1:ncol(mtx))
+  mtx_colmap = mtx_colnames
+  names(mtx_colmap) = colnames(mtx)
+  mtx_noisy = reshape2::melt(unname(mtx)) %>%
+    dplyr::rename(fraction="Var1", bin="Var2") %>%
+    dplyr::group_by(bin) %>%
+    dplyr::mutate(
+      fraction_highest=ifelse(all(is.na(value)), NA_integer_, fraction[which.max(value)])) %>%
+    dplyr::ungroup() %>%
+    dplyr::left_join(noise_df, by=c("fraction_highest", "fraction")) %>%
+    dplyr::mutate(value_noise=rnorm(value, mean=noise_mean, sd=noise_sd), value_fitted=value+value_noise) %>%
+    #dplyr::mutate(value_fitted=pmin(pmax(value_fitted, 0), 1)) %>%
+    dplyr::group_by(bin) %>%
+    dplyr::mutate(value_fitted=value_fitted/max(value_fitted)) %>%
+    dplyr::ungroup() %>%
+    reshape2::dcast(fraction~bin, value.var="value_fitted") %>%
+    tibble::column_to_rownames("fraction") %>%
+    as.matrix()
+  colnames_sorted = colnames(mtx)[sort(as.integer(colnames(mtx)))]
+  rownames(mtx_noisy) = c(8,7,6,5,4,3,2,1)
+  mtx_new = mtx_noisy[,colnames_sorted]
+  colnames(mtx_new) = mtx_colmap[colnames(mtx_new)]
+  mtx_new
 }
 
 layer_activate = function(input, name, activation="selu", dropout=0, normalize=T) {
@@ -1134,7 +1160,7 @@ tzNN_train = function() {
   }
 
   df_all %>%
-    readr::write_tsv(file.path(gsub("/$", "", model_dir), "crossvalidation_data_2022-10-30.tsv"))
+    readr::write_tsv(file.path(gsub("/$", "", model_dir), "crossvalidation_data_2022-12-13.tsv"))
 }
 
 if (!interactive()) {
@@ -1142,9 +1168,9 @@ if (!interactive()) {
 }
 
 tzNN_evaluate = function() {
-  df_all = readr::read_tsv("reports/01-replication_fork/crossvalidation_data_2022-10-30.tsv")
+  df_all = readr::read_tsv("reports/01-replication_fork/crossvalidation_data_2022-12-13.tsv")
 
-  pdf("reports/01-replication_fork/crossvalidation_performance_2022-10-30.pdf", width=8.27, height=8.27)
+  pdf("reports/01-replication_fork/crossvalidation_performance_2022-12-13.pdf", width=8.27, height=8.27)
   rockr_all_data = df_all %>%
     dplyr::arrange(source, validation_k, training_id, Var2) %>%
     dplyr::filter(source=="validation" & validation_k!=0) %>%
