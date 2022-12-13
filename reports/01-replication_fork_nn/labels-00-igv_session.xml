@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<Session genome="mm10" version="8">
+    <Resources>
+        <Resource path="labels-00-repliseq.igv" type="igv"/>
+        <Resource path="labels-02-tz_annotation_step1extended.bed" type="bed"/>
+        <Resource path="labels-03-tz_annotation_step2extended.bed" type="bed"/>
+        <Resource path="labels-04-training_long_regions.bed" type="bed"/>
+        <Resource path="labels-04-training_regions.bed" type="bed"/>
+        <Resource path="labels-01-repliseqTime.bedgraph" type="bedgraph"/>
+        <Resource path="../../data/okseq/GSM3290342_OK-seq_smooth_results_w1000_s30_d30_z1_filter.bw" type="bw"/>
+        <Resource path="../../data/okseq/GSM3290342_Ok_IZ.bed" type="bed"/>
+    </Resources>
+    <Panel height="759" name="DataPanel">
+        <Track clazz="org.broad.igv.track.DataSourceTrack"  id="labels-00-repliseq.igv_16" name="16" renderer="HEATMAP" />
+        <Track attributeKey="15" clazz="org.broad.igv.track.DataSourceTrack" id="labels-00-repliseq.igv_15" name="15" renderer="HEATMAP" />
+        <Track attributeKey="14" clazz="org.broad.igv.track.DataSourceTrack" id="labels-00-repliseq.igv_14" name="14" renderer="HEATMAP" />
+        <Track attributeKey="13" clazz="org.broad.igv.track.DataSourceTrack" id="labels-00-repliseq.igv_13" name="13" renderer="HEATMAP" />
+        <Track attributeKey="12" clazz="org.broad.igv.track.DataSourceTrack" id="labels-00-repliseq.igv_12" name="12" renderer="HEATMAP" />
+        <Track attributeKey="11" clazz="org.broad.igv.track.DataSourceTrack" id="labels-00-repliseq.igv_11" name="11" renderer="HEATMAP" />
+        <Track attributeKey="10" clazz="org.broad.igv.track.DataSourceTrack" id="labels-00-repliseq.igv_10" name="10" renderer="HEATMAP" />
+        <Track attributeKey="9" clazz="org.broad.igv.track.DataSourceTrack" id="labels-00-repliseq.igv_9" name="9" renderer="HEATMAP" />
+        <Track attributeKey="8" clazz="org.broad.igv.track.DataSourceTrack" id="labels-00-repliseq.igv_8" name="8" renderer="HEATMAP" />
+        <Track attributeKey="7" clazz="org.broad.igv.track.DataSourceTrack" id="labels-00-repliseq.igv_7" name="7" renderer="HEATMAP" />
+        <Track attributeKey="6" clazz="org.broad.igv.track.DataSourceTrack" id="labels-00-repliseq.igv_6" name="6" renderer="HEATMAP" />
+        <Track attributeKey="5" clazz="org.broad.igv.track.DataSourceTrack" id="labels-00-repliseq.igv_5" name="5" renderer="HEATMAP" />
+        <Track attributeKey="4" clazz="org.broad.igv.track.DataSourceTrack" id="labels-00-repliseq.igv_4" name="4" renderer="HEATMAP" />
+        <Track attributeKey="3" clazz="org.broad.igv.track.DataSourceTrack" id="labels-00-repliseq.igv_3" name="3" renderer="HEATMAP" />
+        <Track attributeKey="2" clazz="org.broad.igv.track.DataSourceTrack" id="labels-00-repliseq.igv_2" name="2" renderer="HEATMAP" />
+        <Track attributeKey="1" clazz="org.broad.igv.track.DataSourceTrack" id="labels-00-repliseq.igv_1" name="1" renderer="HEATMAP" />
+        <Track attributeKey="OK_BW" clazz="org.broad.igv.track.DataSourceTrack" id="GSM3290342_OK-seq_smooth_results_w1000_s30_d30_z1_filter.bw" name="OK-seq" renderer="BAR_CHART" />
+        <Track attributeKey="OK_IZ" clazz="org.broad.igv.track.FeatureTrack" id="GSM3290342_Ok_IZ.bed" name="IZ from OK-seq" />
+        <Track attributeKey="repliseqTime" clazz="org.broad.igv.track.DataSourceTrack" id="labels-01-repliseqTime.bedgraph" name="01: RepliSeq time" renderer="BAR_CHART" />
+        <Track attributeKey="labels-02" clazz="org.broad.igv.track.FeatureTrack" id="labels-02-tz_annotation_step1extended.bed" name="02: TZ OK-seq based (step 1)" />
+        <Track attributeKey="labels-03" clazz="org.broad.igv.track.FeatureTrack" id="labels-03-tz_annotation_step2extended.bed" name="03: TZ RepliSeq corrected (step 2)" />
+        <Track attributeKey="labels-04long" clazz="org.broad.igv.track.FeatureTrack" id="labels-04-training_long_regions.bed" name="04: Training regions long" />
+        <Track attributeKey="labels-04" clazz="org.broad.igv.track.FeatureTrack" id="labels-04-training_regions.bed" name="04: Training regions short" />
+    </Panel>
+    <Panel>
+        <Track attributeKey="Reference sequence" clazz="org.broad.igv.track.SequenceTrack" id="Reference sequence" name="Reference sequence" />
+        <Track attributeKey="Refseq genes" clazz="org.broad.igv.track.FeatureTrack" id="mm10_genes" name="Refseq genes" />
+    </Panel>
+</Session>

@@ -6,6 +6,19 @@ devtools::install_cran(c("ggprism", "ggpubr"))
 devtools::install_bioc(c("GenomicFeatures", "GenomicRanges", "rtracklayer", "Biostrings", "ComplexHeatmap"))
 devtools::install_deps("breaktools/")
 
+#
+# Create Python environment for Keras and Tensorflow
+# To run Tensorboard (for validating model training) use command
+#
+# tensorboard --logdir logs/
+#
+reticulate::virtualenv_create("r-tensorflow", python="/usr/bin/python3.8")
+reticulate::py_install("tensorflow-gpu")
+tensorflow::install_tensorflow(envname="r-tensorflow")
+keras::install_keras(envname="r-tensorflow", tensorflow="gpu")
+
+
+
 # Install blast, bowtie2 and dustmasker if you don't have them. The easiest way is to use Anaconda installer. You might need to add Anaconda binaries folder to your PATH environment variable.
 # If you are using OSX+Rstudion also add PATH to ~/.Renviron file:
 #
@@ -15,8 +28,17 @@ devtools::install_deps("breaktools/")
 # https://anaconda.org/bioconda/bowtie2
 # https://anaconda.org/bioconda/blat
 
-unzip("data/TLX.zip", exdir="data")
-
 dir.create("reports", recursive=T, showWarnings=F)
 dir.create("genomes", recursive=T, showWarnings=F)
 dir.create("tmp", recursive=T, showWarnings=F)
+
+#
+# Download TLX files from NCBI
+#
+unzip("data/data.zip", exdir="data/")
+dir.create("data/TLX", recursive=T, showWarnings=F)
+file.copy(Sys.glob("data/TLX_paper/*"), "data/TLX", overwrite=T, recursive=T)
+file.copy(Sys.glob("data/TLX_public/*"), "data/TLX", overwrite=T, recursive=T)
+# file.copy(Sys.glob("reports/00-upload_ncbi/TLX/*.tlx"), "data/TLX", overwrite=TRUE)
+
+

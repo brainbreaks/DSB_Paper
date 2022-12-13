@@ -8,13 +8,13 @@ source("00-utils.R")
 
 promoter_enhancer_deletion = function()
 {
-  dir.create("reports/05-promoter_enhancer_deletion", recursive=T, showWarnings=F)
+  dir.create("reports/06-promoter_enhancer_deletion", recursive=T, showWarnings=F)
 
   #
   # Read TLX files
   #
-  samples_df = tlx_read_paper_samples("data/htgts_samples.tsv", "data") %>%
-    dplyr::filter(grepl("(Ctnna2|Nrxn1) promoter/enhancer", experiment)) %>%
+  samples_df = tlx_read_samples("data/htgts_samples.tsv", "data/TLX") %>%
+    dplyr::filter(subset_promoter_enhancer_deletion=="Y") %>%
     dplyr::mutate(group=dplyr::case_when(
       control~"DMSO",
       grepl("NXP010|NXP047", group)~"WT",
@@ -95,7 +95,7 @@ promoter_enhancer_deletion = function()
     setNames(., levels(group)))
 
 
-  pdf("reports/05-promoter_enhancer_deletion/promoter_enhancer_deletion-boxplots_pulled.pdf", width=8.27, height=11.69, paper="a4")
+  pdf("reports/06-promoter_enhancer_deletion/promoter_enhancer_deletion-boxplots_pulled.pdf", width=8.27, height=11.69, paper="a4")
   ggplot(tlx2roi_pulled_df, aes(x=group, y=breaks_norm_rel)) +
     geom_boxplot(aes(fill=group), outlier.shape=NA, show.legend=F) +
     geom_point(color="#000000", size=2.5, position=position_jitter(width=0.2, height=0, seed=2), show.legend=F) +
@@ -109,7 +109,7 @@ promoter_enhancer_deletion = function()
     theme(legend.position="bottom", axis.title.x=element_blank(), axis.ticks.x=element_blank())
   dev.off()
 
-  pdf("reports/05-promoter_enhancer_deletion/promoter_enhancer_deletion-boxplots.pdf", width=11.69, height=8.27, paper="a4r")
+  pdf("reports/06-promoter_enhancer_deletion/promoter_enhancer_deletion-boxplots.pdf", width=11.69, height=8.27, paper="a4r")
   rdc2tlx_df %>%
     dplyr::filter(!is.na(rdc_gene)) %>%
     dplyr::group_split(experiment) %>%

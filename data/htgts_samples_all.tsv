@@ -1,0 +1,475 @@
+sample	experiment	run	celltype	organism	path	bait_chrom	bait_name	treatment	group	group_short	group_i	control	alleles	concentration	description
+PW090	APH concentration	B400_016	NPC	mouse	APH_concentration/PW090_B400_016_result.tlx	chr6	Chr6_70Mb	DMSO	DMSO	DMSO	1	T	2	0	ESC-NPC;NXP010; DMSO
+PW091	APH concentration	B400_016	NPC	mouse	APH_concentration/PW091_B400_016_result.tlx	chr6	Chr6_70Mb	APH 0.4 uM 96h	APH 0.4 uM 96h	APH 0.4	1	F	2	0.4	ESC-NPC;NXP010; Aphidicolin 0.4 uM 96h
+PW092	APH concentration	B400_016	NPC	mouse	APH_concentration/PW092_B400_016_result.tlx	chr6	Chr6_70Mb	APH 0.2 uM 96h	APH 0.2 uM 96h	APH 0.2	1	F	2	0.2	ESC-NPC;NXP010; Aphidicolin 0.2 uM 96h
+PW093	APH concentration	B400_016	NPC	mouse	APH_concentration/PW093_B400_016_result.tlx	chr6	Chr6_70Mb	APH 0.6 uM 96h	APH 0.6 uM 96h	APH 0.6	1	F	2	0.6	ESC-NPC;NXP010; Aphidicolin 0.6 uM 96h
+PW094	Hydroxyurea	B400_016	NPC	mouse	PW094_B400_016_result.tlx	chr6	Chr6_70Mb	DMSO	HU-chr6	HU-chr6	3	T	2	0	ESC-NPC;NXP010; DMSO
+PW095	Hydroxyurea	B400_016	NPC	mouse	PW095_B400_016_result.tlx	chr6	Chr6_70Mb	HU 2 uM 6h	HU-chr6	HU-chr6	3	F	2	2	ESC-NPC;NXP010; Hydroxyurea 2 uM 6hr
+PW096	Hydroxyurea	B400_016	NPC	mouse	PW096_B400_016_result.tlx	chr6	Chr6_70Mb	DMSO	HU-chr6	HU-chr6	4	T	2	0	ESC-NPC;NXP010; DMSO
+PW097	Hydroxyurea	B400_016	NPC	mouse	PW097_B400_016_result.tlx	chr6	Chr6_70Mb	HU 2 uM 6h	HU-chr6	HU-chr6	4	F	2	2	ESC-NPC;NXP010; Hydroxyurea 2 uM 6hr
+PW098	Chr6 and offtarget baits	B400_016	NPC	mouse	PW098_B400_016_result.tlx	chr6	Chr6_70Mb	No treatment	Chr6 bait	Chr6 bait	2	F	2	0	ESC-NPC;NXP010; No treatment
+PW099	Chr6 and offtarget baits	B400_016	NPC	mouse	PW099_B400_016_result.tlx	chr4	Chr6_70Mb-Chr4_141Mb	No treatment	Chr6 Chr4-OT bait	Chr6 Chr4-OT bait	1	T	2	0	ESC-NPC;NXP010; No treatment
+PW100	Chr8 and offtarget baits	B400_016	NPC	mouse	PW100_B400_016_result.tlx	chr8	Chr8_61Mb	No treatment	Chr8	Chr8	1	T	2	0	ESC-NPC;NXP010; No treatment
+PW101	Chr8 and offtarget baits	B400_016	NPC	mouse	PW101_B400_016_result.tlx	chr6	Chr8_61Mb-Chr6_32Mb	No treatment	Chr8 Chr6-OT bait	Chr8 Chr6-OT bait	1	T	2	0	ESC-NPC;NXP010; No treatment
+PW102	Chr8 and offtarget baits	B400_016	NPC	mouse	PW102_B400_016_result.tlx	chr14	Chr8_61Mb-Chr14_22Mb	No treatment	Chr8 Chr14-OT bait	Chr8 Chr14-OT bait	1	T	2	0	ESC-NPC;NXP010; No treatment
+LC037	Auts2 isoforms (cDNA)	B400_016	ESC	mouse	LC037_B400_016_result.tlx	chr5	Chr5_101Mb	DMSO	APH 0.2 uM 96h	Auts2-exon2	1	T	2	0.2	ESC;NXP010; Bait before Auts2 exon 2 DMSO
+LC038	Auts2 isoforms (cDNA)	B400_016	ESC	mouse	LC038_B400_016_result.tlx	chr5	Chr5_101Mb	APH 0.2 uM 96h	APH 0.2 uM 96h	Auts2-exon2	1	F	2	0.2	ESC;NXP010; Bait before Auts2 exon 2; Aphidicolin 0.2 uM 96h
+LC039	Auts2 isoforms (cDNA)	B400_016	ESC	mouse	LC039_B400_016_result.tlx	chr5	Chr5_101Mb	DMSO	APH 0.2 uM 96h	Auts2-exon3	1	T	2	0.2	ESC;NXP010; Bait before Auts2 exon 3 DMSO
+LC040	Auts2 isoforms (cDNA)	B400_016	ESC	mouse	LC040_B400_016_result.tlx	chr5	Chr5_101Mb	APH 0.2 uM 96h	APH 0.2 uM 96h	Auts2-exon3	1	F	2	0.2	ESC;NXP010; Bait before Auts2 exon 3; Aphidicolin 0.2 uM 96h
+JF022	Aphidicolin+Nocodazole	B400_011	NPC	mouse	JF022_B400_011_result.tlx	chr6	Chr6_70Mb	APH 48h + NOC 30h	APH 48h + NOC 30h		1	F	2		ESC-NPC;NXP010; aphidicolin 48hrs + Noco 30hrs
+JF023	Aphidicolin+Nocodazole	B400_011	NPC	mouse	JF023_B400_011_result.tlx	chr6	Chr6_70Mb	APH 48h + resealse 30h	APH 48h + resealse 30h		1	F	2		ESC-NPC;NXP010; aphidicolin 48hrs + resealse 30hrs
+JF024	Aphidicolin+Nocodazole	B400_011	NPC	mouse	JF024_B400_011_result.tlx	chr6	Chr6_70Mb	DMSO	DMSO		1	T	2		ESC-NPC;NXP010; DMSO 78 hrs
+JF021	Aphidicolin+Nocodazole	B400_011	NPC	mouse	JF021_B400_011_result.tlx	chr6	Chr6_70Mb	NOC 30h	NOC 30h		1	F	2		ESC-NPC;NXP010; Nocodazole 30hrs
+LC0022	Csmd1 promoter/enhancer	B400_005	NPC	mouse	LC0022_B400_005_result.tlx	chr8	Chr8_61Mb	APH 0.5 uM 96h	Allelic deletion (73/16)	fndr_73-16	1	F	1	0.5	ESC-NPC;Nxp010;73/16; Aphidicolin 0.5 uM 96h
+LC0023	Csmd1 promoter/enhancer	B400_005	NPC	mouse	LC0023_B400_005_result.tlx	chr8	Chr8_61Mb	DMSO	Allelic deletion (73/16)	fndr_73-16	1	T	1	0	ESC-NPC;Nxp010;73/16; DMSO
+PW061	Csmd1 promoter/enhancer	B400_008	NPC	mouse	PW061_B400_008_result.tlx	chr8	Chr8_61Mb	DMSO	Allelic deletion (73/16)	fndr_73-16	2	T	1	0	ESC-NPC;NXP010;73/16; DMSO
+PW062	Csmd1 promoter/enhancer	B400_007	NPC	mouse	PW062_B400_007_result.tlx	chr8	Chr8_61Mb	APH 0.5 uM 96h	Allelic deletion (73/16)	fndr_73-16	2	F	1	0.5	ESC-NPC;NXP010;73/16; Aphidicolin 0.5 uM 96h
+VI026	Csmd1 promoter/enhancer	B400_006	NPC	mouse	VI026_B400_006_result.tlx	chr8	Chr8_61Mb	DMSO	Allelic deletion (73/16)	fndr_73-16	4	T	1	0	ESC-NPC;NXP010;73/16; DMSO
+VI027	Csmd1 promoter/enhancer	B400_006	NPC	mouse	VI027_B400_006_result.tlx	chr8	Chr8_61Mb	APH 0.5 uM 96h	Allelic deletion (73/16)	fndr_73-16	4	F	1	0.5	ESC-NPC;NXP010;73/16; Aphidicolin 0.5 uM 96h
+VI041	Csmd1 promoter/enhancer	B400_007	NPC	mouse	VI041_B400_007_result.tlx	chr8	Chr8_61Mb	DMSO	Allelic deletion (73/16)	fndr_73-16	5	T	1	0	ESC-NPC;NXP010;73/16; DMSO
+VI042	Csmd1 promoter/enhancer	B400_007	NPC	mouse	VI042_B400_007_result.tlx	chr8	Chr8_61Mb	APH 0.5 uM 96h	Allelic deletion (73/16)	fndr_73-16	5	F	1	0.5	ESC-NPC;NXP010;73/16; Aphidicolin 0.5 uM 96h
+LC029	Csmd1 promoter/enhancer	B400_007	NPC	mouse	LC029_B400_007_result.tlx	chr8	Chr8_61Mb	DMSO	Allelic+promoter deletion (13/12)	fndr-prom_13-12	1	T	1	0	ESC-NPC;NXP010;13/12; DMSO
+VI032	Csmd1 promoter/enhancer	B400_008	NPC	mouse	VI032_B400_008_result.tlx	chr8	Chr8_61Mb	APH 0.5 uM 96h	Allelic+promoter deletion (13/12)	fndr-prom_13-12	1	F	1	0.5	ESC-NPC;NXP010;13/12; Aphidicolin 0.5 uM 96h
+LC028	Csmd1 promoter/enhancer	B400_007	NPC	mouse	LC028_B400_007_result.tlx	chr8	Chr8_61Mb	DMSO	Allelic+promoter deletion (37/8)	fndr-prom_37-8	1	T	1	0	ESC-NPC;NXP010;37/8; DMSO
+VI031	Csmd1 promoter/enhancer	B400_006	NPC	mouse	VI031_B400_006_result.tlx	chr8	Chr8_61Mb	APH 0.5 uM 96h	Allelic+promoter deletion (37/8)	fndr-prom_37-8	1	F	1	0.5	ESC-NPC;NXP010;37/8; Aphidicolin 0.5 uM 96h
+LC0020	Csmd1 promoter/enhancer	B400_005	NPC	mouse	LC0020_B400_005_result.tlx	chr8	Chr8_61Mb	APH 0.5 uM 96h	Perental cell (NXP010)	NXP010	1	F	2	0.5	ESC-NPC;Nxp010; Aphidicolin 0.5 uM 96h
+LC0021	Csmd1 promoter/enhancer	B400_005	NPC	mouse	LC0021_B400_005_result.tlx	chr8	Chr8_61Mb	DMSO	Perental cell (NXP010)	NXP010	1	T	2	0	ESC-NPC;Nxp010; DMSO
+LC030	Csmd1 promoter/enhancer	B400_007	NPC	mouse	LC030_B400_007_result.tlx	chr8	Chr8_61Mb	DMSO	Perental cell (NXP010)	NXP010	2	T	2	0	ESC-NPC;NXP010; DMSO
+PW059	Csmd1 promoter/enhancer	B400_007	NPC	mouse	PW059_B400_007_result.tlx	chr8	Chr8_61Mb	DMSO	Perental cell (NXP010)	NXP010	3	T	2	0	ESC-NPC;NXP010; DMSO
+PW060	Csmd1 promoter/enhancer	B400_007	NPC	mouse	PW060_B400_007_result.tlx	chr8	Chr8_61Mb	APH 0.5 uM 96h	Perental cell (NXP010)	NXP010	2	F	2	0.5	ESC-NPC;NXP010; Aphidicolin 0.5 uM 96h
+VI024	Csmd1 promoter/enhancer	B400_006	NPC	mouse	VI024_B400_006_result.tlx	chr8	Chr8_61Mb	DMSO	Perental cell (NXP010)	NXP010	5	T	2	0	ESC-NPC;NXP010; DMSO
+VI030	Csmd1 promoter/enhancer	B400_006	NPC	mouse	VI030_B400_006_result.tlx	chr8	Chr8_61Mb	APH 0.5 uM 96h	Perental cell (NXP010)	NXP010	4	F	2	0.5	ESC-NPC;NXP010; Aphidicolin 0.5 uM 96h
+VI039	Csmd1 promoter/enhancer	B400_007	NPC	mouse	VI039_B400_007_result.tlx	chr8	Chr8_61Mb	DMSO	Perental cell (NXP010)	NXP010	6	T	2	0	ESC-NPC;NXP010; DMSO
+LC0027	Ctnna2 promoter/enhancer	B400_005	NPC	mouse	LC0027_B400_005_result.tlx	chr6	Chr6_70Mb	DMSO	Allelic deletion (47/5)	fndr_47-5	1	T	1	0	ESC-NPC;Nxp010;47/5; DMSO
+PW057	Ctnna2 promoter/enhancer	B400_007	NPC	mouse	PW057_B400_007_result.tlx	chr6	Chr6_70Mb	DMSO	Allelic deletion (47/5)	fndr_47-5	2	T	1	0	ESC-NPC;NXP010;47/5; DMSO
+PW058	Ctnna2 promoter/enhancer	B400_007	NPC	mouse	PW058_B400_007_result.tlx	chr6	Chr6_70Mb	APH 0.5 uM 96h	Allelic deletion (47/5)	fndr_47-5	1	F	1	0.5	ESC-NPC;NXP010;47/5; Aphidicolin 0.5 uM 96h
+VI012	Ctnna2 promoter/enhancer	B400_003	NPC	mouse	VI012_B400_003_result.tlx	chr6	Chr6_70Mb	DMSO	Allelic deletion (47/5)	fndr_47-5	3	T	1	0	ESC-NPC;NXP010;47/5; DMSO
+VI013	Ctnna2 promoter/enhancer	B400_003	NPC	mouse	VI013_B400_003_result.tlx	chr6	Chr6_70Mb	APH 0.5 uM 96h	Allelic deletion (47/5)	fndr_47-5	2	F	1	0.5	ESC-NPC;NXP010;47/5; Aphidicolin 0.5 uM 96h
+VI022	Ctnna2 promoter/enhancer	B400_006	NPC	mouse	VI022_B400_006_result.tlx	chr6	Chr6_70Mb	DMSO	Allelic deletion (47/5)	fndr_47-5	4	T	1	0	ESC-NPC;NXP010;47/5; DMSO
+VI023	Ctnna2 promoter/enhancer	B400_006	NPC	mouse	VI023_B400_006_result.tlx	chr6	Chr6_70Mb	APH 0.5 uM 96h	Allelic deletion (47/5)	fndr_47-5	3	F	1	0.5	ESC-NPC;NXP010;47/5; Aphidicolin 0.5 uM 96h
+VI029	Ctnna2 promoter/enhancer	B400_006	NPC	mouse	VI029_B400_006_result.tlx	chr6	Chr6_70Mb	APH 0.5 uM 96h	Allelic deletion (47/5)	fndr_47-5	4	F	1	0.5	ESC-NPC;NXP010;47/5; Aphidicolin 0.5 uM 96h
+VI037	Ctnna2 promoter/enhancer	B400_007	NPC	mouse	VI037_B400_007_result.tlx	chr6	Chr6_70Mb	DMSO	Allelic deletion (47/5)	fndr_47-5	5	T	1	0	ESC-NPC;NXP010;47/5; DMSO
+VI038	Ctnna2 promoter/enhancer	B400_007	NPC	mouse	VI038_B400_007_result.tlx	chr6	Chr6_70Mb	APH 0.5 uM 96h	Allelic deletion (47/5)	fndr_47-5	5	F	1	0.5	ESC-NPC;NXP010;47/5; Aphidicolin 0.5 uM 96h
+VI043	Ctnna2 promoter/enhancer	B400_010	NPC	mouse	VI043_B400_010_result.tlx	chr6	Chr6_70Mb	DMSO	Allelic deletion (47/5)	fndr_47-5	6	T	1	0	ESC-NPC;NXP010;47/5; DMSO
+VI044	Ctnna2 promoter/enhancer	B400_010	NPC	mouse	VI044_B400_010_result.tlx	chr6	Chr6_70Mb	APH 0.5 uM 96h	Allelic deletion (47/5)	fndr_47-5	6	F	1	0.5	ESC-NPC;NXP010;47/5; Aphidicolin 0.5 uM 96h
+VI049	Ctnna2 promoter/enhancer	B400_011	NPC	mouse	VI049_B400_011_result.tlx	chr6	Chr6_70Mb	DMSO	Allelic deletion (47/5)	fndr_47-5	7	T	1	0	ESC-NPC;NXP010;47/5; DMSO
+VI050	Ctnna2 promoter/enhancer	B400_011	NPC	mouse	VI050_B400_011_result.tlx	chr6	Chr6_70Mb	APH 0.5 uM 96h	Allelic deletion (47/5)	fndr_47-5	7	F	1	0.5	ESC-NPC;NXP010;47/5; Aphidicolin 0.5 uM 96h
+VI055	Ctnna2 promoter/enhancer	B400_012	NPC	mouse	VI055_B400_012_result.tlx	chr6	Chr6_70Mb	DMSO	Allelic deletion (47/5)	fndr_47-5	8	T	1	0	ESC-NPC;NXP010;47/5; DMSO
+VI056	Ctnna2 promoter/enhancer	B400_012	NPC	mouse	VI056_B400_012_result.tlx	chr6	Chr6_70Mb	APH 0.5 uM 96h	Allelic deletion (47/5)	fndr_47-5	8	F	1	0.5	ESC-NPC;NXP010;47/5; Aphidicolin 0.5 uM 96h
+VI014	Ctnna2 promoter/enhancer	B400_003	NPC	mouse	VI014_B400_003_result.tlx	chr6	Chr6_70Mb	DMSO	Allelic deletion (71/3)	fndr_71-3	1	T	1	0	ESC-NPC;NXP010;71/3; DMSO
+VI015	Ctnna2 promoter/enhancer	B400_003	NPC	mouse	VI015_B400_003_result.tlx	chr6	Chr6_70Mb	APH 0.5 uM 96h	Allelic deletion (71/3)	fndr_71-3	1	F	1	0.5	ESC-NPC;NXP010;71/3; Aphidicolin 0.5 uM 96h
+VI061	Ctnna2 promoter/enhancer	B400_015	NPC	mouse	VI061_B400_015_result.tlx	chr6	Chr6_70Mb	DMSO	Allelic deletion (71/3)	fndr_71-3	2	T	1	0	ESC-NPC;NXP010;71/3; DMSO
+VI062	Ctnna2 promoter/enhancer	B400_015	NPC	mouse	VI062_B400_015_result.tlx	chr6	Chr6_70Mb	APH 0.5 uM 96h	Allelic deletion (71/3)	fndr_71-3	2	F	1	0.5	ESC-NPC;NXP010;71/3; Aphidicolin 0.5 uM 96h
+LC0025	Ctnna2 promoter/enhancer	B400_005	NPC	mouse	LC0025_B400_005_result.tlx	chr6	Chr6_70Mb	DMSO	Allelic+promoter deletion (18/4)	fndr-prom_18-4	1	T	1	0	ESC-NPC;Nxp010;18/4; DMSO
+VI034	Ctnna2 promoter/enhancer	B400_006	NPC	mouse	VI034_B400_006_result.tlx	chr6	Chr6_70Mb	APH 0.5 uM 96h	Allelic+promoter deletion (18/4)	fndr-prom_18-4	1	F	1	0.5	ESC-NPC;NXP010;18/4; Aphidicolin 0.5 uM 96h
+VI057	Ctnna2 promoter/enhancer	B400_012	NPC	mouse	VI057_B400_012_result.tlx	chr6	Chr6_70Mb	DMSO	Allelic+promoter deletion (18/4)	fndr-prom_18-4	2	T	1	0	ESC-NPC;NXP010;18/4; DMSO
+VI058	Ctnna2 promoter/enhancer	B400_012	NPC	mouse	VI058_B400_012_result.tlx	chr6	Chr6_70Mb	APH 0.5 uM 96h	Allelic+promoter deletion (18/4)	fndr-prom_18-4	2	F	1	0.5	ESC-NPC;NXP010;18/4; Aphidicolin 0.5 uM 96h
+VI065	Ctnna2 promoter/enhancer	B400_015	NPC	mouse	VI065_B400_015_result.tlx	chr6	Chr6_70Mb	DMSO	Allelic+promoter deletion (18/4)	fndr-prom_18-4	3	T	1	0	ESC-NPC;NXP010;18/4; DMSO
+VI066	Ctnna2 promoter/enhancer	B400_015	NPC	mouse	VI066_B400_015_result.tlx	chr6	Chr6_70Mb	APH 0.5 uM 96h	Allelic+promoter deletion (18/4)	fndr-prom_18-4	3	F	1	0.5	ESC-NPC;NXP010;18/4; Aphidicolin 0.5 uM 96h
+LC0026	Ctnna2 promoter/enhancer	B400_005	NPC	mouse	LC0026_B400_005_result.tlx	chr6	Chr6_70Mb	DMSO	Allelic+promoter deletion (38/3)	fndr-prom_38-3	1	T	1	0	ESC-NPC;Nxp010;38/3; DMSO
+VI033	Ctnna2 promoter/enhancer	B400_006	NPC	mouse	VI033_B400_006_result.tlx	chr6	Chr6_70Mb	APH 0.5 uM 96h	Allelic+promoter deletion (38/3)	fndr-prom_38-3	1	F	1	0.5	ESC-NPC;NXP010;38/3; Aphidicolin 0.5 uM 96h
+VI045	Ctnna2 promoter/enhancer	B400_010	NPC	mouse	VI045_B400_010_result.tlx	chr6	Chr6_70Mb	DMSO	Allelic+promoter deletion (38/3)	fndr-prom_38-3	2	T	1	0	ESC-NPC;NXP010;38/3; DMSO
+VI046	Ctnna2 promoter/enhancer	B400_010	NPC	mouse	VI046_B400_010_result.tlx	chr6	Chr6_70Mb	APH 0.5 uM 96h	Allelic+promoter deletion (38/3)	fndr-prom_38-3	2	F	1	0.5	ESC-NPC;NXP010;38/3; Aphidicolin 0.5 uM 96h
+VI051	Ctnna2 promoter/enhancer	B400_011	NPC	mouse	VI051_B400_011_result.tlx	chr6	Chr6_70Mb	DMSO	Allelic+promoter deletion (38/3)	fndr-prom_38-3	3	T	1	0	ESC-NPC;NXP010;38/3; DMSO
+VI052	Ctnna2 promoter/enhancer	B400_011	NPC	mouse	VI052_B400_011_result.tlx	chr6	Chr6_70Mb	APH 0.5 uM 96h	Allelic+promoter deletion (38/3)	fndr-prom_38-3	3	F	1	0.5	ESC-NPC;NXP010;38/3; Aphidicolin 0.5 uM 96h
+VI063	Ctnna2 promoter/enhancer	B400_015	NPC	mouse	VI063_B400_015_result.tlx	chr6	Chr6_70Mb	DMSO	Allelic+promoter deletion (38/3)	fndr-prom_38-3	4	T	1	0	ESC-NPC;NXP010;38/3; DMSO
+VI064	Ctnna2 promoter/enhancer	B400_015	NPC	mouse	VI064_B400_015_result.tlx	chr6	Chr6_70Mb	APH 0.5 uM 96h	Allelic+promoter deletion (38/3)	fndr-prom_38-3	4	F	1	0.5	ESC-NPC;NXP010;38/3; Aphidicolin 0.5 uM 96h
+LC0024	Ctnna2 promoter/enhancer	B400_005	NPC	mouse	LC0024_B400_005_result.tlx	chr6	Chr6_70Mb	DMSO	Perental cell (NXP010)	NXP010	1	T	2	0	ESC-NPC;Nxp010; DMSO
+PW055	Ctnna2 promoter/enhancer	B400_007	NPC	mouse	PW055_B400_007_result.tlx	chr6	Chr6_70Mb	DMSO	Perental cell (NXP010)	NXP010	2	T	2	0	ESC-NPC;NXP010; DMSO
+PW056	Ctnna2 promoter/enhancer	B400_008	NPC	mouse	PW056_B400_008_result.tlx	chr6	Chr6_70Mb	APH 0.5 uM 96h	Perental cell (NXP010)	NXP010	1	F	2	0.5	ESC-NPC;NXP010; Aphidicolin 0.5 uM 96h
+VI011	Ctnna2 promoter/enhancer	B400_003	NPC	mouse	VI011_B400_003_result.tlx	chr6	Chr6_70Mb	APH 0.5 uM 96h	Perental cell (NXP010)	NXP010	2	F	2	0.5	ESC-NPC;NXP010; Aphidicolin 0.5 uM 96h
+VI020	Ctnna2 promoter/enhancer	B400_006	NPC	mouse	VI020_B400_006_result.tlx	chr6	Chr6_70Mb	DMSO	Perental cell (NXP010)	NXP010	3	T	2	0	ESC-NPC;NXP010; DMSO
+VI021	Ctnna2 promoter/enhancer	B400_006	NPC	mouse	VI021_B400_006_result.tlx	chr6	Chr6_70Mb	APH 0.5 uM 96h	Perental cell (NXP010)	NXP010	3	F	2	0.5	ESC-NPC;NXP010; Aphidicolin 0.5 uM 96h
+VI028	Ctnna2 promoter/enhancer	B400_006	NPC	mouse	VI028_B400_006_result.tlx	chr6	Chr6_70Mb	APH 0.5 uM 96h	Perental cell (NXP010)	NXP010	4	F	2	0.5	ESC-NPC;NXP010; Aphidicolin 0.5 uM 96h
+VI035	Ctnna2 promoter/enhancer	B400_007	NPC	mouse	VI035_B400_007_result.tlx	chr6	Chr6_70Mb	DMSO	Perental cell (NXP010)	NXP010	4	T	2	0	ESC-NPC;NXP010; DMSO
+VI036	Ctnna2 promoter/enhancer	B400_009	NPC	mouse	VI036_B400_009_result.tlx	chr6	Chr6_70Mb	APH 0.5 uM 96h	Perental cell (NXP010)	NXP010	5	F	2	0.5	ESC-NPC;NXP010; Aphidicolin 0.5 uM 96h
+VI047	Ctnna2 promoter/enhancer	B400_011	NPC	mouse	VI047_B400_011_result.tlx	chr6	Chr6_70Mb	DMSO	Perental cell (NXP010)	NXP010	5	T	2	0	ESC-NPC;NXP010; DMSO
+VI048	Ctnna2 promoter/enhancer	B400_011	NPC	mouse	VI048_B400_011_result.tlx	chr6	Chr6_70Mb	APH 0.5 uM 96h	Perental cell (NXP010)	NXP010	6	F	2	0.5	ESC-NPC;NXP010; Aphidicolin 0.5 uM 96h
+VI053	Ctnna2 promoter/enhancer	B400_012	NPC	mouse	VI053_B400_012_result.tlx	chr6	Chr6_70Mb	DMSO	Perental cell (NXP010)	NXP010	6	T	2	0	ESC-NPC;NXP010; DMSO
+VI054	Ctnna2 promoter/enhancer	B400_012	NPC	mouse	VI054_B400_012_result.tlx	chr6	Chr6_70Mb	APH 0.5 uM 96h	Perental cell (NXP010)	NXP010	7	F	2	0.5	ESC-NPC;NXP010; Aphidicolin 0.5 uM 96h
+VI059	Ctnna2 promoter/enhancer	B400_015	NPC	mouse	VI059_B400_015_result.tlx	chr6	Chr6_70Mb	DMSO	Perental cell (NXP010)	NXP010	7	T	2	0	ESC-NPC;NXP010; DMSO
+VI060	Ctnna2 promoter/enhancer	B400_015	NPC	mouse	VI060_B400_015_result.tlx	chr6	Chr6_70Mb	APH 0.5 uM 96h	Perental cell (NXP010)	NXP010	8	F	2	0.5	ESC-NPC;NXP010; Aphidicolin 0.5 uM 96h
+LC031	ESC cell aphidicolin	B400_014	NPC	mouse	LC031_B400_014_result.tlx	chr5	Chr5_101Mb	DMSO	APH		1	T	2	0	ESC;Nxp010; DMSO
+LC032	ESC cell aphidicolin	B400_014	NPC	mouse	LC032_B400_014_result.tlx	chr5	Chr5_101Mb	APH 0.2 uM 96h	APH		1	F	2	0.2	ESC;Nxp010; Aphidicolin 0.2 uM 96h
+LC033	ESC cell aphidicolin	B400_014	NPC	mouse	LC033_B400_014_result.tlx	chr5	Chr5_101Mb	DMSO	APH		2	T	2	0	ESC;Nxp010; DMSO
+LC034	ESC cell aphidicolin	B400_014	NPC	mouse	LC034_B400_014_result.tlx	chr5	Chr5_101Mb	APH 0.2 uM 96h	APH		2	F	2	0.2	ESC;Nxp010; Aphidicolin 0.2 uM 96h
+LC035	ESC cell aphidicolin	B400_014	NPC	mouse	LC035_B400_014_result.tlx	chr5	Chr5_101Mb	DMSO	APH		3	T	2	0	ESC;Nxp010; DMSO
+LC036	ESC cell aphidicolin	B400_014	NPC	mouse	LC036_B400_014_result.tlx	chr5	Chr5_101Mb	APH 0.2 uM 96h	APH		3	F	2	0.2	ESC;Nxp010; Aphidicolin 0.2 uM 96h
+JF017	Hydroxyurea	B400_006	NPC	mouse	JF017_B400_006_result.tlx	chr12	Chr12_13Mb	DMSO	HU-chr12		1	T	2	0	ESC-NPC;NXP010; DMSO 32 hr
+JF018	Hydroxyurea	B400_006	NPC	mouse	JF018_B400_006_result.tlx	chr12	Chr12_13Mb	HU 2 uM 6h	HU-chr12		1	F	2	2	ESC-NPC;NXP010; Hydroxyurea 2 uM 6hr
+JF019	Hydroxyurea	B400_006	NPC	mouse	JF019_B400_006_result.tlx	chr12	Chr12_13Mb	DMSO	HU-chr12		2	T	2	0	ESC-NPC;NXP010; DMSO 32 hr
+JF020	Hydroxyurea	B400_006	NPC	mouse	JF020_B400_006_result.tlx	chr12	Chr12_13Mb	HU 2 uM 6h	HU-chr12		2	F	2	2	ESC-NPC;NXP010; Hydroxyurea 2 uM 6hr
+PW015	Hydroxyurea	B400_002	NPC	mouse	PW015_B400_002_result.tlx	chr15	Chr15_86Mb	DMSO	HU-chr15		1	T	2	0	ESC-NPC;NXP010; DMSO
+PW016	Hydroxyurea	B400_002	NPC	mouse	PW016_B400_002_result.tlx	chr15	Chr15_86Mb	HU 2 uM 6h	HU-chr15		1	F	2	2	ESC-NPC;NXP010; Hydroxyurea 2 uM 6hr
+PW017	Hydroxyurea	B400_002	NPC	mouse	PW017_B400_002_result.tlx	chr15	Chr15_86Mb	DMSO	HU-chr15		2	T	2	0	ESC-NPC;NXP010; DMSO
+PW018	Hydroxyurea	B400_002	NPC	mouse	PW018_B400_002_result.tlx	chr15	Chr15_86Mb	HU 2 uM 24h	HU-chr15		2	F	2	2	ESC-NPC;NXP010; Hydroxyurea 2 uM 24hr
+PW019	Hydroxyurea	B400_002	NPC	mouse	PW019_B400_002_result.tlx	chr15	Chr15_86Mb	DMSO	HU-chr15		3	T	2	0	ESC-NPC;NXP010; DMSO
+PW020	Hydroxyurea	B400_002	NPC	mouse	PW020_B400_002_result.tlx	chr15	Chr15_86Mb	APH 0.5 uM 96h	HU-chr15		3	F	2	0.5	ESC-NPC;NXP010; Aphidicolin 0.5 uM 96h
+JF013	Hydroxyurea	B400_006	NPC	mouse	JF013_B400_006_result.tlx	chr16	Chr15_86Mb	DMSO	HU-chr16		1	T	2	0	ESC-NPC;NXP010; DMSO 32 hr
+JF014	Hydroxyurea	B400_006	NPC	mouse	JF014_B400_006_result.tlx	chr16	Chr15_86Mb	HU 2 uM 6h	HU-chr16		1	F	2	2	ESC-NPC;NXP010; Hydroxyurea 2 uM 6hr
+JF015	Hydroxyurea	B400_006	NPC	mouse	JF015_B400_006_result.tlx	chr16	Chr15_86Mb	DMSO	HU-chr16		2	T	2	0	ESC-NPC;NXP010; DMSO 32 hr
+JF016	Hydroxyurea	B400_006	NPC	mouse	JF016_B400_006_result.tlx	chr16	Chr15_86Mb	HU 2 uM 6h	HU-chr16		2	F	2	2	ESC-NPC;NXP010; Hydroxyurea 2 uM 6hr
+JF025	Hydroxyurea	B400_013	NPC	mouse	JF025_B400_013_result.tlx	chr6	Chr6_70Mb	HU 2 uM 6h	HU-chr6		1	F	2	2	ESC-NPC;NXP010; Hydroxyurea 2 uM 6hr
+JF026	Hydroxyurea	B400_013	NPC	mouse	JF026_B400_013_result.tlx	chr6	Chr6_70Mb	HU 2 uM 6h	HU-chr6		2	F	2	2	ESC-NPC;NXP010; Hydroxyurea 2 uM 6hr
+JF027	Hydroxyurea	B400_013	NPC	mouse	JF027_B400_013_result.tlx	chr6	Chr6_70Mb	DMSO	HU-chr6		1	T	2	0	ESC-NPC;NXP010; DMSO
+JF028	Hydroxyurea	B400_013	NPC	mouse	JF028_B400_013_result.tlx	chr6	Chr6_70Mb	DMSO	HU-chr6		2	T	2	0	ESC-NPC;NXP010; DMSO
+PW009	Nrxn1 promoter/enhancer	B400_001	NPC	mouse	PW009_B400_001_result.tlx	chr17	Chr17_41Mb	APH 0.5 uM 96h	Allelic deletion (22)	fndr_22	1	F	1	0.5	ESC-NPC;Nxp047;22; Aphidicolin 0.5 uM 96h
+PW010	Nrxn1 promoter/enhancer	B400_001	NPC	mouse	PW010_B400_001_result.tlx	chr17	Chr17_41Mb	DMSO	Allelic deletion (22)	fndr_22	1	T	1	0	ESC-NPC;Nxp047;22; DMSO
+PW047	Nrxn1 promoter/enhancer	B400_005	NPC	mouse	PW047_B400_005_result.tlx	chr17	Chr17_41Mb	DMSO	Allelic deletion (22)	fndr_22	2	T	1	0	ESC-NPC;Nxp047;22; DMSO
+PW048	Nrxn1 promoter/enhancer	B400_005	NPC	mouse	PW048_B400_005_result.tlx	chr17	Chr17_41Mb	APH 0.5 uM 96h	Allelic deletion (22)	fndr_22	2	F	1	0.5	ESC-NPC;Nxp047;22; Aphidicolin 0.5 uM 96h
+PW079	Nrxn1 promoter/enhancer	B400_010	NPC	mouse	PW079_B400_010_result.tlx	chr17	Chr17_41Mb	DMSO	Allelic deletion (22)	fndr_22	3	T	1	0	ESC-NPC;Nxp047;22; DMSO
+PW080	Nrxn1 promoter/enhancer	B400_010	NPC	mouse	PW080_B400_010_result.tlx	chr17	Chr17_41Mb	APH 0.5 uM 96h	Allelic deletion (22)	fndr_22	3	F	1	0.5	ESC-NPC;Nxp047;22; Aphidicolin 0.5 uM 96h
+PW011	Nrxn1 promoter/enhancer	B400_001	NPC	mouse	PW011_B400_001_result.tlx	chr17	Chr17_41Mb	APH 0.5 uM 96h	Allelic+promoter deletion (22/1)	fndr-prom_22-1	1	F	1	0.5	ESC-NPC;Nxp047;22-1; Aphidicolin 0.5 uM 96h
+PW012	Nrxn1 promoter/enhancer	B400_001	NPC	mouse	PW012_B400_001_result.tlx	chr17	Chr17_41Mb	DMSO	Allelic+promoter deletion (22/1)	fndr-prom_22-1	1	T	1	0	ESC-NPC;Nxp047;22-1; DMSO
+PW049	Nrxn1 promoter/enhancer	B400_005	NPC	mouse	PW049_B400_005_result.tlx	chr17	Chr17_41Mb	DMSO	Allelic+promoter deletion (22/1)	fndr-prom_22-1	2	T	1	0	ESC-NPC;Nxp047;22-1; DMSO
+PW050	Nrxn1 promoter/enhancer	B400_005	NPC	mouse	PW050_B400_005_result.tlx	chr17	Chr17_41Mb	APH 0.5 uM 96h	Allelic+promoter deletion (22/1)	fndr-prom_22-1	2	F	1	0.5	ESC-NPC;Nxp047;22-1; Aphidicolin 0.5 uM 96h
+PW081	Nrxn1 promoter/enhancer	B400_012	NPC	mouse	PW081_B400_012_result.tlx	chr17	Chr17_41Mb	DMSO	Allelic+promoter deletion (22/1)	fndr-prom_22-1	3	T	1	0	ESC-NPC;Nxp047;22-1; DMSO
+PW082	Nrxn1 promoter/enhancer	B400_012	NPC	mouse	PW082_B400_012_result.tlx	chr17	Chr17_41Mb	APH 0.5 uM 96h	Allelic+promoter deletion (22/1)	fndr-prom_22-1	3	F	1	0.5	ESC-NPC;Nxp047;22-1; Aphidicolin 0.5 uM 96h
+PW013	Nrxn1 promoter/enhancer	B400_001	NPC	mouse	PW013_B400_001_result.tlx	chr17	Chr17_41Mb	APH 0.5 uM 96h	Allelic+promoter deletion (22/37)	fndr-prom_22-37	1	F	1	0.5	ESC-NPC;Nxp047;22-37; Aphidicolin 0.5 uM 96h
+PW014	Nrxn1 promoter/enhancer	B400_001	NPC	mouse	PW014_B400_001_result.tlx	chr17	Chr17_41Mb	DMSO	Allelic+promoter deletion (22/37)	fndr-prom_22-37	1	T	1	0	ESC-NPC;Nxp047;22-37; DMSO
+PW053	Nrxn1 promoter/enhancer	B400_005	NPC	mouse	PW053_B400_005_result.tlx	chr17	Chr17_41Mb	DMSO	Allelic+promoter deletion (22/39)	fndr-prom_22-39	1	T	1	0	ESC-NPC;Nxp047;22-39; DMSO
+PW054	Nrxn1 promoter/enhancer	B400_005	NPC	mouse	PW054_B400_005_result.tlx	chr17	Chr17_41Mb	APH 0.5 uM 96h	Allelic+promoter deletion (22/39)	fndr-prom_22-39	1	F	1	0.5	ESC-NPC;Nxp047;22-39; Aphidicolin 0.5 uM 96h
+PW088	Nrxn1 promoter/enhancer	B400_012	NPC	mouse	PW088_B400_012_result.tlx	chr17	Chr17_41Mb	DMSO	Allelic+promoter deletion (22/39)	fndr-prom_22-39	2	T	1	0	ESC-NPC;Nxp047;22-39; DMSO
+PW089	Nrxn1 promoter/enhancer	B400_012	NPC	mouse	PW089_B400_012_result.tlx	chr17	Chr17_41Mb	APH 0.5 uM 96h	Allelic+promoter deletion (22/39)	fndr-prom_22-39	2	F	1	0.5	ESC-NPC;Nxp047;22-39; Aphidicolin 0.5 uM 96h
+PW084	Nrxn1 promoter/enhancer	B400_012	NPC	mouse	PW084_B400_012_result.tlx	chr17	Chr17_41Mb	APH 0.5 uM 96h	Allelic+promoter deletion (22/5)	fndr-prom_22-5	1	F	1	0.5	ESC-NPC;Nxp047;22-5; Aphidicolin 0.5 uM 96h
+PW086	Nrxn1 promoter/enhancer	B400_012	NPC	mouse	PW086_B400_012_result.tlx	chr17	Chr17_41Mb	DMSO	Allelic+promoter deletion (22/5)	fndr-prom_22-5	1	T	1	0	ESC-NPC;Nxp047;22-5; DMSO
+PW087	Nrxn1 promoter/enhancer	B400_012	NPC	mouse	PW087_B400_012_result.tlx	chr17	Chr17_41Mb	APH 0.5 uM 96h	Allelic+promoter deletion (22/5)	fndr-prom_22-5	2	F	1	0.5	ESC-NPC;Nxp047;22-5; Aphidicolin 0.5 uM 96h
+PW005	Nrxn1 promoter/enhancer	B400_001	NPC	mouse	PW005_B400_001_result.tlx	chr17	Chr17_41Mb	APH 0.5 uM 96h	Parental cell (NXP047)	NXP047	1	F	2	0.5	ESC-NPC;Nxp047; Aphidicolin 0.5 uM 96h
+PW006	Nrxn1 promoter/enhancer	B400_001	NPC	mouse	PW006_B400_001_result.tlx	chr17	Chr17_41Mb	DMSO	Parental cell (NXP047)	NXP047	1	T	2	0	ESC-NPC;Nxp047; DMSO
+PW045	Nrxn1 promoter/enhancer	B400_005	NPC	mouse	PW045_B400_005_result.tlx	chr17	Chr17_41Mb	DMSO	Parental cell (NXP047)	NXP047	2	T	2	0	ESC-NPC;Nxp047; DMSO
+PW046	Nrxn1 promoter/enhancer	B400_005	NPC	mouse	PW046_B400_005_result.tlx	chr17	Chr17_41Mb	APH 0.5 uM 96h	Parental cell (NXP047)	NXP047	2	F	2	0.5	ESC-NPC;Nxp047; Aphidicolin 0.5 uM 96h
+BD001	Sonic hedgehog + Smoothened agonist	B400_015	NPC	mouse	BD001_B400_015_result.tlx	chr6	Chr6_70Mb	no treatment	no treatment		1	T	2		CGNPs;Atoh1-EGFP; No treatment
+BD004	Sonic hedgehog + Smoothened agonist	B400_015	NPC	mouse	BD004_B400_015_result.tlx	chr6	Chr6_70Mb	SAG	SAG		1	F	2		CGNPs;Atoh1-EGFP; SAG
+BD002	Sonic hedgehog + Smoothened agonist	B400_015	NPC	mouse	BD002_B400_015_result.tlx	chr6	Chr6_70Mb	SHH 0.22 ug/ml	SHH 0.22 ug/ml		1	F	2		CGNPs;Atoh1-EGFP; SHH 0.22 ug/ml
+BD003	Sonic hedgehog + Smoothened agonist	B400_015	NPC	mouse	BD003_B400_015_result.tlx	chr6	Chr6_70Mb	SHH 1 ug/ml	SHH 1 ug/ml		1	F	2		CGNPs;Atoh1-EGFP; SHH 1 ug/ml
+SRR6283674	Wei et al. PNAS 2018	Wei2018_Chr1	NPC	mouse	Wei2018/SRR6283674_WEI2018_result.tlx	chr1	Chr1_41Mb	DMSO	chr1	chr1	1	T	2	0	From Wei et al. PNAS 2018; bait on chr1
+SRR6283675	Wei et al. PNAS 2018	Wei2018_Chr1	NPC	mouse	Wei2018/SRR6283675_WEI2018_result.tlx	chr1	Chr1_41Mb	DMSO	chr1	chr1	2	T	2	0	From Wei et al. PNAS 2018; bait on chr1
+SRR6283676	Wei et al. PNAS 2018	Wei2018_Chr1	NPC	mouse	Wei2018/SRR6283676_WEI2018_result.tlx	chr1	Chr1_41Mb	DMSO	chr1	chr1	3	T	2	0	From Wei et al. PNAS 2018; bait on chr1
+SRR6283677	Wei et al. PNAS 2018	Wei2018_Chr1	NPC	mouse	Wei2018/SRR6283677_WEI2018_result.tlx	chr1	Chr1_41Mb	APH 0.5uM	chr1	chr1	1	F	2	0.5	From Wei et al. PNAS 2018; bait on chr1
+SRR6283678	Wei et al. PNAS 2018	Wei2018_Chr1	NPC	mouse	Wei2018/SRR6283678_WEI2018_result.tlx	chr1	Chr1_41Mb	APH 0.5uM	chr1	chr1	2	F	2	0.5	From Wei et al. PNAS 2018; bait on chr1
+SRR6283679	Wei et al. PNAS 2018	Wei2018_Chr1	NPC	mouse	Wei2018/SRR6283679_WEI2018_result.tlx	chr1	Chr1_41Mb	APH 0.5uM	chr1	chr1	3	F	2	0.5	From Wei et al. PNAS 2018; bait on chr1
+SRR6283680	Wei et al. PNAS 2018	Wei2018_Chr2	NPC	mouse	Wei2018/SRR6283680_WEI2018_result.tlx	chr2	Chr2_129Mb	DMSO	chr2	chr2	1	T	2	0	From Wei et al. PNAS 2018; bait on chr2
+SRR6283681	Wei et al. PNAS 2018	Wei2018_Chr2	NPC	mouse	Wei2018/SRR6283681_WEI2018_result.tlx	chr2	Chr2_129Mb	DMSO	chr2	chr2	2	T	2	0	From Wei et al. PNAS 2018; bait on chr2
+SRR6283682	Wei et al. PNAS 2018	Wei2018_Chr2	NPC	mouse	Wei2018/SRR6283682_WEI2018_result.tlx	chr2	Chr2_129Mb	DMSO	chr2	chr2	3	T	2	0	From Wei et al. PNAS 2018; bait on chr2
+SRR6283683	Wei et al. PNAS 2018	Wei2018_Chr2	NPC	mouse	Wei2018/SRR6283683_WEI2018_result.tlx	chr2	Chr2_129Mb	APH 0.5uM	chr2	chr2	1	F	2	0.5	From Wei et al. PNAS 2018; bait on chr2
+SRR6283684	Wei et al. PNAS 2018	Wei2018_Chr2	NPC	mouse	Wei2018/SRR6283684_WEI2018_result.tlx	chr2	Chr2_129Mb	APH 0.5uM	chr2	chr2	2	F	2	0.5	From Wei et al. PNAS 2018; bait on chr2
+SRR6283685	Wei et al. PNAS 2018	Wei2018_Chr2	NPC	mouse	Wei2018/SRR6283685_WEI2018_result.tlx	chr2	Chr2_129Mb	APH 0.5uM	chr2	chr2	3	F	2	0.5	From Wei et al. PNAS 2018; bait on chr2
+SRR6283686	Wei et al. PNAS 2018	Wei2018_Chr3	NPC	mouse	Wei2018/SRR6283686_WEI2018_result.tlx	chr3	Chr3_47Mb	DMSO	chr3	chr3	1	T	2	0	From Wei et al. PNAS 2018; bait on chr3
+SRR6283687	Wei et al. PNAS 2018	Wei2018_Chr3	NPC	mouse	Wei2018/SRR6283687_WEI2018_result.tlx	chr3	Chr3_47Mb	DMSO	chr3	chr3	2	T	2	0	From Wei et al. PNAS 2018; bait on chr3
+SRR6283688	Wei et al. PNAS 2018	Wei2018_Chr3	NPC	mouse	Wei2018/SRR6283688_WEI2018_result.tlx	chr3	Chr3_47Mb	DMSO	chr3	chr3	3	T	2	0	From Wei et al. PNAS 2018; bait on chr3
+SRR6283689	Wei et al. PNAS 2018	Wei2018_Chr3	NPC	mouse	Wei2018/SRR6283689_WEI2018_result.tlx	chr3	Chr3_47Mb	APH 0.5uM	chr3	chr3	1	F	2	0.5	From Wei et al. PNAS 2018; bait on chr3
+SRR6283690	Wei et al. PNAS 2018	Wei2018_Chr3	NPC	mouse	Wei2018/SRR6283690_WEI2018_result.tlx	chr3	Chr3_47Mb	APH 0.5uM	chr3	chr3	2	F	2	0.5	From Wei et al. PNAS 2018; bait on chr3
+SRR6283691	Wei et al. PNAS 2018	Wei2018_Chr3	NPC	mouse	Wei2018/SRR6283691_WEI2018_result.tlx	chr3	Chr3_47Mb	APH 0.5uM	chr3	chr3	3	F	2	0.5	From Wei et al. PNAS 2018; bait on chr3
+SRR6283692	Wei et al. PNAS 2018	Wei2018_Chr4	NPC	mouse	Wei2018/SRR6283692_WEI2018_result.tlx	chr4	Chr4_51Mb	DMSO	chr4	chr4	1	T	2	0	From Wei et al. PNAS 2018; bait on chr4
+SRR6283693	Wei et al. PNAS 2018	Wei2018_Chr4	NPC	mouse	Wei2018/SRR6283693_WEI2018_result.tlx	chr4	Chr4_51Mb	DMSO	chr4	chr4	2	T	2	0	From Wei et al. PNAS 2018; bait on chr4
+SRR6283694	Wei et al. PNAS 2018	Wei2018_Chr4	NPC	mouse	Wei2018/SRR6283694_WEI2018_result.tlx	chr4	Chr4_51Mb	DMSO	chr4	chr4	3	T	2	0	From Wei et al. PNAS 2018; bait on chr4
+SRR6283695	Wei et al. PNAS 2018	Wei2018_Chr4	NPC	mouse	Wei2018/SRR6283695_WEI2018_result.tlx	chr4	Chr4_51Mb	APH 0.5uM	chr4	chr4	1	F	2	0.5	From Wei et al. PNAS 2018; bait on chr4
+SRR6283696	Wei et al. PNAS 2018	Wei2018_Chr4	NPC	mouse	Wei2018/SRR6283696_WEI2018_result.tlx	chr4	Chr4_51Mb	APH 0.5uM	chr4	chr4	2	F	2	0.5	From Wei et al. PNAS 2018; bait on chr4
+SRR6283697	Wei et al. PNAS 2018	Wei2018_Chr4	NPC	mouse	Wei2018/SRR6283697_WEI2018_result.tlx	chr4	Chr4_51Mb	APH 0.5uM	chr4	chr4	3	F	2	0.5	From Wei et al. PNAS 2018; bait on chr4
+SRR6283698	Wei et al. PNAS 2018	Wei2018_Chr5	NPC	mouse	Wei2018/SRR6283698_WEI2018_result.tlx	chr5	Chr5_101Mb	DMSO	chr5	chr5	1	T	2	0	From Wei et al. PNAS 2018; bait on chr5
+SRR6283699	Wei et al. PNAS 2018	Wei2018_Chr5	NPC	mouse	Wei2018/SRR6283699_WEI2018_result.tlx	chr5	Chr5_101Mb	DMSO	chr5	chr5	2	T	2	0	From Wei et al. PNAS 2018; bait on chr5
+SRR6283700	Wei et al. PNAS 2018	Wei2018_Chr5	NPC	mouse	Wei2018/SRR6283700_WEI2018_result.tlx	chr5	Chr5_101Mb	DMSO	chr5	chr5	3	T	2	0	From Wei et al. PNAS 2018; bait on chr5
+SRR6283701	Wei et al. PNAS 2018	Wei2018_Chr5	NPC	mouse	Wei2018/SRR6283701_WEI2018_result.tlx	chr5	Chr5_101Mb	APH 0.5uM	chr5	chr5	1	F	2	0.5	From Wei et al. PNAS 2018; bait on chr5
+SRR6283702	Wei et al. PNAS 2018	Wei2018_Chr5	NPC	mouse	Wei2018/SRR6283702_WEI2018_result.tlx	chr5	Chr5_101Mb	APH 0.5uM	chr5	chr5	2	F	2	0.5	From Wei et al. PNAS 2018; bait on chr5
+SRR6283703	Wei et al. PNAS 2018	Wei2018_Chr5	NPC	mouse	Wei2018/SRR6283703_WEI2018_result.tlx	chr5	Chr5_101Mb	APH 0.5uM	chr5	chr5	3	F	2	0.5	From Wei et al. PNAS 2018; bait on chr5
+SRR6283704	Wei et al. PNAS 2018	Wei2018_Chr6	NPC	mouse	Wei2018/SRR6283704_WEI2018_result.tlx	chr6	Chr6_70Mb	DMSO	chr6	chr6	1	T	2	0	From Wei et al. PNAS 2018; bait on chr6
+SRR6283705	Wei et al. PNAS 2018	Wei2018_Chr6	NPC	mouse	Wei2018/SRR6283705_WEI2018_result.tlx	chr6	Chr6_70Mb	DMSO	chr6	chr6	2	T	2	0	From Wei et al. PNAS 2018; bait on chr6
+SRR6283706	Wei et al. PNAS 2018	Wei2018_Chr6	NPC	mouse	Wei2018/SRR6283706_WEI2018_result.tlx	chr6	Chr6_70Mb	DMSO	chr6	chr6	3	T	2	0	From Wei et al. PNAS 2018; bait on chr6
+SRR6283707	Wei et al. PNAS 2018	Wei2018_Chr6	NPC	mouse	Wei2018/SRR6283707_WEI2018_result.tlx	chr6	Chr6_70Mb	APH 0.5uM	chr6	chr6	1	F	2	0.5	From Wei et al. PNAS 2018; bait on chr6
+SRR6283708	Wei et al. PNAS 2018	Wei2018_Chr6	NPC	mouse	Wei2018/SRR6283708_WEI2018_result.tlx	chr6	Chr6_70Mb	APH 0.5uM	chr6	chr6	2	F	2	0.5	From Wei et al. PNAS 2018; bait on chr6
+SRR6283709	Wei et al. PNAS 2018	Wei2018_Chr6	NPC	mouse	Wei2018/SRR6283709_WEI2018_result.tlx	chr6	Chr6_70Mb	APH 0.5uM	chr6	chr6	3	F	2	0.5	From Wei et al. PNAS 2018; bait on chr6
+SRR6283710	Wei et al. PNAS 2018	Wei2018_Chr7	NPC	mouse	Wei2018/SRR6283710_WEI2018_result.tlx	chr7	Chr7_80Mb	DMSO	chr7	chr7	1	T	2	0	From Wei et al. PNAS 2018; bait on chr7
+SRR6283711	Wei et al. PNAS 2018	Wei2018_Chr7	NPC	mouse	Wei2018/SRR6283711_WEI2018_result.tlx	chr7	Chr7_80Mb	DMSO	chr7	chr7	2	T	2	0	From Wei et al. PNAS 2018; bait on chr7
+SRR6283712	Wei et al. PNAS 2018	Wei2018_Chr7	NPC	mouse	Wei2018/SRR6283712_WEI2018_result.tlx	chr7	Chr7_80Mb	DMSO	chr7	chr7	3	T	2	0	From Wei et al. PNAS 2018; bait on chr7
+SRR6283713	Wei et al. PNAS 2018	Wei2018_Chr7	NPC	mouse	Wei2018/SRR6283713_WEI2018_result.tlx	chr7	Chr7_80Mb	APH 0.5uM	chr7	chr7	1	F	2	0.5	From Wei et al. PNAS 2018; bait on chr7
+SRR6283714	Wei et al. PNAS 2018	Wei2018_Chr7	NPC	mouse	Wei2018/SRR6283714_WEI2018_result.tlx	chr7	Chr7_80Mb	APH 0.5uM	chr7	chr7	2	F	2	0.5	From Wei et al. PNAS 2018; bait on chr7
+SRR6283715	Wei et al. PNAS 2018	Wei2018_Chr7	NPC	mouse	Wei2018/SRR6283715_WEI2018_result.tlx	chr7	Chr7_80Mb	APH 0.5uM	chr7	chr7	3	F	2	0.5	From Wei et al. PNAS 2018; bait on chr7
+SRR6283716	Wei et al. PNAS 2018	Wei2018_Chr8	NPC	mouse	Wei2018/SRR6283716_WEI2018_result.tlx	chr8	Chr8_61Mb	DMSO	chr8	chr8	1	T	2	0	From Wei et al. PNAS 2018; bait on chr8
+SRR6283717	Wei et al. PNAS 2018	Wei2018_Chr8	NPC	mouse	Wei2018/SRR6283717_WEI2018_result.tlx	chr8	Chr8_61Mb	DMSO	chr8	chr8	2	T	2	0	From Wei et al. PNAS 2018; bait on chr8
+SRR6283718	Wei et al. PNAS 2018	Wei2018_Chr8	NPC	mouse	Wei2018/SRR6283718_WEI2018_result.tlx	chr8	Chr8_61Mb	DMSO	chr8	chr8	3	T	2	0	From Wei et al. PNAS 2018; bait on chr8
+SRR6283719	Wei et al. PNAS 2018	Wei2018_Chr8	NPC	mouse	Wei2018/SRR6283719_WEI2018_result.tlx	chr8	Chr8_61Mb	APH 0.5uM	chr8	chr8	1	F	2	0.5	From Wei et al. PNAS 2018; bait on chr8
+SRR6283720	Wei et al. PNAS 2018	Wei2018_Chr8	NPC	mouse	Wei2018/SRR6283720_WEI2018_result.tlx	chr8	Chr8_61Mb	APH 0.5uM	chr8	chr8	2	F	2	0.5	From Wei et al. PNAS 2018; bait on chr8
+SRR6283721	Wei et al. PNAS 2018	Wei2018_Chr8	NPC	mouse	Wei2018/SRR6283721_WEI2018_result.tlx	chr8	Chr8_61Mb	APH 0.5uM	chr8	chr8	3	F	2	0.5	From Wei et al. PNAS 2018; bait on chr8
+SRR6283722	Wei et al. PNAS 2018	Wei2018_Chr9	NPC	mouse	Wei2018/SRR6283722_WEI2018_result.tlx	chr9	Chr9_25Mb	DMSO	chr9	chr9	1	T	2	0	From Wei et al. PNAS 2018; bait on chr9
+SRR6283723	Wei et al. PNAS 2018	Wei2018_Chr9	NPC	mouse	Wei2018/SRR6283723_WEI2018_result.tlx	chr9	Chr9_25Mb	DMSO	chr9	chr9	2	T	2	0	From Wei et al. PNAS 2018; bait on chr9
+SRR6283724	Wei et al. PNAS 2018	Wei2018_Chr9	NPC	mouse	Wei2018/SRR6283724_WEI2018_result.tlx	chr9	Chr9_25Mb	DMSO	chr9	chr9	3	T	2	0	From Wei et al. PNAS 2018; bait on chr9
+SRR6283725	Wei et al. PNAS 2018	Wei2018_Chr9	NPC	mouse	Wei2018/SRR6283725_WEI2018_result.tlx	chr9	Chr9_25Mb	APH 0.5uM	chr9	chr9	1	F	2	0.5	From Wei et al. PNAS 2018; bait on chr9
+SRR6283726	Wei et al. PNAS 2018	Wei2018_Chr9	NPC	mouse	Wei2018/SRR6283726_WEI2018_result.tlx	chr9	Chr9_25Mb	APH 0.5uM	chr9	chr9	2	F	2	0.5	From Wei et al. PNAS 2018; bait on chr9
+SRR6283727	Wei et al. PNAS 2018	Wei2018_Chr9	NPC	mouse	Wei2018/SRR6283727_WEI2018_result.tlx	chr9	Chr9_25Mb	APH 0.5uM	chr9	chr9	3	F	2	0.5	From Wei et al. PNAS 2018; bait on chr9
+SRR6283728	Wei et al. PNAS 2018	Wei2018_Chr10	NPC	mouse	Wei2018/SRR6283728_WEI2018_result.tlx	chr10	Chr10_80Mb	DMSO	chr10	chr10	1	T	2	0	From Wei et al. PNAS 2018; bait on chr10
+SRR6283729	Wei et al. PNAS 2018	Wei2018_Chr10	NPC	mouse	Wei2018/SRR6283729_WEI2018_result.tlx	chr10	Chr10_80Mb	DMSO	chr10	chr10	2	T	2	0	From Wei et al. PNAS 2018; bait on chr10
+SRR6283730	Wei et al. PNAS 2018	Wei2018_Chr10	NPC	mouse	Wei2018/SRR6283730_WEI2018_result.tlx	chr10	Chr10_80Mb	DMSO	chr10	chr10	3	T	2	0	From Wei et al. PNAS 2018; bait on chr10
+SRR6283731	Wei et al. PNAS 2018	Wei2018_Chr10	NPC	mouse	Wei2018/SRR6283731_WEI2018_result.tlx	chr10	Chr10_80Mb	APH 0.5uM	chr10	chr10	1	F	2	0.5	From Wei et al. PNAS 2018; bait on chr10
+SRR6283732	Wei et al. PNAS 2018	Wei2018_Chr10	NPC	mouse	Wei2018/SRR6283732_WEI2018_result.tlx	chr10	Chr10_80Mb	APH 0.5uM	chr10	chr10	2	F	2	0.5	From Wei et al. PNAS 2018; bait on chr10
+SRR6283733	Wei et al. PNAS 2018	Wei2018_Chr10	NPC	mouse	Wei2018/SRR6283733_WEI2018_result.tlx	chr10	Chr10_80Mb	APH 0.5uM	chr10	chr10	3	F	2	0.5	From Wei et al. PNAS 2018; bait on chr10
+SRR6283734	Wei et al. PNAS 2018	Wei2018_Chr11	NPC	mouse	Wei2018/SRR6283734_WEI2018_result.tlx	chr11	Chr11_38Mb	DMSO	chr11	chr11	1	T	2	0	From Wei et al. PNAS 2018; bait on chr11
+SRR6283735	Wei et al. PNAS 2018	Wei2018_Chr11	NPC	mouse	Wei2018/SRR6283735_WEI2018_result.tlx	chr11	Chr11_38Mb	DMSO	chr11	chr11	2	T	2	0	From Wei et al. PNAS 2018; bait on chr11
+SRR6283736	Wei et al. PNAS 2018	Wei2018_Chr11	NPC	mouse	Wei2018/SRR6283736_WEI2018_result.tlx	chr11	Chr11_38Mb	DMSO	chr11	chr11	3	T	2	0	From Wei et al. PNAS 2018; bait on chr11
+SRR6283737	Wei et al. PNAS 2018	Wei2018_Chr11	NPC	mouse	Wei2018/SRR6283737_WEI2018_result.tlx	chr11	Chr11_38Mb	APH 0.5uM	chr11	chr11	1	F	2	0.5	From Wei et al. PNAS 2018; bait on chr11
+SRR6283738	Wei et al. PNAS 2018	Wei2018_Chr11	NPC	mouse	Wei2018/SRR6283738_WEI2018_result.tlx	chr11	Chr11_38Mb	APH 0.5uM	chr11	chr11	2	F	2	0.5	From Wei et al. PNAS 2018; bait on chr11
+SRR6283739	Wei et al. PNAS 2018	Wei2018_Chr11	NPC	mouse	Wei2018/SRR6283739_WEI2018_result.tlx	chr11	Chr11_38Mb	APH 0.5uM	chr11	chr11	3	F	2	0.5	From Wei et al. PNAS 2018; bait on chr11
+SRR6283740	Wei et al. PNAS 2018	Wei2018_Chr13	NPC	mouse	Wei2018/SRR6283740_WEI2018_result.tlx	chr13	Chr13_57Mb	DMSO	chr13	chr13	1	T	2	0	From Wei et al. PNAS 2018; bait on chr13
+SRR6283741	Wei et al. PNAS 2018	Wei2018_Chr13	NPC	mouse	Wei2018/SRR6283741_WEI2018_result.tlx	chr13	Chr13_57Mb	DMSO	chr13	chr13	2	T	2	0	From Wei et al. PNAS 2018; bait on chr13
+SRR6283742	Wei et al. PNAS 2018	Wei2018_Chr13	NPC	mouse	Wei2018/SRR6283742_WEI2018_result.tlx	chr13	Chr13_57Mb	DMSO	chr13	chr13	3	T	2	0	From Wei et al. PNAS 2018; bait on chr13
+SRR6283743	Wei et al. PNAS 2018	Wei2018_Chr13	NPC	mouse	Wei2018/SRR6283743_WEI2018_result.tlx	chr13	Chr13_57Mb	DMSO	chr13	chr13	4	T	2	0	From Wei et al. PNAS 2018; bait on chr13
+SRR6283744	Wei et al. PNAS 2018	Wei2018_Chr13	NPC	mouse	Wei2018/SRR6283744_WEI2018_result.tlx	chr13	Chr13_57Mb	DMSO	chr13	chr13	5	T	2	0	From Wei et al. PNAS 2018; bait on chr13
+SRR6283745	Wei et al. PNAS 2018	Wei2018_Chr13	NPC	mouse	Wei2018/SRR6283745_WEI2018_result.tlx	chr13	Chr13_57Mb	APH 0.5uM	chr13	chr13	1	F	2	0.5	From Wei et al. PNAS 2018; bait on chr13
+SRR6283746	Wei et al. PNAS 2018	Wei2018_Chr13	NPC	mouse	Wei2018/SRR6283746_WEI2018_result.tlx	chr13	Chr13_57Mb	APH 0.5uM	chr13	chr13	2	F	2	0.5	From Wei et al. PNAS 2018; bait on chr13
+SRR6283747	Wei et al. PNAS 2018	Wei2018_Chr13	NPC	mouse	Wei2018/SRR6283747_WEI2018_result.tlx	chr13	Chr13_57Mb	APH 0.5uM	chr13	chr13	3	F	2	0.5	From Wei et al. PNAS 2018; bait on chr13
+SRR6283748	Wei et al. PNAS 2018	Wei2018_Chr13	NPC	mouse	Wei2018/SRR6283748_WEI2018_result.tlx	chr13	Chr13_57Mb	APH 0.5uM	chr13	chr13	4	F	2	0.5	From Wei et al. PNAS 2018; bait on chr13
+SRR6283749	Wei et al. PNAS 2018	Wei2018_Chr13	NPC	mouse	Wei2018/SRR6283749_WEI2018_result.tlx	chr13	Chr13_57Mb	APH 0.5uM	chr13	chr13	5	F	2	0.5	From Wei et al. PNAS 2018; bait on chr13
+SRR6283750	Wei et al. PNAS 2018	Wei2018_Chr14	NPC	mouse	Wei2018/SRR6283750_WEI2018_result.tlx	chr14	Chr14_83Mb	DMSO	chr14	chr14	1	T	2	0	From Wei et al. PNAS 2018; bait on chr14
+SRR6283751	Wei et al. PNAS 2018	Wei2018_Chr14	NPC	mouse	Wei2018/SRR6283751_WEI2018_result.tlx	chr14	Chr14_83Mb	DMSO	chr14	chr14	2	T	2	0	From Wei et al. PNAS 2018; bait on chr14
+SRR6283752	Wei et al. PNAS 2018	Wei2018_Chr14	NPC	mouse	Wei2018/SRR6283752_WEI2018_result.tlx	chr14	Chr14_83Mb	DMSO	chr14	chr14	3	T	2	0	From Wei et al. PNAS 2018; bait on chr14
+SRR6283753	Wei et al. PNAS 2018	Wei2018_Chr14	NPC	mouse	Wei2018/SRR6283753_WEI2018_result.tlx	chr14	Chr14_83Mb	APH 0.5uM	chr14	chr14	1	F	2	0.5	From Wei et al. PNAS 2018; bait on chr14
+SRR6283754	Wei et al. PNAS 2018	Wei2018_Chr14	NPC	mouse	Wei2018/SRR6283754_WEI2018_result.tlx	chr14	Chr14_83Mb	APH 0.5uM	chr14	chr14	2	F	2	0.5	From Wei et al. PNAS 2018; bait on chr14
+SRR6283755	Wei et al. PNAS 2018	Wei2018_Chr14	NPC	mouse	Wei2018/SRR6283755_WEI2018_result.tlx	chr14	Chr14_83Mb	APH 0.5uM	chr14	chr14	3	F	2	0.5	From Wei et al. PNAS 2018; bait on chr14
+SRR6283756	Wei et al. PNAS 2018	Wei2018_Chr17	NPC	mouse	Wei2018/SRR6283756_WEI2018_result.tlx	chr17	Chr17_41Mb	DMSO	chr17	chr17	1	T	2	0	From Wei et al. PNAS 2018; bait on chr17
+SRR6283757	Wei et al. PNAS 2018	Wei2018_Chr17	NPC	mouse	Wei2018/SRR6283757_WEI2018_result.tlx	chr17	Chr17_41Mb	DMSO	chr17	chr17	2	T	2	0	From Wei et al. PNAS 2018; bait on chr17
+SRR6283758	Wei et al. PNAS 2018	Wei2018_Chr17	NPC	mouse	Wei2018/SRR6283758_WEI2018_result.tlx	chr17	Chr17_41Mb	DMSO	chr17	chr17	3	T	2	0	From Wei et al. PNAS 2018; bait on chr17
+SRR6283759	Wei et al. PNAS 2018	Wei2018_Chr17	NPC	mouse	Wei2018/SRR6283759_WEI2018_result.tlx	chr17	Chr17_41Mb	DMSO	chr17	chr17	4	T	2	0	From Wei et al. PNAS 2018; bait on chr17
+SRR6283760	Wei et al. PNAS 2018	Wei2018_Chr17	NPC	mouse	Wei2018/SRR6283760_WEI2018_result.tlx	chr17	Chr17_41Mb	DMSO	chr17	chr17	5	T	2	0	From Wei et al. PNAS 2018; bait on chr17
+SRR6283761	Wei et al. PNAS 2018	Wei2018_Chr17	NPC	mouse	Wei2018/SRR6283761_WEI2018_result.tlx	chr17	Chr17_41Mb	DMSO	chr17	chr17	6	T	2	0	From Wei et al. PNAS 2018; bait on chr17
+SRR6283762	Wei et al. PNAS 2018	Wei2018_Chr17	NPC	mouse	Wei2018/SRR6283762_WEI2018_result.tlx	chr17	Chr17_41Mb	APH 0.5uM	chr17	chr17	1	F	2	0.5	From Wei et al. PNAS 2018; bait on chr17
+SRR6283763	Wei et al. PNAS 2018	Wei2018_Chr17	NPC	mouse	Wei2018/SRR6283763_WEI2018_result.tlx	chr17	Chr17_41Mb	APH 0.5uM	chr17	chr17	2	F	2	0.5	From Wei et al. PNAS 2018; bait on chr17
+SRR6283764	Wei et al. PNAS 2018	Wei2018_Chr17	NPC	mouse	Wei2018/SRR6283764_WEI2018_result.tlx	chr17	Chr17_41Mb	APH 0.5uM	chr17	chr17	3	F	2	0.5	From Wei et al. PNAS 2018; bait on chr17
+SRR6283765	Wei et al. PNAS 2018	Wei2018_Chr17	NPC	mouse	Wei2018/SRR6283765_WEI2018_result.tlx	chr17	Chr17_41Mb	APH 0.5uM	chr17	chr17	4	F	2	0.5	From Wei et al. PNAS 2018; bait on chr17
+SRR6283766	Wei et al. PNAS 2018	Wei2018_Chr17	NPC	mouse	Wei2018/SRR6283766_WEI2018_result.tlx	chr17	Chr17_41Mb	APH 0.5uM	chr17	chr17	5	F	2	0.5	From Wei et al. PNAS 2018; bait on chr17
+SRR6283767	Wei et al. PNAS 2018	Wei2018_Chr17	NPC	mouse	Wei2018/SRR6283767_WEI2018_result.tlx	chr17	Chr17_41Mb	APH 0.5uM	chr17	chr17	6	F	2	0.5	From Wei et al. PNAS 2018; bait on chr17
+SRR6283768	Wei et al. PNAS 2018	Wei2018_Chr18	NPC	mouse	Wei2018/SRR6283768_WEI2018_result.tlx	chr18	Chr18_58Mb	DMSO	chr18	chr18	1	T	2	0	From Wei et al. PNAS 2018; bait on chr18
+SRR6283769	Wei et al. PNAS 2018	Wei2018_Chr18	NPC	mouse	Wei2018/SRR6283769_WEI2018_result.tlx	chr18	Chr18_58Mb	DMSO	chr18	chr18	2	T	2	0	From Wei et al. PNAS 2018; bait on chr18
+SRR6283770	Wei et al. PNAS 2018	Wei2018_Chr18	NPC	mouse	Wei2018/SRR6283770_WEI2018_result.tlx	chr18	Chr18_58Mb	DMSO	chr18	chr18	3	T	2	0	From Wei et al. PNAS 2018; bait on chr18
+SRR6283771	Wei et al. PNAS 2018	Wei2018_Chr18	NPC	mouse	Wei2018/SRR6283771_WEI2018_result.tlx	chr18	Chr18_58Mb	APH 0.5uM	chr18	chr18	1	F	2	0.5	From Wei et al. PNAS 2018; bait on chr18
+SRR6283772	Wei et al. PNAS 2018	Wei2018_Chr18	NPC	mouse	Wei2018/SRR6283772_WEI2018_result.tlx	chr18	Chr18_58Mb	APH 0.5uM	chr18	chr18	2	F	2	0.5	From Wei et al. PNAS 2018; bait on chr18
+SRR6283773	Wei et al. PNAS 2018	Wei2018_Chr18	NPC	mouse	Wei2018/SRR6283773_WEI2018_result.tlx	chr18	Chr18_58Mb	APH 0.5uM	chr18	chr18	3	F	2	0.5	From Wei et al. PNAS 2018; bait on chr18
+SRR6283774	Wei et al. PNAS 2018	Wei2018_Chr19	NPC	mouse	Wei2018/SRR6283774_WEI2018_result.tlx	chr19	Chr19_35Mb	DMSO	chr19	chr19	1	T	2	0	From Wei et al. PNAS 2018; bait on chr19
+SRR6283775	Wei et al. PNAS 2018	Wei2018_Chr19	NPC	mouse	Wei2018/SRR6283775_WEI2018_result.tlx	chr19	Chr19_35Mb	DMSO	chr19	chr19	2	T	2	0	From Wei et al. PNAS 2018; bait on chr19
+SRR6283776	Wei et al. PNAS 2018	Wei2018_Chr19	NPC	mouse	Wei2018/SRR6283776_WEI2018_result.tlx	chr19	Chr19_35Mb	DMSO	chr19	chr19	3	T	2	0	From Wei et al. PNAS 2018; bait on chr19
+SRR6283777	Wei et al. PNAS 2018	Wei2018_Chr19	NPC	mouse	Wei2018/SRR6283777_WEI2018_result.tlx	chr19	Chr19_35Mb	APH 0.5uM	chr19	chr19	1	F	2	0.5	From Wei et al. PNAS 2018; bait on chr19
+SRR6283778	Wei et al. PNAS 2018	Wei2018_Chr19	NPC	mouse	Wei2018/SRR6283778_WEI2018_result.tlx	chr19	Chr19_35Mb	APH 0.5uM	chr19	chr19	2	F	2	0.5	From Wei et al. PNAS 2018; bait on chr19
+SRR6283779	Wei et al. PNAS 2018	Wei2018_Chr19	NPC	mouse	Wei2018/SRR6283779_WEI2018_result.tlx	chr19	Chr19_35Mb	APH 0.5uM	chr19	chr19	3	F	2	0.5	From Wei et al. PNAS 2018; bait on chr19
+SRR6283780	Wei et al. PNAS 2018	Wei2018_ChrX	NPC	mouse	Wei2018/SRR6283780_WEI2018_result.tlx	chrX	ChrX_96Mb	DMSO	chrX	chrX	1	T	2	0	From Wei et al. PNAS 2018; bait on chrX
+SRR6283781	Wei et al. PNAS 2018	Wei2018_ChrX	NPC	mouse	Wei2018/SRR6283781_WEI2018_result.tlx	chrX	ChrX_96Mb	DMSO	chrX	chrX	2	T	2	0	From Wei et al. PNAS 2018; bait on chrX
+SRR6283782	Wei et al. PNAS 2018	Wei2018_ChrX	NPC	mouse	Wei2018/SRR6283782_WEI2018_result.tlx	chrX	ChrX_96Mb	DMSO	chrX	chrX	3	T	2	0	From Wei et al. PNAS 2018; bait on chrX
+SRR6283783	Wei et al. PNAS 2018	Wei2018_ChrX	NPC	mouse	Wei2018/SRR6283783_WEI2018_result.tlx	chrX	ChrX_96Mb	APH 0.5uM	chrX	chrX	1	F	2	0.5	From Wei et al. PNAS 2018; bait on chrX
+SRR6283784	Wei et al. PNAS 2018	Wei2018_ChrX	NPC	mouse	Wei2018/SRR6283784_WEI2018_result.tlx	chrX	ChrX_96Mb	APH 0.5uM	chrX	chrX	2	F	2	0.5	From Wei et al. PNAS 2018; bait on chrX
+SRR6283785	Wei et al. PNAS 2018	Wei2018_ChrX	NPC	mouse	Wei2018/SRR6283785_WEI2018_result.tlx	chrX	ChrX_96Mb	APH 0.5uM	chrX	chrX	3	F	2	0.5	From Wei et al. PNAS 2018; bait on chrX
+SRR6283786	Wei et al. PNAS 2018	Wei2018_ChrX	NPC	mouse	Wei2018/SRR6283786_WEI2018_result.tlx	chrX	ChrX_96Mb	DMSO	chrX	chrX	4	T	2	0	From Wei et al. PNAS 2018; bait on chrX
+SRR6283787	Wei et al. PNAS 2018	Wei2018_ChrX	NPC	mouse	Wei2018/SRR6283787_WEI2018_result.tlx	chrX	ChrX_96Mb	DMSO	chrX	chrX	5	T	2	0	From Wei et al. PNAS 2018; bait on chrX
+SRR6283788	Wei et al. PNAS 2018	Wei2018_ChrX	NPC	mouse	Wei2018/SRR6283788_WEI2018_result.tlx	chrX	ChrX_96Mb	DMSO	chrX	chrX	6	T	2	0	From Wei et al. PNAS 2018; bait on chrX
+SRR6283789	Wei et al. PNAS 2018	Wei2018_ChrX	NPC	mouse	Wei2018/SRR6283789_WEI2018_result.tlx	chrX	ChrX_96Mb	APH 0.5uM	chrX	chrX	4	F	2	0.5	From Wei et al. PNAS 2018; bait on chrX
+SRR6283790	Wei et al. PNAS 2018	Wei2018_ChrX	NPC	mouse	Wei2018/SRR6283790_WEI2018_result.tlx	chrX	ChrX_96Mb	APH 0.5uM	chrX	chrX	5	F	2	0.5	From Wei et al. PNAS 2018; bait on chrX
+SRR6283791	Wei et al. PNAS 2018	Wei2018_ChrX	NPC	mouse	Wei2018/SRR6283791_WEI2018_result.tlx	chrX	ChrX_96Mb	APH 0.5uM	chrX	chrX	6	F	2	0.5	From Wei et al. PNAS 2018; bait on chrX
+SRR10733938	Tena et al., 2020	Tena2020_ESC_Chr7	ESC	mouse	Tena2018/SRR10733938_TENA2020_result.tlx	chr7	Chr7_80Mb	APH 0.2uM	chr7	chr7	1	F	2	0.2	From Tena et al. PNAS 2020; exp line 01
+SRR10733939	Tena et al., 2020	Tena2020_ESC_Chr7	ESC	mouse	Tena2018/SRR10733939_TENA2020_result.tlx	chr7	Chr7_80Mb	APH 0.2uM	chr7	chr7	2	F	2	0.2	From Tena et al. PNAS 2020; exp line 01
+SRR10733940	Tena et al., 2020	Tena2020_ESC_Chr7	ESC	mouse	Tena2018/SRR10733940_TENA2020_result.tlx	chr7	Chr7_80Mb	APH 0.2uM	chr7	chr7	3	F	2	0.2	From Tena et al. PNAS 2020; exp line 01
+SRR10733941	Tena et al., 2020	Tena2020_ESC_Chr7	ESC	mouse	Tena2018/SRR10733941_TENA2020_result.tlx	chr7	Chr7_80Mb	APH 0.2uM	chr7	chr7	4	F	2	0.2	From Tena et al. PNAS 2020; exp line 01
+SRR10733942	Tena et al., 2020	Tena2020_ESC_Chr7	ESC	mouse	Tena2018/SRR10733942_TENA2020_result.tlx	chr7	Chr7_80Mb	APH 0.2uM	chr7	chr7	5	F	2	0.2	From Tena et al. PNAS 2020; exp line 01
+SRR10733943	Tena et al., 2020	Tena2020_ESC_Chr7	ESC	mouse	Tena2018/SRR10733943_TENA2020_result.tlx	chr7	Chr7_80Mb	APH 0.2uM	chr7	chr7	6	F	2	0.2	From Tena et al. PNAS 2020; exp line 01
+SRR10733944	Tena et al., 2020	Tena2020_ESC_Chr7	ESC	mouse	Tena2018/SRR10733944_TENA2020_result.tlx	chr7	Chr7_80Mb	APH 0.2uM	chr7	chr7	7	F	2	0.2	From Tena et al. PNAS 2020; exp line 01
+SRR10733945	Tena et al., 2020	Tena2020_ESC_Chr7	ESC	mouse	Tena2018/SRR10733945_TENA2020_result.tlx	chr7	Chr7_80Mb	APH 0.2uM	chr7	chr7	8	F	2	0.2	From Tena et al. PNAS 2020; exp line 01
+SRR10733946	Tena et al., 2020	Tena2020_ESC_Chr7	ESC	mouse	Tena2018/SRR10733946_TENA2020_result.tlx	chr7	Chr7_80Mb	DMSO	chr7	chr7	1	T	2	0	From Tena et al. PNAS 2020; exp line 01
+SRR10733947	Tena et al., 2020	Tena2020_ESC_Chr7	ESC	mouse	Tena2018/SRR10733947_TENA2020_result.tlx	chr7	Chr7_80Mb	DMSO	chr7	chr7	2	T	2	0	From Tena et al. PNAS 2020; exp line 01
+SRR10733948	Tena et al., 2020	Tena2020_ESC_Chr7	ESC	mouse	Tena2018/SRR10733948_TENA2020_result.tlx	chr7	Chr7_80Mb	DMSO	chr7	chr7	3	T	2	0	From Tena et al. PNAS 2020; exp line 01
+SRR10733949	Tena et al., 2020	Tena2020_ESC_Chr7	ESC	mouse	Tena2018/SRR10733949_TENA2020_result.tlx	chr7	Chr7_80Mb	DMSO	chr7	chr7	4	T	2	0	From Tena et al. PNAS 2020; exp line 01
+SRR10733950	Tena et al., 2020	Tena2020_ESC_Chr7	ESC	mouse	Tena2018/SRR10733950_TENA2020_result.tlx	chr7	Chr7_80Mb	DMSO	chr7	chr7	5	T	2	0	From Tena et al. PNAS 2020; exp line 01
+SRR10733951	Tena et al., 2020	Tena2020_ESC_Chr7	ESC	mouse	Tena2018/SRR10733951_TENA2020_result.tlx	chr7	Chr7_80Mb	DMSO	chr7	chr7	6	T	2	0	From Tena et al. PNAS 2020; exp line 01
+SRR10733952	Tena et al., 2020	Tena2020_ESC_Chr7	ESC	mouse	Tena2018/SRR10733952_TENA2020_result.tlx	chr7	Chr7_80Mb	DMSO	chr7	chr7	7	T	2	0	From Tena et al. PNAS 2020; exp line 01
+SRR10733953	Tena et al., 2020	Tena2020_ESC_Chr7	ESC	mouse	Tena2018/SRR10733953_TENA2020_result.tlx	chr7	Chr7_80Mb	DMSO	chr7	chr7	8	T	2	0	From Tena et al. PNAS 2020; exp line 01
+SRR10733954	Tena et al., 2020	Tena2020_ESC_Chr12	ESC	mouse	Tena2018/SRR10733954_TENA2020_result.tlx	chr12	Chr12_13Mb	APH 0.2uM	chr12	chr12	1	F	2	0.2	From Tena et al. PNAS 2020; exp line 01
+SRR10733955	Tena et al., 2020	Tena2020_ESC_Chr12	ESC	mouse	Tena2018/SRR10733955_TENA2020_result.tlx	chr12	Chr12_13Mb	APH 0.2uM	chr12	chr12	2	F	2	0.2	From Tena et al. PNAS 2020; exp line 01
+SRR10733956	Tena et al., 2020	Tena2020_ESC_Chr12	ESC	mouse	Tena2018/SRR10733956_TENA2020_result.tlx	chr12	Chr12_13Mb	APH 0.2uM	chr12	chr12	3	F	2	0.2	From Tena et al. PNAS 2020; exp line 01
+SRR10733957	Tena et al., 2020	Tena2020_ESC_Chr12	ESC	mouse	Tena2018/SRR10733957_TENA2020_result.tlx	chr12	Chr12_13Mb	APH 0.2uM	chr12	chr12	4	F	2	0.2	From Tena et al. PNAS 2020; exp line 01
+SRR10733958	Tena et al., 2020	Tena2020_ESC_Chr12	ESC	mouse	Tena2018/SRR10733958_TENA2020_result.tlx	chr12	Chr12_13Mb	DMSO	chr12	chr12	1	T	2	0	From Tena et al. PNAS 2020; exp line 01
+SRR10733959	Tena et al., 2020	Tena2020_ESC_Chr12	ESC	mouse	Tena2018/SRR10733959_TENA2020_result.tlx	chr12	Chr12_13Mb	DMSO	chr12	chr12	2	T	2	0	From Tena et al. PNAS 2020; exp line 01
+SRR10733960	Tena et al., 2020	Tena2020_ESC_Chr12	ESC	mouse	Tena2018/SRR10733960_TENA2020_result.tlx	chr12	Chr12_13Mb	DMSO	chr12	chr12	3	T	2	0	From Tena et al. PNAS 2020; exp line 01
+SRR10733961	Tena et al., 2020	Tena2020_ESC_Chr12	ESC	mouse	Tena2018/SRR10733961_TENA2020_result.tlx	chr12	Chr12_13Mb	DMSO	chr12	chr12	4	T	2	0	From Tena et al. PNAS 2020; exp line 01
+SRR10733962	Tena et al., 2020	Tena2020_ESC_Chr15	ESC	mouse	Tena2018/SRR10733962_TENA2020_result.tlx	chr15	Chr15_86Mb	APH 0.2uM	chr15	chr15	1	F	2	0.2	From Tena et al. PNAS 2020; exp line 01
+SRR10733963	Tena et al., 2020	Tena2020_ESC_Chr15	ESC	mouse	Tena2018/SRR10733963_TENA2020_result.tlx	chr15	Chr15_86Mb	APH 0.2uM	chr15	chr15	2	F	2	0.2	From Tena et al. PNAS 2020; exp line 01
+SRR10733964	Tena et al., 2020	Tena2020_ESC_Chr15	ESC	mouse	Tena2018/SRR10733964_TENA2020_result.tlx	chr15	Chr15_86Mb	APH 0.2uM	chr15	chr15	3	F	2	0.2	From Tena et al. PNAS 2020; exp line 01
+SRR10733965	Tena et al., 2020	Tena2020_ESC_Chr15	ESC	mouse	Tena2018/SRR10733965_TENA2020_result.tlx	chr15	Chr15_86Mb	APH 0.2uM	chr15	chr15	4	F	2	0.2	From Tena et al. PNAS 2020; exp line 01
+SRR10733966	Tena et al., 2020	Tena2020_ESC_Chr15	ESC	mouse	Tena2018/SRR10733966_TENA2020_result.tlx	chr15	Chr15_86Mb	DMSO	chr15	chr15	1	T	2	0	From Tena et al. PNAS 2020; exp line 01
+SRR10733967	Tena et al., 2020	Tena2020_ESC_Chr15	ESC	mouse	Tena2018/SRR10733967_TENA2020_result.tlx	chr15	Chr15_86Mb	DMSO	chr15	chr15	2	T	2	0	From Tena et al. PNAS 2020; exp line 01
+SRR10733968	Tena et al., 2020	Tena2020_ESC_Chr15	ESC	mouse	Tena2018/SRR10733968_TENA2020_result.tlx	chr15	Chr15_86Mb	DMSO	chr15	chr15	3	T	2	0	From Tena et al. PNAS 2020; exp line 01
+SRR10733969	Tena et al., 2020	Tena2020_ESC_Chr15	ESC	mouse	Tena2018/SRR10733969_TENA2020_result.tlx	chr15	Chr15_86Mb	DMSO	chr15	chr15	4	T	2	0	From Tena et al. PNAS 2020; exp line 01
+SRR10733970	Tena et al., 2020	Tena2020_ESC-NPC_Chr7	NPC	mouse	Tena2018/SRR10733970_TENA2020_result.tlx	chr7	Chr7_80Mb	APH 0.2uM	chr7	chr7	1	F	2	0.2	From Tena et al. PNAS 2020; exp line 01
+SRR10733971	Tena et al., 2020	Tena2020_ESC-NPC_Chr7	NPC	mouse	Tena2018/SRR10733971_TENA2020_result.tlx	chr7	Chr7_80Mb	APH 0.2uM	chr7	chr7	2	F	2	0.2	From Tena et al. PNAS 2020; exp line 01
+SRR10733972	Tena et al., 2020	Tena2020_ESC-NPC_Chr7	NPC	mouse	Tena2018/SRR10733972_TENA2020_result.tlx	chr7	Chr7_80Mb	APH 0.2uM	chr7	chr7	3	F	2	0.2	From Tena et al. PNAS 2020; exp line 01
+SRR10733973	Tena et al., 2020	Tena2020_ESC-NPC_Chr7	NPC	mouse	Tena2018/SRR10733973_TENA2020_result.tlx	chr7	Chr7_80Mb	APH 0.2uM	chr7	chr7	4	F	2	0.2	From Tena et al. PNAS 2020; exp line 01
+SRR10733974	Tena et al., 2020	Tena2020_ESC-NPC_Chr7	NPC	mouse	Tena2018/SRR10733974_TENA2020_result.tlx	chr7	Chr7_80Mb	DMSO	chr7	chr7	1	T	2	0	From Tena et al. PNAS 2020; exp line 01
+SRR10733975	Tena et al., 2020	Tena2020_ESC-NPC_Chr7	NPC	mouse	Tena2018/SRR10733975_TENA2020_result.tlx	chr7	Chr7_80Mb	DMSO	chr7	chr7	2	T	2	0	From Tena et al. PNAS 2020; exp line 01
+SRR10733976	Tena et al., 2020	Tena2020_ESC-NPC_Chr7	NPC	mouse	Tena2018/SRR10733976_TENA2020_result.tlx	chr7	Chr7_80Mb	DMSO	chr7	chr7	3	T	2	0	From Tena et al. PNAS 2020; exp line 01
+SRR10733977	Tena et al., 2020	Tena2020_ESC-NPC_Chr7	NPC	mouse	Tena2018/SRR10733977_TENA2020_result.tlx	chr7	Chr7_80Mb	DMSO	chr7	chr7	4	T	2	0	From Tena et al. PNAS 2020; exp line 01
+SRR10733978	Tena et al., 2020	Tena2020_ESC-NPC_Chr12	NPC	mouse	Tena2018/SRR10733978_TENA2020_result.tlx	chr12	Chr12_13Mb	APH 0.2uM	chr12	chr12	1	F	2	0.2	From Tena et al. PNAS 2020; exp line 01
+SRR10733979	Tena et al., 2020	Tena2020_ESC-NPC_Chr12	NPC	mouse	Tena2018/SRR10733979_TENA2020_result.tlx	chr12	Chr12_13Mb	APH 0.2uM	chr12	chr12	2	F	2	0.2	From Tena et al. PNAS 2020; exp line 01
+SRR10733980	Tena et al., 2020	Tena2020_ESC-NPC_Chr12	NPC	mouse	Tena2018/SRR10733980_TENA2020_result.tlx	chr12	Chr12_13Mb	APH 0.2uM	chr12	chr12	3	F	2	0.2	From Tena et al. PNAS 2020; exp line 01
+SRR10733981	Tena et al., 2020	Tena2020_ESC-NPC_Chr12	NPC	mouse	Tena2018/SRR10733981_TENA2020_result.tlx	chr12	Chr12_13Mb	APH 0.2uM	chr12	chr12	4	F	2	0.2	From Tena et al. PNAS 2020; exp line 01
+SRR10733982	Tena et al., 2020	Tena2020_ESC-NPC_Chr12	NPC	mouse	Tena2018/SRR10733982_TENA2020_result.tlx	chr12	Chr12_13Mb	DMSO	chr12	chr12	1	T	2	0	From Tena et al. PNAS 2020; exp line 01
+SRR10733983	Tena et al., 2020	Tena2020_ESC-NPC_Chr12	NPC	mouse	Tena2018/SRR10733983_TENA2020_result.tlx	chr12	Chr12_13Mb	DMSO	chr12	chr12	2	T	2	0	From Tena et al. PNAS 2020; exp line 01
+SRR10733984	Tena et al., 2020	Tena2020_ESC-NPC_Chr12	NPC	mouse	Tena2018/SRR10733984_TENA2020_result.tlx	chr12	Chr12_13Mb	DMSO	chr12	chr12	3	T	2	0	From Tena et al. PNAS 2020; exp line 01
+SRR10733985	Tena et al., 2020	Tena2020_ESC-NPC_Chr12	NPC	mouse	Tena2018/SRR10733985_TENA2020_result.tlx	chr12	Chr12_13Mb	DMSO	chr12	chr12	4	T	2	0	From Tena et al. PNAS 2020; exp line 01
+SRR10733986	Tena et al., 2020	Tena2020_ESC-NPC_Chr15	NPC	mouse	Tena2018/SRR10733986_TENA2020_result.tlx	chr15	Chr15_86Mb	APH 0.2uM	chr15	chr15	1	F	2	0.2	From Tena et al. PNAS 2020; exp line 01
+SRR10733987	Tena et al., 2020	Tena2020_ESC-NPC_Chr15	NPC	mouse	Tena2018/SRR10733987_TENA2020_result.tlx	chr15	Chr15_86Mb	APH 0.2uM	chr15	chr15	2	F	2	0.2	From Tena et al. PNAS 2020; exp line 01
+SRR10733988	Tena et al., 2020	Tena2020_ESC-NPC_Chr15	NPC	mouse	Tena2018/SRR10733988_TENA2020_result.tlx	chr15	Chr15_86Mb	APH 0.2uM	chr15	chr15	3	F	2	0.2	From Tena et al. PNAS 2020; exp line 01
+SRR10733989	Tena et al., 2020	Tena2020_ESC-NPC_Chr15	NPC	mouse	Tena2018/SRR10733989_TENA2020_result.tlx	chr15	Chr15_86Mb	APH 0.2uM	chr15	chr15	4	F	2	0.2	From Tena et al. PNAS 2020; exp line 01
+SRR10733990	Tena et al., 2020	Tena2020_ESC-NPC_Chr15	NPC	mouse	Tena2018/SRR10733990_TENA2020_result.tlx	chr15	Chr15_86Mb	DMSO	chr15	chr15	1	T	2	0	From Tena et al. PNAS 2020; exp line 01
+SRR10733991	Tena et al., 2020	Tena2020_ESC-NPC_Chr15	NPC	mouse	Tena2018/SRR10733991_TENA2020_result.tlx	chr15	Chr15_86Mb	DMSO	chr15	chr15	2	T	2	0	From Tena et al. PNAS 2020; exp line 01
+SRR10733992	Tena et al., 2020	Tena2020_ESC-NPC_Chr15	NPC	mouse	Tena2018/SRR10733992_TENA2020_result.tlx	chr15	Chr15_86Mb	DMSO	chr15	chr15	3	T	2	0	From Tena et al. PNAS 2020; exp line 01
+SRR10733993	Tena et al., 2020	Tena2020_ESC-NPC_Chr15	NPC	mouse	Tena2018/SRR10733993_TENA2020_result.tlx	chr15	Chr15_86Mb	DMSO	chr15	chr15	4	T	2	0	From Tena et al. PNAS 2020; exp line 01
+SRR10733994	Tena et al., 2020	Tena2020_ESC_Chr7	ESC	mouse	Tena2018/SRR10733994_TENA2020_result.tlx	chr7	Chr7_80Mb	APH 0.2uM	chr7	chr7	1	F	2	0.2	From Tena et al. PNAS 2020; exp line 01
+SRR10733995	Tena et al., 2020	Tena2020_ESC_Chr7	ESC	mouse	Tena2018/SRR10733995_TENA2020_result.tlx	chr7	Chr7_80Mb	APH 0.2uM	chr7	chr7	2	F	2	0.2	From Tena et al. PNAS 2020; exp line 02
+SRR10733996	Tena et al., 2020	Tena2020_ESC_Chr7	ESC	mouse	Tena2018/SRR10733996_TENA2020_result.tlx	chr7	Chr7_80Mb	APH 0.2uM	chr7	chr7	3	F	2	0.2	From Tena et al. PNAS 2020; exp line 02
+SRR10733997	Tena et al., 2020	Tena2020_ESC_Chr7	ESC	mouse	Tena2018/SRR10733997_TENA2020_result.tlx	chr7	Chr7_80Mb	APH 0.2uM	chr7	chr7	4	F	2	0.2	From Tena et al. PNAS 2020; exp line 02
+SRR10733998	Tena et al., 2020	Tena2020_ESC_Chr7	ESC	mouse	Tena2018/SRR10733998_TENA2020_result.tlx	chr7	Chr7_80Mb	DMSO	chr7	chr7	1	T	2	0	From Tena et al. PNAS 2020; exp line 02
+SRR10733999	Tena et al., 2020	Tena2020_ESC_Chr7	ESC	mouse	Tena2018/SRR10733999_TENA2020_result.tlx	chr7	Chr7_80Mb	DMSO	chr7	chr7	2	T	2	0	From Tena et al. PNAS 2020; exp line 02
+SRR10734000	Tena et al., 2020	Tena2020_ESC_Chr7	ESC	mouse	Tena2018/SRR10734000_TENA2020_result.tlx	chr7	Chr7_80Mb	DMSO	chr7	chr7	3	T	2	0	From Tena et al. PNAS 2020; exp line 02
+SRR10734001	Tena et al., 2020	Tena2020_ESC_Chr7	ESC	mouse	Tena2018/SRR10734001_TENA2020_result.tlx	chr7	Chr7_80Mb	DMSO	chr7	chr7	4	T	2	0	From Tena et al. PNAS 2020; exp line 02
+SRR10734002	Tena et al., 2020	Tena2020_ESC_Chr12	ESC	mouse	Tena2018/SRR10734002_TENA2020_result.tlx	chr12	Chr12_13Mb	APH 0.2uM	chr12	chr12	1	F	2	0.2	From Tena et al. PNAS 2020; exp line 02
+SRR10734003	Tena et al., 2020	Tena2020_ESC_Chr12	ESC	mouse	Tena2018/SRR10734003_TENA2020_result.tlx	chr12	Chr12_13Mb	APH 0.2uM	chr12	chr12	2	F	2	0.2	From Tena et al. PNAS 2020; exp line 02
+SRR10734004	Tena et al., 2020	Tena2020_ESC_Chr12	ESC	mouse	Tena2018/SRR10734004_TENA2020_result.tlx	chr12	Chr12_13Mb	APH 0.2uM	chr12	chr12	3	F	2	0.2	From Tena et al. PNAS 2020; exp line 02
+SRR10734005	Tena et al., 2020	Tena2020_ESC_Chr12	ESC	mouse	Tena2018/SRR10734005_TENA2020_result.tlx	chr12	Chr12_13Mb	APH 0.2uM	chr12	chr12	4	F	2	0.2	From Tena et al. PNAS 2020; exp line 02
+SRR10734006	Tena et al., 2020	Tena2020_ESC_Chr12	ESC	mouse	Tena2018/SRR10734006_TENA2020_result.tlx	chr12	Chr12_13Mb	DMSO	chr12	chr12	1	T	2	0	From Tena et al. PNAS 2020; exp line 02
+SRR10734007	Tena et al., 2020	Tena2020_ESC_Chr12	ESC	mouse	Tena2018/SRR10734007_TENA2020_result.tlx	chr12	Chr12_13Mb	DMSO	chr12	chr12	2	T	2	0	From Tena et al. PNAS 2020; exp line 02
+SRR10734008	Tena et al., 2020	Tena2020_ESC_Chr12	ESC	mouse	Tena2018/SRR10734008_TENA2020_result.tlx	chr12	Chr12_13Mb	DMSO	chr12	chr12	3	T	2	0	From Tena et al. PNAS 2020; exp line 02
+SRR10734009	Tena et al., 2020	Tena2020_ESC_Chr12	ESC	mouse	Tena2018/SRR10734009_TENA2020_result.tlx	chr12	Chr12_13Mb	DMSO	chr12	chr12	4	T	2	0	From Tena et al. PNAS 2020; exp line 02
+SRR10734010	Tena et al., 2020	Tena2020_ESC_Chr15	ESC	mouse	Tena2018/SRR10734010_TENA2020_result.tlx	chr15	Chr15_86Mb	APH 0.2uM	chr15	chr15	1	F	2	0.2	From Tena et al. PNAS 2020; exp line 02
+SRR10734011	Tena et al., 2020	Tena2020_ESC_Chr15	ESC	mouse	Tena2018/SRR10734011_TENA2020_result.tlx	chr15	Chr15_86Mb	APH 0.2uM	chr15	chr15	2	F	2	0.2	From Tena et al. PNAS 2020; exp line 02
+SRR10734012	Tena et al., 2020	Tena2020_ESC_Chr15	ESC	mouse	Tena2018/SRR10734012_TENA2020_result.tlx	chr15	Chr15_86Mb	APH 0.2uM	chr15	chr15	3	F	2	0.2	From Tena et al. PNAS 2020; exp line 02
+SRR10734013	Tena et al., 2020	Tena2020_ESC_Chr15	ESC	mouse	Tena2018/SRR10734013_TENA2020_result.tlx	chr15	Chr15_86Mb	APH 0.2uM	chr15	chr15	4	F	2	0.2	From Tena et al. PNAS 2020; exp line 02
+SRR10734014	Tena et al., 2020	Tena2020_ESC_Chr15	ESC	mouse	Tena2018/SRR10734014_TENA2020_result.tlx	chr15	Chr15_86Mb	DMSO	chr15	chr15	1	T	2	0	From Tena et al. PNAS 2020; exp line 02
+SRR10734015	Tena et al., 2020	Tena2020_ESC_Chr15	ESC	mouse	Tena2018/SRR10734015_TENA2020_result.tlx	chr15	Chr15_86Mb	DMSO	chr15	chr15	2	T	2	0	From Tena et al. PNAS 2020; exp line 02
+SRR10734016	Tena et al., 2020	Tena2020_ESC_Chr15	ESC	mouse	Tena2018/SRR10734016_TENA2020_result.tlx	chr15	Chr15_86Mb	DMSO	chr15	chr15	3	T	2	0	From Tena et al. PNAS 2020; exp line 02
+SRR10734017	Tena et al., 2020	Tena2020_ESC_Chr15	ESC	mouse	Tena2018/SRR10734017_TENA2020_result.tlx	chr15	Chr15_86Mb	DMSO	chr15	chr15	4	T	2	0	From Tena et al. PNAS 2020; exp line 02
+SRR10734018	Tena et al., 2020	Tena2020_ESC-NPC_Chr7	NPC	mouse	Tena2018/SRR10734018_TENA2020_result.tlx	chr7	Chr7_80Mb	APH 0.2uM	chr7	chr7	1	F	2	0.2	From Tena et al. PNAS 2020; exp line 02
+SRR10734019	Tena et al., 2020	Tena2020_ESC-NPC_Chr7	NPC	mouse	Tena2018/SRR10734019_TENA2020_result.tlx	chr7	Chr7_80Mb	APH 0.2uM	chr7	chr7	2	F	2	0.2	From Tena et al. PNAS 2020; exp line 02
+SRR10734020	Tena et al., 2020	Tena2020_ESC-NPC_Chr7	NPC	mouse	Tena2018/SRR10734020_TENA2020_result.tlx	chr7	Chr7_80Mb	APH 0.2uM	chr7	chr7	3	F	2	0.2	From Tena et al. PNAS 2020; exp line 02
+SRR10734021	Tena et al., 2020	Tena2020_ESC-NPC_Chr7	NPC	mouse	Tena2018/SRR10734021_TENA2020_result.tlx	chr7	Chr7_80Mb	APH 0.2uM	chr7	chr7	4	F	2	0.2	From Tena et al. PNAS 2020; exp line 02
+SRR10734022	Tena et al., 2020	Tena2020_ESC-NPC_Chr7	NPC	mouse	Tena2018/SRR10734022_TENA2020_result.tlx	chr7	Chr7_80Mb	DMSO	chr7	chr7	1	T	2	0	From Tena et al. PNAS 2020; exp line 02
+SRR10734023	Tena et al., 2020	Tena2020_ESC-NPC_Chr7	NPC	mouse	Tena2018/SRR10734023_TENA2020_result.tlx	chr7	Chr7_80Mb	DMSO	chr7	chr7	2	T	2	0	From Tena et al. PNAS 2020; exp line 02
+SRR10734024	Tena et al., 2020	Tena2020_ESC-NPC_Chr7	NPC	mouse	Tena2018/SRR10734024_TENA2020_result.tlx	chr7	Chr7_80Mb	DMSO	chr7	chr7	3	T	2	0	From Tena et al. PNAS 2020; exp line 02
+SRR10734025	Tena et al., 2020	Tena2020_ESC-NPC_Chr7	NPC	mouse	Tena2018/SRR10734025_TENA2020_result.tlx	chr7	Chr7_80Mb	DMSO	chr7	chr7	4	T	2	0	From Tena et al. PNAS 2020; exp line 02
+SRR10734026	Tena et al., 2020	Tena2020_ESC-NPC_Chr12	NPC	mouse	Tena2018/SRR10734026_TENA2020_result.tlx	chr12	Chr12_13Mb	APH 0.2uM	chr12	chr12	1	F	2	0.2	From Tena et al. PNAS 2020; exp line 02
+SRR10734027	Tena et al., 2020	Tena2020_ESC-NPC_Chr12	NPC	mouse	Tena2018/SRR10734027_TENA2020_result.tlx	chr12	Chr12_13Mb	APH 0.2uM	chr12	chr12	2	F	2	0.2	From Tena et al. PNAS 2020; exp line 02
+SRR10734028	Tena et al., 2020	Tena2020_ESC-NPC_Chr12	NPC	mouse	Tena2018/SRR10734028_TENA2020_result.tlx	chr12	Chr12_13Mb	APH 0.2uM	chr12	chr12	3	F	2	0.2	From Tena et al. PNAS 2020; exp line 02
+SRR10734029	Tena et al., 2020	Tena2020_ESC-NPC_Chr12	NPC	mouse	Tena2018/SRR10734029_TENA2020_result.tlx	chr12	Chr12_13Mb	APH 0.2uM	chr12	chr12	4	F	2	0.2	From Tena et al. PNAS 2020; exp line 02
+SRR10734030	Tena et al., 2020	Tena2020_ESC-NPC_Chr12	NPC	mouse	Tena2018/SRR10734030_TENA2020_result.tlx	chr12	Chr12_13Mb	DMSO	chr12	chr12	1	T	2	0	From Tena et al. PNAS 2020; exp line 02
+SRR10734031	Tena et al., 2020	Tena2020_ESC-NPC_Chr12	NPC	mouse	Tena2018/SRR10734031_TENA2020_result.tlx	chr12	Chr12_13Mb	DMSO	chr12	chr12	2	T	2	0	From Tena et al. PNAS 2020; exp line 02
+SRR10734032	Tena et al., 2020	Tena2020_ESC-NPC_Chr12	NPC	mouse	Tena2018/SRR10734032_TENA2020_result.tlx	chr12	Chr12_13Mb	DMSO	chr12	chr12	3	T	2	0	From Tena et al. PNAS 2020; exp line 02
+SRR10734033	Tena et al., 2020	Tena2020_ESC-NPC_Chr12	NPC	mouse	Tena2018/SRR10734033_TENA2020_result.tlx	chr12	Chr12_13Mb	DMSO	chr12	chr12	4	T	2	0	From Tena et al. PNAS 2020; exp line 02
+SRR10734034	Tena et al., 2020	Tena2020_ESC-NPC_Chr15	NPC	mouse	Tena2018/SRR10734034_TENA2020_result.tlx	chr15	Chr15_86Mb	APH 0.2uM	chr15	chr15	1	F	2	0.2	From Tena et al. PNAS 2020; exp line 02
+SRR10734035	Tena et al., 2020	Tena2020_ESC-NPC_Chr15	NPC	mouse	Tena2018/SRR10734035_TENA2020_result.tlx	chr15	Chr15_86Mb	APH 0.2uM	chr15	chr15	2	F	2	0.2	From Tena et al. PNAS 2020; exp line 02
+SRR10734036	Tena et al., 2020	Tena2020_ESC-NPC_Chr15	NPC	mouse	Tena2018/SRR10734036_TENA2020_result.tlx	chr15	Chr15_86Mb	APH 0.2uM	chr15	chr15	3	F	2	0.2	From Tena et al. PNAS 2020; exp line 02
+SRR10734037	Tena et al., 2020	Tena2020_ESC-NPC_Chr15	NPC	mouse	Tena2018/SRR10734037_TENA2020_result.tlx	chr15	Chr15_86Mb	APH 0.2uM	chr15	chr15	4	F	2	0.2	From Tena et al. PNAS 2020; exp line 02
+SRR10734038	Tena et al., 2020	Tena2020_ESC-NPC_Chr15	NPC	mouse	Tena2018/SRR10734038_TENA2020_result.tlx	chr15	Chr15_86Mb	DMSO	chr15	chr15	1	T	2	0	From Tena et al. PNAS 2020; exp line 02
+SRR10734039	Tena et al., 2020	Tena2020_ESC-NPC_Chr15	NPC	mouse	Tena2018/SRR10734039_TENA2020_result.tlx	chr15	Chr15_86Mb	DMSO	chr15	chr15	2	T	2	0	From Tena et al. PNAS 2020; exp line 02
+SRR10734040	Tena et al., 2020	Tena2020_ESC-NPC_Chr15	NPC	mouse	Tena2018/SRR10734040_TENA2020_result.tlx	chr15	Chr15_86Mb	DMSO	chr15	chr15	3	T	2	0	From Tena et al. PNAS 2020; exp line 02
+SRR10734041	Tena et al., 2020	Tena2020_ESC-NPC_Chr15	NPC	mouse	Tena2018/SRR10734041_TENA2020_result.tlx	chr15	Chr15_86Mb	DMSO	chr15	chr15	4	T	2	0	From Tena et al. PNAS 2020; exp line 02
+PW103	APH concentration	B400_017	NPC	mouse	APH_concentration/PW103_B400_017_result.tlx	chr8	Chr8_61Mb	DMSO	DMSO	DMSO	1	T	2	0	ESC-NPC;NXP010; DMSO
+PW104	APH concentration	B400_017	NPC	mouse	APH_concentration/PW104_B400_017_result.tlx	chr8	Chr8_61Mb	APH 0.2 uM 96h	APH 0.2 uM 96h	APH 0.2	1	F	2	0.2	ESC-NPC;NXP010; Aphidicolin 0.2 uM 96h
+PW105	APH concentration	B400_017	NPC	mouse	APH_concentration/PW105_B400_017_result.tlx	chr8	Chr8_61Mb	APH 0.4 uM 96h	APH 0.4 uM 96h	APH 0.4	1	F	2	0.4	ESC-NPC;NXP010; Aphidicolin 0.4 uM 96h
+PW106	APH concentration	B400_017	NPC	mouse	APH_concentration/PW106_B400_017_result.tlx	chr8	Chr8_61Mb	APH 0.6 uM 96h	APH 0.6 uM 96h	APH 0.6	1	F	2	0.6	ESC-NPC;NXP010; Aphidicolin 0.6 uM 96h
+PW107	APH concentration	B400_017	NPC	mouse	APH_concentration/PW107_B400_017_result.tlx	chr6	Chr6_70Mb	DMSO	DMSO	DMSO	2	T	2	0	ESC-NPC;NXP010; DMSO
+PW108	APH concentration	B400_017	NPC	mouse	APH_concentration/PW108_B400_017_result.tlx	chr6	Chr6_70Mb	APH 0.2 uM 96h	APH 0.2 uM 96h	APH 0.2	2	F	2	0.2	ESC-NPC;NXP010; Aphidicolin 0.2 uM 96h
+PW109	APH concentration	B400_017	NPC	mouse	APH_concentration/PW109_B400_017_result.tlx	chr6	Chr6_70Mb	APH 0.4 uM 96h	APH 0.4 uM 96h	APH 0.4	2	F	2	0.4	ESC-NPC;NXP010; Aphidicolin 0.4 uM 96h
+PW110	APH concentration	B400_017	NPC	mouse	APH_concentration/PW110_B400_017_result.tlx	chr6	Chr6_70Mb	APH 0.6 uM 96h	APH 0.6 uM 96h	APH 0.6	2	F	2	0.6	ESC-NPC;NXP010; Aphidicolin 0.6 uM 96h
+PW111	APH concentration	B400_017	NPC	mouse	APH_concentration/PW111_B400_017_result.tlx	chr6	Chr6_70Mb	DMSO	DMSO	DMSO	3	T	2	0	ESC-NPC;NXP010; DMSO
+PW112	APH concentration	B400_017	NPC	mouse	APH_concentration/PW112_B400_017_result.tlx	chr6	Chr6_70Mb	APH 0.2 uM 96h	APH 0.2 uM 96h	APH 0.2	3	F	2	0.2	ESC-NPC;NXP010; Aphidicolin 0.2 uM 96h
+PW113	APH concentration	B400_017	NPC	mouse	APH_concentration/PW113_B400_017_result.tlx	chr6	Chr6_70Mb	APH 0.4 uM 96h	APH 0.4 uM 96h	APH 0.4	3	F	2	0.4	ESC-NPC;NXP010; Aphidicolin 0.4 uM 96h
+PW114	APH concentration	B400_017	NPC	mouse	APH_concentration/PW114_B400_017_result.tlx	chr6	Chr6_70Mb	APH 0.6 uM 96h	APH 0.6 uM 96h	APH 0.6	3	F	2	0.6	ESC-NPC;NXP010; Aphidicolin 0.6 uM 96h
+PW115	APH concentration	B400_018	NPC	mouse	APH_concentration/PW115_B400_018_result.tlx	chr8	Chr8_61Mb	DMSO	DMSO	DMSO	2	T	2	0	ESC-NPC;NXP010; DMSO
+PW116	APH concentration	B400_018	NPC	mouse	APH_concentration/PW116_B400_018_result.tlx	chr8	Chr8_61Mb	APH 0.2 uM 96h	APH 0.2 uM 96h	APH 0.2	2	F	2	0.2	ESC-NPC;NXP010; Aphidicolin 0.2 uM 96h
+PW117	APH concentration	B400_018	NPC	mouse	APH_concentration/PW117_B400_018_result.tlx	chr8	Chr8_61Mb	APH 0.4 uM 96h	APH 0.4 uM 96h	APH 0.4	2	F	2	0.4	ESC-NPC;NXP010; Aphidicolin 0.4 uM 96h
+PW118	APH concentration	B400_018	NPC	mouse	APH_concentration/PW118_B400_018_result.tlx	chr8	Chr8_61Mb	APH 0.6 uM 96h	APH 0.6 uM 96h	APH 0.6	2	F	2	0.6	ESC-NPC;NXP010; Aphidicolin 0.6 uM 96h
+PW119	APH concentration	B400_018	NPC	mouse	APH_concentration/PW119_B400_018_result.tlx	chr8	Chr8_61Mb	DMSO	DMSO	DMSO	3	T	2	0	ESC-NPC;NXP010; DMSO
+PW120	APH concentration	B400_018	NPC	mouse	APH_concentration/PW120_B400_018_result.tlx	chr8	Chr8_61Mb	APH 0.2 uM 96h	APH 0.2 uM 96h	APH 0.2	3	F	2	0.2	ESC-NPC;NXP010; Aphidicolin 0.2 uM 96h
+PW121	APH concentration	B400_018	NPC	mouse	APH_concentration/PW121_B400_018_result.tlx	chr8	Chr8_61Mb	APH 0.4 uM 96h	APH 0.4 uM 96h	APH 0.4	3	F	2	0.4	ESC-NPC;NXP010; Aphidicolin 0.4 uM 96h
+PW122	APH concentration	B400_018	NPC	mouse	APH_concentration/PW122_B400_018_result.tlx	chr8	Chr8_61Mb	APH 0.6 uM 96h	APH 0.6 uM 96h	APH 0.6	3	F	2	0.6	ESC-NPC;NXP010; Aphidicolin 0.6 uM 96h
+PW123	APH concentration	B400_018	NPC	mouse	APH_concentration/PW123_B400_018_result.tlx	chr5	Chr5_101Mb	DMSO	DMSO	DMSO	1	T	2	0	ESC-NPC;NXP010; DMSO
+PW124	APH concentration	B400_018	NPC	mouse	APH_concentration/PW124_B400_018_result.tlx	chr5	Chr5_101Mb	APH 0.2 uM 96h	APH 0.2 uM 96h	APH 0.2	1	F	2	0.2	ESC-NPC;NXP010; Aphidicolin 0.2 uM 96h
+PW125	APH concentration	B400_018	NPC	mouse	APH_concentration/PW125_B400_018_result.tlx	chr5	Chr5_101Mb	APH 0.4 uM 96h	APH 0.4 uM 96h	APH 0.4	1	F	2	0.4	ESC-NPC;NXP010; Aphidicolin 0.4 uM 96h
+PW126	APH concentration	B400_018	NPC	mouse	APH_concentration/PW126_B400_018_result.tlx	chr5	Chr5_101Mb	APH 0.6 uM 96h	APH 0.6 uM 96h	APH 0.6	1	F	2	0.6	ESC-NPC;NXP010; Aphidicolin 0.6 uM 96h
+PW127	APH concentration	B400_018	NPC	mouse	APH_concentration/PW127_B400_018_result.tlx	chr5	Chr5_101Mb	DMSO	DMSO	DMSO	2	T	2	0	ESC-NPC;NXP010; DMSO
+PW128	APH concentration	B400_018	NPC	mouse	APH_concentration/PW128_B400_018_result.tlx	chr5	Chr5_101Mb	APH 0.2 uM 96h	APH 0.2 uM 96h	APH 0.2	2	F	2	0.2	ESC-NPC;NXP010; Aphidicolin 0.2 uM 96h
+PW129	APH concentration	B400_018	NPC	mouse	APH_concentration/PW129_B400_018_result.tlx	chr5	Chr5_101Mb	APH 0.4 uM 96h	APH 0.4 uM 96h	APH 0.4	2	F	2	0.4	ESC-NPC;NXP010; Aphidicolin 0.4 uM 96h
+PW130	APH concentration	B400_018	NPC	mouse	APH_concentration/PW130_B400_018_result.tlx	chr5	Chr5_101Mb	APH 0.6 uM 96h	APH 0.6 uM 96h	APH 0.6	2	F	2	0.6	ESC-NPC;NXP010; Aphidicolin 0.6 uM 96h
+PW131	APH concentration	B400_018	NPC	mouse	APH_concentration/PW131_B400_018_result.tlx	chr5	Chr5_101Mb	DMSO	DMSO	DMSO	3	T	2	0	ESC-NPC;NXP010; DMSO
+PW132	APH concentration	B400_018	NPC	mouse	APH_concentration/PW132_B400_018_result.tlx	chr5	Chr5_101Mb	APH 0.2 uM 96h	APH 0.2 uM 96h	APH 0.2	3	F	2	0.2	ESC-NPC;NXP010; Aphidicolin 0.2 uM 96h
+PW133	APH concentration	B400_018	NPC	mouse	APH_concentration/PW133_B400_018_result.tlx	chr5	Chr5_101Mb	APH 0.4 uM 96h	APH 0.4 uM 96h	APH 0.4	3	F	2	0.4	ESC-NPC;NXP010; Aphidicolin 0.4 uM 96h
+PW134	APH concentration	B400_018	NPC	mouse	APH_concentration/PW134_B400_018_result.tlx	chr5	Chr5_101Mb	APH 0.6 uM 96h	APH 0.6 uM 96h	APH 0.6	3	F	2	0.6	ESC-NPC;NXP010; Aphidicolin 0.6 uM 96h
+PW135	APH concentration	B400_019	NPC	mouse	APH_concentration/PW135_B400_019_result.tlx	chr5	Chr5_101Mb	APH 0.3 uM 96h	APH 0.3 uM 96h	APH 0.3	1	F	2	0.3	ESC-NPC;NXP010; Aphidicolin 0.3 uM 96h
+PW136	APH concentration	B400_019	NPC	mouse	APH_concentration/PW136_B400_019_result.tlx	chr5	Chr5_101Mb	APH 0.3 uM 96h	APH 0.3 uM 96h	APH 0.3	2	F	2	0.3	ESC-NPC;NXP010; Aphidicolin 0.3 uM 96h
+PW137	APH concentration	B400_019	NPC	mouse	APH_concentration/PW137_B400_019_result.tlx	chr5	Chr5_101Mb	APH 0.3 uM 96h	APH 0.3 uM 96h	APH 0.3	3	F	2	0.3	ESC-NPC;NXP010; Aphidicolin 0.3 uM 96h
+PW138	APH concentration	B400_019	NPC	mouse	APH_concentration/PW138_B400_019_result.tlx	chr6	Chr6_70Mb	APH 0.3 uM 96h	APH 0.3 uM 96h	APH 0.3	1	F	2	0.3	ESC-NPC;NXP010; Aphidicolin 0.3 uM 96h
+PW139	APH concentration	B400_019	NPC	mouse	APH_concentration/PW139_B400_019_result.tlx	chr6	Chr6_70Mb	APH 0.3 uM 96h	APH 0.3 uM 96h	APH 0.3	2	F	2	0.3	ESC-NPC;NXP010; Aphidicolin 0.3 uM 96h
+PW140	APH concentration	B400_019	NPC	mouse	APH_concentration/PW140_B400_019_result.tlx	chr8	Chr8_61Mb	APH 0.3 uM 96h	APH 0.3 uM 96h	APH 0.3	1	F	2	0.3	ESC-NPC;NXP010; Aphidicolin 0.3 uM 96h
+PW141	APH concentration	B400_019	NPC	mouse	APH_concentration/PW141_B400_019_result.tlx	chr8	Chr8_61Mb	APH 0.3 uM 96h	APH 0.3 uM 96h	APH 0.3	2	F	2	0.3	ESC-NPC;NXP010; Aphidicolin 0.3 uM 96h
+PW142	APH concentration (experimental)	B400_019	NPC	mouse	APH_concentration/PW142_B400_019_result.tlx	chr8	Chr8_61Mb	APH 0.2 uM 96h	APH 0.2 uM 96h	APH 0.2	1	F	2	0.2	ESC-NPC;NXP010; Aphidicolin 0.2 uM 96h (test new aphidicolin)
+PW143	APH concentration (experimental)	B400_019	NPC	mouse	APH_concentration/PW143_B400_019_result.tlx	chr8	Chr8_61Mb	APH 0.4 uM 96h	APH 0.4 uM 96h	APH 0.4	1	F	2	0.4	ESC-NPC;NXP010; Aphidicolin 0.4 uM 96h (test new aphidicolin)
+PW144	APH concentration (experimental)	B400_019	NPC	mouse	APH_concentration/PW144_B400_019_result.tlx	chr8	Chr8_61Mb	APH 0.6 uM 96h	APH 0.6 uM 96h	APH 0.6	1	F	2	0.6	ESC-NPC;NXP010; Aphidicolin 0.6 uM 96h (test new aphidicolin)
+PW145	APH concentration (experimental)	B400_019	NPC	mouse	APH_concentration/PW145_B400_019_result.tlx	chr5	Chr5_101Mb	APH 0.3 uM 96h	APH 0.3 uM 96h	APH 0.3	1	F	2	0.3	ESC-NPC;NXP010; Aphidicolin 0.3 uM 96h (Home-made Pfu enzyme)
+GDM01	Doxycycline 10ug/ml	B400_019	ESC	mouse	GDM01_B400_019_result.tlx	chr6	Chr6_70Mb	Doxycycline 10ug/ml	Doxycycline 10ug/ml		1	F	2		ESC; TLCV2_Chr6-JM8/A4; Doxycycline 10ug/ml 36 hr
+GDM02	Doxycycline 10ug/ml	B400_019	ESC	mouse	GDM02_B400_019_result.tlx	chr6	Chr6_70Mb	Doxycycline 10ug/ml	Doxycycline 10ug/ml		2	F	2		ESC; TLCV2_Chr6-JM8/A4; Doxycycline 10ug/ml 36 hr
+GDM03	Doxycycline 10ug/ml	B400_019	ESC	mouse	GDM03_B400_019_result.tlx	chr6	Chr6_70Mb	Doxycycline 10ug/ml	Doxycycline 10ug/ml		1	T	2		ESC; TLCV2_Chr6-JM8/A4; untreated
+GDM04	Doxycycline 10ug/ml	B400_019	ESC	mouse	GDM04_B400_019_result.tlx	chr6	Chr6_70Mb	Doxycycline 10ug/ml	Doxycycline 10ug/ml		2	T	2		ESC; TLCV2_Chr6-JM8/A4; untreated
+PW146	APH concentration	B400_020	NPC	mouse	APH_concentration/PW146_B400_020_result.tlx	chr12	Chr12_13Mb	APH 0.3 uM 96h	APH 0.3 uM 96h	APH 0.3 uM 96h	1	F	2	0.3	ESC-NPC;NXP010;Aphidicolin 0.3 uM 96h
+PW147	APH concentration	B400_020	NPC	mouse	APH_concentration/PW147_B400_020_result.tlx	chr12	Chr12_13Mb	APH 0.3 uM 96h	APH 0.3 uM 96h	APH 0.3 uM 96h	2	F	2	0.3	ESC-NPC;NXP010;Aphidicolin 0.3 uM 96h
+PW148	APH concentration	B400_020	NPC	mouse	APH_concentration/PW148_B400_020_result.tlx	chr12	Chr12_13Mb	APH 0.3 uM 96h	APH 0.3 uM 96h	APH 0.3 uM 96h	3	F	2	0.3	ESC-NPC;NXP010;Aphidicolin 0.3 uM 96h
+PW149	APH concentration	B400_020	NPC	mouse	APH_concentration/PW149_B400_020_result.tlx	chr12	Chr12_13Mb	APH 0.4 uM 96h	APH 0.4 uM 96h	APH 0.4 uM 96h	1	F	2	0.4	ESC-NPC;NXP010;Aphidicolin 0.4 uM 96h
+PW150	APH concentration	B400_020	NPC	mouse	APH_concentration/PW150_B400_020_result.tlx	chr12	Chr12_13Mb	APH 0.4 uM 96h	APH 0.4 uM 96h	APH 0.4 uM 96h	2	F	2	0.4	ESC-NPC;NXP010;Aphidicolin 0.4 uM 96h
+PW151	APH concentration	B400_020	NPC	mouse	APH_concentration/PW151_B400_020_result.tlx	chr12	Chr12_13Mb	APH 0.6 uM 96h	APH 0.6 uM 96h	APH 0.6 uM 96h	1	F	2	0.6	ESC-NPC;NXP010;Aphidicolin 0.6 uM 96h
+PW152	APH concentration	B400_020	NPC	mouse	APH_concentration/PW152_B400_020_result.tlx	chr12	Chr12_13Mb	APH 0.6 uM 96h	APH 0.6 uM 96h	APH 0.6 uM 96h	2	F	2	0.6	ESC-NPC;NXP010;Aphidicolin 0.6 uM 96h
+PW153	APH concentration	B400_020	NPC	mouse	APH_concentration/PW153_B400_020_result.tlx	chr12	Chr12_13Mb	APH 0.6 uM 96h	APH 0.6 uM 96h	APH 0.6 uM 96h	3	F	2	0.6	ESC-NPC;NXP010;Aphidicolin 0.6 uM 96h
+VI067	Nrxn1 promoter/enhancer	B400_020	NPC	mouse	VI067_B400_020_result.tlx	chr17	Chr17_41Mb	DMSO	Allelic deletion (22)	DMSO	1	T	1	0	ESC-NPC;Nxp047;22;DMSO
+VI068	Nrxn1 promoter/enhancer	B400_020	NPC	mouse	VI068_B400_020_result.tlx	chr17	Chr17_41Mb	DMSO	Allelic deletion (22)	DMSO	2	T	1	0	ESC-NPC;Nxp047;22;DMSO
+VI069	Nrxn1 promoter/enhancer	B400_020	NPC	mouse	VI069_B400_020_result.tlx	chr17	Chr17_41Mb	DMSO	Allelic+promoter deletion (22/5)	DMSO	1	T	1	0	ESC-NPC;Nxp047;22-5;DMSO
+VI070	Nrxn1 promoter/enhancer	B400_020	NPC	mouse	VI070_B400_020_result.tlx	chr17	Chr17_41Mb	DMSO	Allelic+promoter deletion (22/5)	DMSO	2	T	1	0	ESC-NPC;Nxp047;22-5;DMSO
+VI071	Nrxn1 promoter/enhancer	B400_020	NPC	mouse	VI071_B400_020_result.tlx	chr17	Chr17_41Mb	DMSO	Allelic+promoter deletion (22/37)	DMSO	1	T	1	0	ESC-NPC;Nxp047;22-37;DMSO
+VI072	Nrxn1 promoter/enhancer	B400_020	NPC	mouse	VI072_B400_020_result.tlx	chr17	Chr17_41Mb	APH 0.5 uM 96h	Allelic deletion (22)	APH 0.5 uM 96h	1	F	1	0.5	ESC-NPC;Nxp047;22;Aphidicolin 0.5 uM 96h
+VI073	Nrxn1 promoter/enhancer	B400_020	NPC	mouse	VI073_B400_020_result.tlx	chr17	Chr17_41Mb	APH 0.5 uM 96h	Allelic deletion (22)	APH 0.5 uM 96h	2	F	1	0.5	ESC-NPC;Nxp047;22;Aphidicolin 0.5 uM 96h
+VI074	Nrxn1 promoter/enhancer	B400_020	NPC	mouse	VI074_B400_020_result.tlx	chr17	Chr17_41Mb	APH 0.5 uM 96h	Allelic+promoter deletion (22/5)	APH 0.5 uM 96h	1	F	1	0.5	ESC-NPC;Nxp047;22-5;Aphidicolin 0.5 uM 96h
+VI075	Nrxn1 promoter/enhancer	B400_020	NPC	mouse	VI075_B400_020_result.tlx	chr17	Chr17_41Mb	APH 0.5 uM 96h	Allelic+promoter deletion (22/5)	APH 0.5 uM 96h	2	F	1	0.5	ESC-NPC;Nxp047;22-5;Aphidicolin 0.5 uM 96h
+VI076	Nrxn1 promoter/enhancer	B400_020	NPC	mouse	VI076_B400_020_result.tlx	chr17	Chr17_41Mb	APH 0.5 uM 96h	Allelic+promoter deletion (22/37)	APH 0.5 uM 96h	1	F	1	0.5	ESC-NPC;Nxp047;22-37;Aphidicolin 0.5 uM 96h
+PW154_PW157	APH concentration	B400_021	NPC	mouse	APH_concentration/PW154_PW157_B400_021_result.tlx	chr5	Chr5_101Mb	APH 0.3 uM 96h	APH 0.3 uM 96h	APH 0.3 uM 96h	3	F	2	0.3	ESC-NPC;NXP010;Aphidicolin 0.3 uM 96h
+PW155	APH concentration	B400_021	NPC	mouse	APH_concentration/PW155_B400_021_result.tlx	chr6	Chr6_70Mb	APH 0.3 uM 96h	APH 0.3 uM 96h	APH 0.3 uM 96h	3	F	2	0.3	ESC-NPC;NXP010;Aphidicolin 0.3 uM 96h
+PW156_PW159	APH concentration	B400_021	NPC	mouse	APH_concentration/PW156_PW159_B400_021_result.tlx	chr8	Chr8_61Mb	APH 0.3 uM 96h	APH 0.3 uM 96h	APH 0.3 uM 96h	3	F	2	0.3	ESC-NPC;NXP010;Aphidicolin 0.3 uM 96h
+PW158	APH concentration	B400_021	NPC	mouse	APH_concentration/PW158_B400_021_result.tlx	chr6	Chr6_70Mb	APH 0.3 uM 96h	APH 0.3 uM 96h	APH 0.3 uM 96h	3	F	2	0.3	ESC-NPC;NXP010;Aphidicolin 0.3 uM 96h
+PW160	Wee1 concentration	B400_021	NPC	mouse	Wee1_concentration/PW160_B400_021_result.tlx	chr5	Chr5_101Mb	Wee1 0.125 uM	Wee1 0.125 uM	Wee1 0.125 uM	1	F	2	0.125	ESC-NPC;NXP010;Aphidicolin 0.3 uM 96h;Wee1 0.125 uM
+PW161	Wee1 concentration	B400_021	NPC	mouse	Wee1_concentration/PW161_B400_021_result.tlx	chr6	Chr6_70Mb	Wee1 0.125 uM	Wee1 0.125 uM	Wee1 0.125 uM	1	F	2	0.125	ESC-NPC;NXP010;Aphidicolin 0.3 uM 96h;Wee1 0.125 uM
+PW162	Wee1 concentration	B400_021	NPC	mouse	Wee1_concentration/PW162_B400_021_result.tlx	chr8	Chr8_61Mb	Wee1 0.125 uM	Wee1 0.125 uM	Wee1 0.125 uM	1	F	2	0.125	ESC-NPC;NXP010;Aphidicolin 0.3 uM 96h;Wee1 0.125 uM
+PW163	Wee1 concentration	B400_021	NPC	mouse	Wee1_concentration/PW163_B400_021_result.tlx	chr5	Chr5_101Mb	Wee1 0.25 uM	Wee1 0.25 uM	Wee1 0.25 uM	1	F	2	0.25	ESC-NPC;NXP010;Aphidicolin 0.3 uM 96h;Wee1 0.25 uM
+PW164	Wee1 concentration	B400_021	NPC	mouse	Wee1_concentration/PW164_B400_021_result.tlx	chr6	Chr6_70Mb	Wee1 0.25 uM	Wee1 0.25 uM	Wee1 0.25 uM	1	F	2	0.25	ESC-NPC;NXP010;Aphidicolin 0.3 uM 96h;Wee1 0.25 uM
+PW165	Wee1 concentration	B400_021	NPC	mouse	Wee1_concentration/PW165_B400_021_result.tlx	chr8	Chr8_61Mb	Wee1 0.25 uM	Wee1 0.25 uM	Wee1 0.25 uM	1	F	2	0.25	ESC-NPC;NXP010;Aphidicolin 0.3 uM 96h;Wee1 0.25 uM
+PW166	Wee1 concentration	B400_021	NPC	mouse	Wee1_concentration/PW166_B400_021_result.tlx	chr5	Chr5_101Mb	Wee1 0.5 uM	Wee1 0.5 uM	Wee1 0.5 uM	1	F	2	0.5	ESC-NPC;NXP010;Aphidicolin 0.3 uM 96h;Wee1 0.5 uM
+PW167	Wee1 concentration	B400_021	NPC	mouse	Wee1_concentration/PW167_B400_021_result.tlx	chr6	Chr6_70Mb	Wee1 0.5 uM	Wee1 0.5 uM	Wee1 0.5 uM	1	F	2	0.5	ESC-NPC;NXP010;Aphidicolin 0.3 uM 96h;Wee1 0.5 uM
+PW168	Wee1 concentration	B400_021	NPC	mouse	Wee1_concentration/PW168_B400_021_result.tlx	chr8	Chr8_61Mb	Wee1 0.5 uM	Wee1 0.5 uM	Wee1 0.5 uM	1	F	2	0.5	ESC-NPC;NXP010;Aphidicolin 0.3 uM 96h;Wee1 0.5 uM
+VI077	Nrxn1 promoter/enhancer	B400_021	NPC	mouse	VI077_B400_021_result.tlx	chr17	Chr17_41Mb	DMSO	Allelic deletion (22)	fndr_22	3	T	1	0.5	ESC-NPC;Nxp047;22;DMSO
+VI078	Nrxn1 promoter/enhancer	B400_021	NPC	mouse	VI078_B400_021_result.tlx	chr17	Chr17_41Mb	APH 0.5 uM 96h	Allelic deletion (22)	fndr_22	3	F	1	0.5	ESC-NPC;Nxp047;22;Aphidicolin 0.5 uM 96h
+VI079	Nrxn1 promoter/enhancer	B400_021	NPC	mouse	VI079_B400_021_result.tlx	chr17	Chr17_41Mb	DMSO	Allelic+promoter deletion (22/5)	fndr-prom_22-5	3	T	1	0.5	ESC-NPC;Nxp047;22-5;DMSO
+VI080	Nrxn1 promoter/enhancer	B400_021	NPC	mouse	VI080_B400_021_result.tlx	chr17	Chr17_41Mb	APH 0.5 uM 96h	Allelic+promoter deletion (22/5)	fndr-prom_22-5	3	F	1	0.5	ESC-NPC;Nxp047;22-5;Aphidicolin 0.5 uM 96h
+VI081	Nrxn1 promoter/enhancer	B400_021	NPC	mouse	VI081_B400_021_result.tlx	chr17	Chr17_41Mb	DMSO	Allelic+promoter deletion (22/37)	fndr-prom_22-37	3	T	1	0.5	ESC-NPC;Nxp047;22-37;DMSO
+VI082	Nrxn1 promoter/enhancer	B400_021	NPC	mouse	VI082_B400_021_result.tlx	chr17	Chr17_41Mb	APH 0.5 uM 96h	Allelic+promoter deletion (22/37)	fndr-prom_22-37	3	F	1	0.5	ESC-NPC;Nxp047;22-37;Aphidicolin 0.5 uM 96h
+VI083	Nrxn1 promoter/enhancer	B400_021	NPC	mouse	VI083_B400_021_result.tlx	chr17	Chr17_41Mb	DMSO	Allelic+promoter deletion (22/37)	fndr-prom_22-37	4	T	1	0.5	ESC-NPC;Nxp047;22-37;DMSO
+VI084	Nrxn1 promoter/enhancer	B400_021	NPC	mouse	VI084_B400_021_result.tlx	chr17	Chr17_41Mb	APH 0.5 uM 96h	Allelic+promoter deletion (22/37)	fndr-prom_22-37	4	F	1	0.5	ESC-NPC;Nxp047;22-37;Aphidicolin 0.5 uM 96h
+VI085	Nrxn1 promoter/enhancer	B400_022	NPC	mouse	VI085_B400_022_result.tlx	chr17	Chr17_41Mb	DMSO	Parental cell (NXP047)	NXP047	3	T	2	0	ESC-NPC;NXP047;DMSO
+VI086	Nrxn1 promoter/enhancer	B400_022	NPC	mouse	VI086_B400_022_result.tlx	chr17	Chr17_41Mb	APH 0.5 uM 96h	Parental cell (NXP047)	NXP047	3	F	2	0.5	ESC-NPC;Nxp047; Aphidicolin 0.5 uM 96h
+VI087	Nrxn1 promoter/enhancer	B400_022	NPC	mouse	VI087_B400_022_result.tlx	chr17	Chr17_41Mb	DMSO	Parental cell (NXP047)	NXP047	4	T	2	0	ESC-NPC;NXP047;DMSO
+VI088	Nrxn1 promoter/enhancer	B400_022	NPC	mouse	VI088_B400_022_result.tlx	chr17	Chr17_41Mb	APH 0.5 uM 96h	Parental cell (NXP047)	NXP047	4	F	2	0.5	ESC-NPC;Nxp047; Aphidicolin 0.5 uM 96h
+SRR2820416	Wei et al. Cell 2016	Wei2016_Chr12	NPC	mouse	Wei2016/SRR2820416_WEI2016_result.tlx	chr12	Chr12_13Mb	APH 0.5uM	chr12	chr12	1	F	2	0.5	From Wei et al. Cell 2016; X4p53_Chr12_sgRNA_1_APH_ExpA
+SRR2820417	Wei et al. Cell 2016	Wei2016_Chr12	NPC	mouse	Wei2016/SRR2820417_WEI2016_result.tlx	chr12	Chr12_13Mb	APH 0.5uM	chr12	chr12	2	F	2	0.5	From Wei et al. Cell 2016; X4p53_Chr12_sgRNA_1_APH_ExpB
+SRR2820418	Wei et al. Cell 2016	Wei2016_Chr12	NPC	mouse	Wei2016/SRR2820418_WEI2016_result.tlx	chr12	Chr12_13Mb	APH 0.5uM	chr12	chr12	3	F	2	0.5	From Wei et al. Cell 2016; X4p53_Chr12_sgRNA_1_APH_ExpC
+SRR2820463	Wei et al. Cell 2016	Wei2016_Chr15	NPC	mouse	Wei2016/SRR2820463_WEI2016_result.tlx	chr15	Chr15_62Mb	APH 0.5uM	chr15	chr15	1	F	2	0.5	From Wei et al. Cell 2016; X4p53_Chr15_Myc_SgRNA_APH_ExpA
+SRR2820464	Wei et al. Cell 2016	Wei2016_Chr15	NPC	mouse	Wei2016/SRR2820464_WEI2016_result.tlx	chr15	Chr15_62Mb	APH 0.5uM	chr15	chr15	2	F	2	0.5	From Wei et al. Cell 2016; X4p53_Chr15_Myc_SgRNA_APH_ExpB
+SRR2820466	Wei et al. Cell 2016	Wei2016_Chr15	NPC	mouse	Wei2016/SRR2820466_WEI2016_result.tlx	chr15	Chr15_62Mb	APH 0.5uM	chr15	chr15	3	F	2	0.5	From Wei et al. Cell 2016; X4p53_Chr15_Myc_SgRNA_APH_ExpC
+SRR2820474	Wei et al. Cell 2016	Wei2016_Chr16	NPC	mouse	Wei2016/SRR2820474_WEI2016_result.tlx	chr16	Chr16_39Mb	APH 0.5uM	chr16	chr16	1	F	2	0.5	From Wei et al. Cell 2016; X4p53_Chr16_sgRNA_2_APH_ExpA
+SRR2820475	Wei et al. Cell 2016	Wei2016_Chr16	NPC	mouse	Wei2016/SRR2820475_WEI2016_result.tlx	chr16	Chr16_39Mb	APH 0.5uM	chr16	chr16	2	F	2	0.5	From Wei et al. Cell 2016; X4p53_Chr16_sgRNA_2_APH_ExpB
+SRR2820476	Wei et al. Cell 2016	Wei2016_Chr16	NPC	mouse	Wei2016/SRR2820476_WEI2016_result.tlx	chr16	Chr16_39Mb	APH 0.5uM	chr16	chr16	3	F	2	0.5	From Wei et al. Cell 2016; X4p53_Chr16_sgRNA_2_APH_ExpC
+SRR2820477	Wei et al. Cell 2016	Wei2016_Chr16	NPC	mouse	Wei2016/SRR2820477_WEI2016_result.tlx	chr16	Chr16_39Mb	APH 0.5uM	chr16	chr16	4	F	2	0.5	From Wei et al. Cell 2016; X4p53_Chr16_sgRNA_2_APH_ExpD
+SRR2820419	Wei et al. Cell 2016	Wei2016_Chr12	NPC	mouse	Wei2016/SRR2820419_WEI2016_result.tlx	chr12	Chr12_13Mb	DMSO	chr12	chr12	1	T	2	0	From Wei et al. Cell 2016; X4p53_Chr12_sgRNA_1_DMSO_ExpA
+SRR2820420	Wei et al. Cell 2016	Wei2016_Chr12	NPC	mouse	Wei2016/SRR2820420_WEI2016_result.tlx	chr12	Chr12_13Mb	DMSO	chr12	chr12	2	T	2	0	From Wei et al. Cell 2016; X4p53_Chr12_sgRNA_1_DMSO_ExpB
+SRR2820421	Wei et al. Cell 2016	Wei2016_Chr12	NPC	mouse	Wei2016/SRR2820421_WEI2016_result.tlx	chr12	Chr12_13Mb	DMSO	chr12	chr12	3	T	2	0	From Wei et al. Cell 2016; X4p53_Chr12_sgRNA_1_DMSO_ExpC
+SRR2820467	Wei et al. Cell 2016	Wei2016_Chr15	NPC	mouse	Wei2016/SRR2820467_WEI2016_result.tlx	chr15	Chr15_62Mb	DMSO	chr15	chr15	1	T	2	0	From Wei et al. Cell 2016; X4p53_Chr15_Myc_sgRNA_DMSO_ExpA
+SRR2820469	Wei et al. Cell 2016	Wei2016_Chr15	NPC	mouse	Wei2016/SRR2820469_WEI2016_result.tlx	chr15	Chr15_62Mb	DMSO	chr15	chr15	2	T	2	0	From Wei et al. Cell 2016; X4p53_Chr15_Myc_sgRNA_DMSO_ExpB
+SRR2820470	Wei et al. Cell 2016	Wei2016_Chr15	NPC	mouse	Wei2016/SRR2820470_WEI2016_result.tlx	chr15	Chr15_62Mb	DMSO	chr15	chr15	3	T	2	0	From Wei et al. Cell 2016; X4p53_Chr15_Myc_sgRNA_DMSO_ExpC
+SRR2820478	Wei et al. Cell 2016	Wei2016_Chr16	NPC	mouse	Wei2016/SRR2820478_WEI2016_result.tlx	chr16	Chr16_39Mb	DMSO	chr16	chr16	1	T	2	0	From Wei et al. Cell 2016; X4p53_Chr16_sgRNA_2_DMSO_ExpA
+SRR2820479	Wei et al. Cell 2016	Wei2016_Chr16	NPC	mouse	Wei2016/SRR2820479_WEI2016_result.tlx	chr16	Chr16_39Mb	DMSO	chr16	chr16	2	T	2	0	From Wei et al. Cell 2016; X4p53_Chr16_sgRNA_2_DMSO_ExpB
+SRR2820480	Wei et al. Cell 2016	Wei2016_Chr16	NPC	mouse	Wei2016/SRR2820480_WEI2016_result.tlx	chr16	Chr16_39Mb	DMSO	chr16	chr16	3	T	2	0	From Wei et al. Cell 2016; X4p53_Chr16_sgRNA_2_DMSO_ExpC

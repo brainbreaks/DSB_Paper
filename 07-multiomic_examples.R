@@ -9,7 +9,7 @@ source("00-utils.R")
 
 multiomics_examples = function()
 {
-  dir.create("reports/07-multiomic_examples", recursive=T, showWarnings=F)
+  dir.create("reports/07-multiomic_examples/bedgraphs", recursive=T, showWarnings=F)
   params = macs2_params(extsize=1e5, exttype="symmetrical", minqvalue=0.01, effective_size=1.87e9, maxgap=2e5, minlen=1e5)
 
   #
@@ -34,12 +34,8 @@ multiomics_examples = function()
   #
   # Load TLX
   #
-  samples_df = tlx_read_paper_samples("data/htgts_samples.tsv", "data") %>%
-    dplyr::filter(!control & (
-      grepl("(Ctnna2|Nrxn1) promoter/enhancer", experiment) |
-      grepl("concentration$", experiment) & concentration==0.4 |
-      grepl("Wei|Tena", experiment)))
-
+  samples_df = tlx_read_samples("data/htgts_samples.tsv", "data/TLX") %>%
+    dplyr::filter(subset_multiomics_examples=="Y")
 
   tlx_all_df = tlx_read_many(samples_df, threads=16) %>%
     tlx_extract_bait(bait_size=19, bait_region=12e6) %>%
@@ -73,8 +69,8 @@ multiomics_examples = function()
   # Write TLX coverage
   #
   if(F) {
-    tlxcov_write_bedgraph(tlxcov_clean_all_df, path=paste0("reports/bedgaph-", extsize), group="group", ignore.strand=T)
-    tlxcov_write_bedgraph(tlxcov_clean_all_df, path=paste0("reports/bedgaph-", extsize), group="group", ignore.strand=F)
+    tlxcov_write_bedgraph(tlxcov_clean_all_df, path=paste0("reports/07-multiomic_examples/bedgraphs/bedgaph-", params$extsize), group="group", ignore.strand=T)
+    tlxcov_write_bedgraph(tlxcov_clean_all_df, path=paste0("reports/07-multiomic_examples/bedgraphs/bedgaph-", params$extsize), group="group", ignore.strand=F)
   }
 
   #
@@ -162,7 +158,7 @@ multiomics_examples = function()
     dplyr::summarize(rdc_filter=paste(gsub("\\.", "\\\\\\.", rdc_name), collapse="|"), rdc_examples_n=dplyr::n(), rdc_examples_length=sum(rdc_length), .groups="keep") %>%
     dplyr::mutate(rdc_examples_missing=max(rdc_examples_n) - rdc_examples_n, rdc_examples_mislength=max(rdc_examples_length) - rdc_examples_length)
 
-  pdf("reports/07-multiomic_examples/multiomics_examples-new.pdf", width=5*8.27, height=2*11.6)
+  pdf("reports/07-multiomic_examples/multiomics_examples.pdf", width=5*8.27, height=2*11.6)
     for(tg in rdc2tlx_df %>% dplyr::distinct(rdc_tlx_group, tlx_group) %>% split(f=1:nrow(.))) {
       rdc_samples_df.tg = rdc_samples_df %>% dplyr::filter(rdc_tlx_group==tg$rdc_tlx_group)
       plist = lapply(split(rdc_samples_df.tg, f=rdc_samples_df.tg$rdc_repliseq_type), FUN=function(df) {

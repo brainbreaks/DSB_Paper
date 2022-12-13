@@ -1,6 +1,9 @@
 # Remove cache if you prefer to recalculate all the alignments
 # unlink("tmp", recursive=T, force=T)
 
+source("01-replication_fork_nn.R")
+tzNN_prepare_training_data()
+
 source("02-detect_offtargets.R")
 detect_offtargets()
 

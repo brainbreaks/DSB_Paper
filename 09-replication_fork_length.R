@@ -1,15 +1,15 @@
-source("00-utils.R")
 library(introdataviz)
 library(ggplot2)
+source("00-utils.R")
 devtools::load_all("breaktools/")
 
 replication_fork_length = function() {
-  dir.create("reports/08-replication_fork")
+  dir.create("reports/09-replication_fork")
 
   #
   # Load Repliseq
   #
-  repliseq_df = readr::read_tsv("~/Workspace/Datasets/zhao_bmc_repliseq_2020/results/zhao_mESC_repliseq50000.tsv") %>% dplyr::mutate(Run="Zhao_mESC")
+  repliseq_df = readr::read_tsv("data/repliseq_zhao_bmc2020/repliseq_ESC.tsv") %>% dplyr::mutate(Run="Zhao_mESC")
 
   #
   # Load genes
@@ -105,24 +105,8 @@ replication_fork_length = function() {
     dplyr::mutate(collision_forks_length=collision_iz_right-collision_iz_left, collision_forks_length_group=dplyr::case_when(collision_forks_length>=1e6~">1Mb", collision_forks_length>=5e5~">500kb", collision_forks_length>=1e5~">100kb", T~">0")) %>%
     dplyr::mutate(collision_forks_length.log10=log10(collision_forks_length))
 
-  table(rdc2replication_df$rdc_group)
-  rdc2replication_df %>%
-    dplyr::filter(grepl("2", rdc_group) | overlap_type %in% c("No gene", "Gene<100kb")) %>%
-    ggplot() +
-      geom_boxplot(aes(x=as.factor(overlap_type), y=collision_forks_length))
-  x = rdc2replication_df %>%
-    dplyr::filter(grepl("3|2|1", rdc_group) | overlap_type %in% c("Gene<100kb")) %>%
-    dplyr::mutate(overlap_type=ifelse(overlap_type=="RDC", paste0(overlap_type, rdc_group), overlap_type))
-  ggplot(x) +
-      geom_boxplot(aes(x=as.factor(overlap_type), y=collision_forks_length))
-  ggplot(x) +
-    geom_point(aes(x=gene_length, y=collision_forks_length, color=overlap_type))
-    ggrepel::geom_text_repel(aes(x=gene_length, y=collision_forks_length, color=overlap_type, label=rdc_name), data=x %>% dplyr::filter(grepl("3", rdc_group) ))
 
-
-
-  pdf("reports/08-replication_fork/replication_fork_collision-new.pdf", width=8.27, height=11.6)
-
+  pdf("reports/09-replication_fork/replication_fork_collision-new.pdf", width=8.27, height=11.6)
   g0 = ggplot(forks_df) +
     geom_histogram(aes(y=nrow(forks_df)*100e3*..density.., x=fork_length), alpha=0.5, binwidth=100e3, position="identity", fill="#111111", color="#000000") +
     geom_vline(xintercept=median(forks_df$fork_length), color="#FF0000") +

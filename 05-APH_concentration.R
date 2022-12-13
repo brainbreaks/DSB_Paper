@@ -8,6 +8,8 @@ source("00-utils.R")
 
 APH_concentration = function()
 {
+  dir.create("reports/05-APH_concentration", recursive=T, showWarnings=F)
+
   debug = F
   group_palette = c("APH 0.2 uM 96h"="#C49A6C", "APH 0.3 uM 96h"="#C49A6C", "APH 0.4 uM 96h"="#C49A6C", "APH 0.6 uM 96h"="#C49A6C", "DMSO"="#CCCCCC")
   region_palette = c("RDC"="#00B9D3", "Gene > 100kb"="#D34B00", "Gene < 100kb"="#D39B00")
@@ -51,8 +53,8 @@ APH_concentration = function()
   #
   # Read TLX
   #
-  samples_df = tlx_read_paper_samples("data/htgts_samples.tsv", "data") %>%
-    dplyr::filter(experiment=="APH concentration") %>%
+  samples_df = tlx_read_samples("data/htgts_samples.tsv", "data/TLX") %>%
+    dplyr::filter(subset_aph_concentration=="Y") %>%
     dplyr::mutate(control=F)
 
   #
@@ -82,15 +84,13 @@ APH_concentration = function()
   # Off-target based normalization calculation
   #
   libfactors_centration_df = tlx_offtarget_libfactor(tlx_all_df, offtargets_df)
-  if(F) {
-    libfactors_centration_df$libfactors %>%
-      dplyr::inner_join(tlx_all_df %>% dplyr::distinct(tlx_sample, tlx_sample_raw), by="tlx_sample") %>%
-      dplyr::group_by(group=tlx_sample, library_size, library_factor) %>%
-      dplyr::summarise(sample_count=length(unique(tlx_sample_raw))) %>%
-      readr::write_tsv("reports/04-concentration/APH_concentration_normalization.tsv")
-    libfactors_centration_df$offtargets %>%
-      readr::write_tsv("reports/04-concentration/APH_concentration_normalization_offtargets.tsv")
-  }
+  libfactors_centration_df$libfactors %>%
+    dplyr::inner_join(tlx_all_df %>% dplyr::distinct(tlx_sample, tlx_sample_raw), by="tlx_sample") %>%
+    dplyr::group_by(group=tlx_sample, library_size, library_factor) %>%
+    dplyr::summarise(sample_count=length(unique(tlx_sample_raw))) %>%
+    readr::write_tsv("reports/05-APH_concentration/APH_concentration_normalization.tsv")
+  libfactors_centration_df$offtargets %>%
+    readr::write_tsv("reports/05-APH_concentration/APH_concentration_normalization_offtargets.tsv")
 
   #
   # Load RDC and test to filter out only the RDC that are significant in concentration samples
@@ -163,7 +163,7 @@ APH_concentration = function()
       junctions_telomeric_count.co_directional=sum(junctions_sense_count[collision=="co-directional"]),
       junctions_centromeric_count.head_on=sum(junctions_anti_count[collision=="head-on"]),
       junctions_centromeric_count.co_directional=sum(junctions_anti_count[collision=="co-directional"])) %>%
-      readr::write_tsv("reports/04-concentration/APH_junctions_count.tsv")
+      readr::write_tsv("reports/05-APH_concentration/APH_junctions_count.tsv")
 
 
   genes_nonrdc_df = genes_df %>%
@@ -220,7 +220,7 @@ APH_concentration = function()
   #   dplyr::group_by(region_subset) %>%
   #   dplyr::summarise(n=length(unique(region_name)), min_length=min(region_end-region_start))
 
-  pdf("reports/04-concentration/APH_concentration.pdf", width=11.69, height=8.27, paper="a4r")
+  pdf("reports/05-APH_concentration/APH_concentration.pdf", width=11.69, height=8.27, paper="a4r")
   #
   # 1a. Number of junctions increase with concentration (same as 1b but as line with standard error)
   #
@@ -358,6 +358,6 @@ APH_concentration = function()
   if(debug) {
     tlxcov_concentration_df = tlx_concentration_df %>%
       tlx_coverage(group="group", extsize=params_concentration$extsize, exttype=params_concentration$exttype, libfactors_df=libfactors_centration_df$libfactors, ignore.strand=F)
-    tlxcov_concentration_df %>% tlxcov_write_bedgraph(path="reports/04-concentration-bedgraph", group="group", ignore.strand=F)
+    tlxcov_concentration_df %>% tlxcov_write_bedgraph(path="reports/05-APH_concentration/bedgraph", group="group", ignore.strand=F)
   }
 }

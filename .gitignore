@@ -20,6 +20,12 @@
 /.Renviron
 
 /data/TLX
+/data/TLX_public
+/data/TLX_paper
+/data/groseq
+/data/okseq
+/data/repliseq
+/data/repliseq_zhao_bmc2020
 /breaktools
 /genomes
 /reports

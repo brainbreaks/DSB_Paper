@@ -14,7 +14,7 @@ python3 -m genome_downloader mm10 genomes
 git pull git@github.com:brainbreaks/breaktools.git
 RScript 00-setup.R
 ```
-
+ 
 # Related to Repli-SEQ -> OK-Seq termination zones (ignore for now)
 ## Tables
 

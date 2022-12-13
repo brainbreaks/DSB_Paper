@@ -7,7 +7,7 @@ source("00-utils.R")
 
 rdc_published_overlap = function()
 {
-  dir.create("reports/03-rdc_published_overlap", recursive=T, showWarnings=F)
+  dir.create("reports/04-rdc_published_overlap", recursive=T, showWarnings=F)
 
   rdc_df = readr::read_tsv("data/rdc.tsv")
   rdc_combined_df = rdc_df %>%
@@ -68,7 +68,7 @@ rdc_published_overlap = function()
     df2ranges(rdc_reduced_chrom, rdc_reduced_start, rdc_reduced_end) %>%
     innerJoinByOverlaps(allrdc_ranges)
 
-  pdf("reports/03-rdc_published_overlap/wei2018-venn-new.pdf", width=8.27, height=8.27)
+  pdf("reports/04-rdc_published_overlap/wei2018-venn.pdf", width=8.27, height=8.27)
   overlaps_venn1 = overlaps_df %>%
     dplyr::filter(rdc_subset %in% c("Wei+DKFZ", "DKFZ")) %>%
     dplyr::filter(rdc_is_significant) %>%

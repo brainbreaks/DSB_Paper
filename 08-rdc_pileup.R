@@ -9,6 +9,7 @@ source("00-utils.R")
 
 rdc_pileup = function()
 {
+  dir.create("reports/08-rdc_pileup", recursive=T, showWarnings=F)
   #
   # Load offtargets
   #
@@ -29,14 +30,9 @@ rdc_pileup = function()
   #
   # Load samples data
   #
-
-  samples_df = tlx_read_paper_samples("data/htgts_samples.tsv", "data")  %>%
-    dplyr::filter(!control) %>%
-    dplyr::filter(
-      grepl("(Ctnna2|Nrxn1) promoter/enhancer", experiment) |
-      grepl("concentration", experiment) & concentration %in% 0.4 |
-      grepl("Wei|Tena", experiment)
-    ) %>% dplyr::mutate(group="Inter")
+  samples_df = tlx_read_samples("data/htgts_samples.tsv", "data/TLX")  %>%
+    dplyr::filter(subset_pileups=="Y") %>%
+    dplyr::mutate(group="Inter")
 
   #
   # Load TLX
@@ -87,14 +83,12 @@ rdc_pileup = function()
         readr::write_tsv(paste0(z$tlx_group[1], "_", z$tlx_strand[1], ".bedgraph"), col_names=F)
     })(.))
 
-
-  plot_viewport = 7e5
-  plot_center_strategy = "collision"
-
   #
   # Find middle of RDC
   #
-  if(plot_center_strategy=="between peaks") {
+  plot_viewport = 7e5
+  plot_center_strategy = "between_peaks"
+  if(plot_center_strategy=="between_peaks") {
     # Visually detect center between telomeric and centromeric peaks
     collision_df = readr::read_tsv("data/rdc.tsv") %>%
       # dplyr::filter(grepl("RDC-chr12-53.7", rdc_name)) %>%
@@ -122,14 +116,14 @@ rdc_pileup = function()
       dplyr::slice(1) %>%
       dplyr::ungroup() %>%
       dplyr::select(collision_chrom, collision_tz)
-  } else {
-    if(plot_center_strategy=="collision") {
-      # Collissions as predicted by tzNN
-      collision_df = readr::read_tsv("data/replication_collisions_NPC.tsv")
     } else {
-      stop("Unsupported value of 'plot_center_strategy'")
+      if(plot_center_strategy=="collision") {
+        # Collissions as predicted by tzNN
+        collision_df = readr::read_tsv("data/replication_collisions_NPC.tsv")
+      } else {
+        stop("Unsupported value of 'plot_center_strategy'")
+      }
     }
-  }
 
 
   #
@@ -258,7 +252,7 @@ rdc_pileup = function()
       g
   })
 
-  pdf("reports/06-rdc_pileup/tlxcov_relative.pdf", width=8.27, height=11.69*2)
+  pdf(paste0("reports/08-rdc_pileup/tlxcov_", plot_center_strategy, ".pdf"), width=8.27, height=11.69*2)
   plist
   dev.off()
 }

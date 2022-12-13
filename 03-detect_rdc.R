@@ -11,7 +11,7 @@ source("00-utils.R")
 detect_rdc = function()
 {
   debug=F
-  dir.create("reports/02-detect_rdc", recursive=T, showWarnings=F)
+  dir.create("reports/03-detect_rdc", recursive=T, showWarnings=F)
 
   #
   # Load offtargets
@@ -29,12 +29,8 @@ detect_rdc = function()
   #
   # Load samples data
   #
-  samples_df = tlx_read_paper_samples("data/htgts_samples.tsv", "data") %>%
-    dplyr::filter(
-      grepl("(Ctnna2|Nrxn1) promoter/enhancer", experiment) |
-      grepl("concentration", experiment) & concentration %in% c(0, 0.4) |
-      grepl("Wei|Tena", experiment)
-    )
+  samples_df = tlx_read_samples("data/htgts_samples.tsv", "data/TLX") %>%
+    dplyr::filter(subset_detect_rdc=="Y")
 
   #
   # Load TLX
@@ -64,7 +60,7 @@ detect_rdc = function()
   ) %>% dplyr::mutate(tlx_control=F)
   tlx_rdc_df = tlx_rdc_all_df
 
-  pdf("reports/02-detect_rdc/qualified_reads.pdf", width=11.69, height=8.27, paper="a4r")
+  pdf("reports/03-detect_rdc/qualified_reads.pdf", width=11.69, height=8.27, paper="a4r")
   tlx_all_sumdf = tlx_all_df %>%
     dplyr::mutate(total_reads=dplyr::n()) %>%
     dplyr::mutate(qualified_read=ifelse(grepl("^chr[0-9X]+$", Rname) & tlx_copynumber==1 & !tlx_duplicated & !tlx_is_bait_junction & !tlx_is_offtarget, "Qualified read", "Discarded read"), translocation=ifelse(tlx_is_bait_chrom, "Intra", "Inter")) %>%
@@ -260,7 +256,7 @@ detect_rdc = function()
       df %>%
         dplyr::mutate(rdc_display_name=paste0(rdc_gene, " (", rdc_name, ")"), rdc_score=-log10(rdc_bootstrap_pvalue)) %>%
         dplyr::select(rdc_chrom, rdc_extended_start, rdc_extended_end, rdc_display_name, rdc_score, rdc_gene_strand, rdc_start, rdc_end) %>%
-        readr::write_tsv(paste0("reports/02-detect_rdc/rdc-", df$tlx_group[1], "_", df$rdc_subset[1], ".bed"), col_names=F)
+        readr::write_tsv(paste0("reports/03-detect_rdc/rdc-", df$tlx_group[1], "_", df$rdc_subset[1], ".bed"), col_names=F)
     })(.))
 
   # rdc_old_df = readr::read_tsv(file="data/rdc (5th copy).tsv")
@@ -284,15 +280,15 @@ detect_rdc = function()
   #
   if(debug)
   {
-    tlx_rdc_df %>% tlx_write_bed(path="reports/02-detect_rdc/bed", group="group", ignore.strand=T)
-    tlxcov_rdc_combined_df %>% tlxcov_write_bedgraph(path="reports/02-detect_rdc/bedgraph", group="group", ignore.strand=F)
+    tlx_rdc_df %>% tlx_write_bed(path="reports/03-detect_rdc/bed", group="group", ignore.strand=T)
+    tlxcov_rdc_combined_df %>% tlxcov_write_bedgraph(path="reports/03-detect_rdc/bedgraph", group="group", ignore.strand=F)
 
     macs_combined_rdc$islands %>%
       dplyr::group_by(tlx_group, island_strand) %>%
       dplyr::do((function(df){
         df %>%
           dplyr::select(island_chrom, island_extended_start, island_extended_end, island_name, island_score, island_strand, island_start, island_end) %>%
-          readr::write_tsv(paste0("reports/02-detect_rdc/islands-", df$tlx_group[1], "_", df$island_strand[1], ".bed"), col_names=F)
+          readr::write_tsv(paste0("reports/03-detect_rdc/islands-", df$tlx_group[1], "_", df$island_strand[1], ".bed"), col_names=F)
       })(.))
 
     islands_combined_reduced_df %>%
@@ -302,7 +298,7 @@ detect_rdc = function()
           dplyr::mutate(l=island_combined_extended_end-island_combined_extended_start, thickStart=island_combined_extended_start, thickEnd=island_combined_extended_end) %>%
           dplyr::mutate(i=tidyr::replace_na(findInterval(l, seq(rdc_minlen, max(l), length.out=1000))+1, 1), score=1, strand="*", rgb=dplyr::case_when(l<=rdc_minlen~"#BBBBFF", T~colorRampPalette(c("#0000B2", "#FA00FF"))(1000)[i])) %>%
           dplyr::select(island_combined_chrom, island_combined_extended_start, island_combined_extended_end, island_combined_name, score, strand, thickStart, thickEnd, rgb) %>%
-          readr::write_tsv(paste0("reports/02-detect_rdc/islands-reduced-", df$island_combined_group[1], ".bed"), col_names=F)
+          readr::write_tsv(paste0("reports/03-detect_rdc/islands-reduced-", df$island_combined_group[1], ".bed"), col_names=F)
       })(.))
 
     rdc_df %>%
@@ -313,27 +309,27 @@ detect_rdc = function()
         df %>%
           dplyr::mutate(rdc_strand="*") %>%
           dplyr::select(rdc_chrom, rdc_extended_start, rdc_extended_end, rdc_name, rdc_significant_length, rdc_strand, rdc_start, rdc_end) %>%
-          readr::write_tsv(paste0("reports/02-detect_rdc/rdc-", df$tlx_group[1], " (", df$rdc_subset[1], ").bed"), col_names=F)
+          readr::write_tsv(paste0("reports/03-detect_rdc/rdc-", df$tlx_group[1], " (", df$rdc_subset[1], ").bed"), col_names=F)
       })(.))
 
     macs_combined_rdc$qvalues %>%
       dplyr::group_by(tlx_group, qvalue_strand) %>%
       dplyr::do((function(df){
-        writeLines('track color="255,102,102" altColor="255,0,0"', con=paste0("reports/02-detect_rdc/qvalues-", df$tlx_group[1], "_", df$qvalue_strand[1], ".bedgraph"))
+        writeLines('track color="255,102,102" altColor="255,0,0"', con=paste0("reports/03-detect_rdc/qvalues-", df$tlx_group[1], "_", df$qvalue_strand[1], ".bedgraph"))
         df %>%
           dplyr::select(qvalue_chrom, qvalue_start, qvalue_end, qvalue_score) %>%
-          readr::write_tsv(paste0("reports/02-detect_rdc/qvalues-", df$tlx_group[1], "_", df$qvalue_strand[1], ".bedgraph"), col_names=F, append=T)
-        writeLines('track color="255,153,51" altColor="255,0,0"', con=paste0("reports/02-detect_rdc/qvalue-", df$tlx_group[1], ".bedgraph"))
+          readr::write_tsv(paste0("reports/03-detect_rdc/qvalues-", df$tlx_group[1], "_", df$qvalue_strand[1], ".bedgraph"), col_names=F, append=T)
+        writeLines('track color="255,153,51" altColor="255,0,0"', con=paste0("reports/03-detect_rdc/qvalue-", df$tlx_group[1], ".bedgraph"))
         df %>%
           dplyr::select(qvalue_chrom, qvalue_start, qvalue_end, bgmodel_signal) %>%
-          readr::write_tsv(paste0("reports/02-detect_rdc/baseline-", df$tlx_group[1], "_", df$qvalue_strand[1], ".bedgraph"), col_names=F, append=T)
+          readr::write_tsv(paste0("reports/03-detect_rdc/baseline-", df$tlx_group[1], "_", df$qvalue_strand[1], ".bedgraph"), col_names=F, append=T)
       })(.))
   }
 }
 
 estimate_power = function()
 {
-  dir.create("reports/02-detect_rdc", recursive=T, showWarnings=F)
+  dir.create("reports/03-detect_rdc", recursive=T, showWarnings=F)
 
   rdc_power_df = readr::read_tsv(file="data/rdc_power.tsv")
   rdc_power_sumdf = rdc_power_df %>%
@@ -348,7 +344,7 @@ estimate_power = function()
     dplyr::group_by(tlx_group, extsize, sample_frac, sample_n) %>%
     dplyr::summarize(n_significant=dplyr::n(), n_overlap=sum(!is.na(ref_chrom)))
 
-  pdf("reports/02-detect_rdc/rdc_power_estimation.pdf", width=11.69, height=8.27, paper="a4r")
+  pdf("reports/03-detect_rdc/rdc_power_estimation.pdf", width=11.69, height=8.27, paper="a4r")
   ggplot(rdc_power_sumdf) +
     # geom_smooth(aes(x=sample_n, y=n_overlap, color=factor(as.integer(extsize))), se=F) +
     geom_line(aes(x=sample_n, y=n_overlap, color=factor(as.integer(extsize))), se=F) +

@@ -2,10 +2,12 @@ tlx_read_paper_samples = function(annotation_path, data_path)
 {
   tlx_read_samples(annotation_path, data_path) %>%
     dplyr::filter(
-      tlx_exists &
-        organism=="mouse" & celltype=="NPC" & sample!="VI035" &
-        (experiment=="APH concentration" | grepl("Nrxn1|Ctnna2 promoter/enhancer", experiment) & grepl(".*\\((NXP047||NXP010|22|22/37|22/5|47/5|18/4|38/3)\\)", group) | grepl("Wei|Tena", experiment)
-   ))
+        organism=="mouse" & celltype=="NPC" & sample!="VI035" & (
+          experiment=="APH concentration" |
+          grepl("Nrxn1|Ctnna2 promoter/enhancer", experiment) & grepl(".*\\((NXP047||NXP010|22|22/37|22/5|47/5|18/4|38/3)\\)", group) |
+          grepl("Wei|Tena", experiment)
+        )
+   )
 }
 
 

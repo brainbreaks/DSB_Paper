@@ -12,10 +12,32 @@ export_files_to_ncbi = function()
 {
   dir.create("reports/00-upload_ncbi", recursive=T, showWarnings=F)
 
+  # samples_df = readr::read_tsv("data/htgts_samples.tsv") %>%
+  #   dplyr::filter(file.exists(paste0("data/TLX/", path))) %>%
+  #   dplyr::left_join(geo_samples_df %>% dplyr::select(sample, tlx_clean_local_path), by="sample") %>%
+  #   #dplyr::rename(path_original="path", path="tlx_clean_local_path") %>%
+  #   # dplyr::mutate(path=ifelse(is.na(path), path_original, basename(path))) %>%
+  #   dplyr::filter(
+  #     organism=="mouse" & celltype=="NPC" & sample!="VI035" & (
+  #       experiment=="APH concentration" |
+  #       grepl("Nrxn1|Ctnna2 promoter/enhancer", experiment) & grepl(".*\\((NXP047||NXP010|22|22/37|22/5|47/5|18/4|38/3)\\)", group) |
+  #       grepl("Wei|Tena", experiment)
+  #     )
+  #  ) %>%
+  #   dplyr::mutate(subset_detect_offtargets="Y")  %>%
+  #   dplyr::mutate(subset_detect_rdc=ifelse(grepl("(Ctnna2|Nrxn1) promoter/enhancer", experiment) | grepl("concentration", experiment) & concentration %in% c(0, 0.4) | grepl("Wei|Tena", experiment), "Y", "N")) %>%
+  #   dplyr::mutate(subset_aph_concentration=ifelse(experiment=="APH concentration", "Y", "N")) %>%
+  #   dplyr::mutate(subset_promoter_enhancer_deletion=ifelse(grepl("(Ctnna2|Nrxn1) promoter/enhancer", experiment), "Y", "N"))  %>%
+  #   dplyr::mutate(subset_multiomics_examples=ifelse(!control & (grepl("(Ctnna2|Nrxn1) promoter/enhancer", experiment) | grepl("concentration$", experiment) & concentration==0.4 | grepl("Wei|Tena", experiment)), "Y", "N")) %>%
+  #   dplyr::mutate(subset_pileups=subset_multiomics_examples)
+  # samples_df = readr::read_tsv("data/htgts_samples.tsv") %>%
+  #   dplyr::select(sample, experiment, run, celltype, treatment, group, group_short, control, organism, path ,path_original, bait_chrom, bait_name, alleles, concentration, description, subset_detect_offtargets, subset_detect_rdc, subset_aph_concentration, subset_promoter_enhancer_deletion, subset_multiomics_examples, subset_pileups) %>%
+  #   readr::write_tsv("data/htgts_samples.tsv")
+
   #
   # Load samples data
   #
-  samples_df = tlx_read_paper_samples("data/htgts_samples.tsv", "data/Datasets") %>%
+  samples_df = tlx_read_paper_samples("data/htgts_samples_all.tsv", "data/TLX_compiled") %>%
     dplyr::filter(!grepl("Wei|Tena", experiment))
 
   #
@@ -53,17 +75,19 @@ export_files_to_ncbi = function()
   geo_samples_df = samples_df %>%
     dplyr::left_join(raw_df %>% dplyr::select(sample, raw_path), by="sample") %>%
     dplyr::left_join(batch_sequencer_kits_df, by="run") %>%
-    dplyr::mutate(genotype=gsub("/", "-", ifelse(grepl("ESC-NPC;NXP[0-9]+;([0-9/-]+).*", description, ignore.case=T), gsub("ESC-NPC;NXP[0-9]+;([0-9/-]+).*", "\\1", description, ignore.case=T), ""))) %>%
-    dplyr::group_by(organism, celltype, bait_name, treatment, genotype) %>%
-    dplyr::mutate(replicate=paste0("rep", 1:dplyr::n())) %>%
+    dplyr::mutate(cellparental=toupper(gsub(".*(NXP[0-9]+).*", "\\1", description, ignore.case=T))) %>%
+    dplyr::mutate(cellculture=gsub("/", "-", ifelse(grepl("ESC-NPC;NXP[0-9]+;([0-9/-]+).*", description, ignore.case=T), gsub("ESC-NPC;NXP[0-9]+;([0-9/-]+).*", "\\1", description, ignore.case=T), ""))) %>%
+    dplyr::group_by(organism, celltype, bait_name, treatment, cellculture) %>%
+    dplyr::mutate(replicate=paste0("replicate_", 1:dplyr::n())) %>%
     data.frame() %>%
     dplyr::mutate(
       `library name`=paste0("HTGTS_Sample", 1:dplyr::n()),
-      sample_id=gsub("_+", "_", gsub(" ", "-", paste0(bait_name, "_", gsub("[ .]", "", gsub(" uM [0-9]+h$", "", treatment)), "_", `genotype`, "_", replicate))),
-      `title`=gsub("; *", "; ", paste(description, replicate, sep="; ")),
+      sample_id=gsub("_+", "_", gsub(" ", "-", paste0(bait_name, "_", gsub("[ .]", "", gsub(" uM [0-9]+h$", "", treatment)), "_", cellculture, "_", replicate))),
+      `title`=gsub("; *", "; ", paste(description, "LAM-HTGTS", replicate, sep="; ")),
+      `genotype`=paste("Xrcc4-/-::p53-/-", cellparental, gsub(" \\(.*", "", gsub("\\b(APH|DMSO).*", "", geo_samples_df$group)), sep=","),
       `organism`=organism,
-      `cell line`=toupper(gsub("ESC-NPC;([^;]+);.*", "\\1", description)),
-      `cell type`=gsub(";.*", "", description),
+      `cell line`="ESC-NPC",
+      `cell type`="Neural progenitor cells",
       `treatment`=treatment,
       `molecule`="genomic DNA",
       `single or paired-end`="paired-end",
@@ -152,9 +176,10 @@ export_files_to_ncbi = function()
     dplyr::mutate(md5=tools::md5sum(local_path)) %>%
     dplyr::select(`file name`=file, `file checksum`=md5)
 
-
+  #
+  # Create script to copy all ftp files
+  #
   cmd_ftpcopy = c(
-    "ftp ftp-private.ncbi.nlm.nih.gov",
     "cd uploads/ch164594_Y54fyeWG",
     "",
     paste0("mput ", getwd(), "/reports/00-upload_ncbi/TLX/*.tlx"),
@@ -164,10 +189,12 @@ export_files_to_ncbi = function()
     "bye"
   )
   writeLines(cmd_ftpcopy, con="reports/00-upload_ncbi/upload.ftp")
-  writeLines("cat upload.ftp | ftp", con="reports/00-upload_ncbi/upload.sh")
+  writeLines('cat upload.ftp | lftp  -u "geoftp,NtG5hT0U" ftp-private.ncbi.nlm.nih.gov', con="reports/00-upload_ncbi/upload.sh")
 
-  excel_path = "reports/00-Wei_NCBI_upload/ncbi.xlsx"
-  dir.create(dirname(excel_path), recursive=T, showWarnings=F)
+  #
+  # Write EXCEL file describing samples uploaded to NCBI
+  #
+  excel_path = "reports/00-upload_ncbi/ncbi.xlsx"
   xlsx::write.xlsx(geo_samples_export_df, excel_path, sheetName="2-1. Metadata Template",  col.names=T, row.names=F, append=F)
   xlsx::write.xlsx(geo_paired_export_df, excel_path, sheetName="2-2. PAIRED-END EXPERIMENTS",  col.names=T, row.names=F, append=T)
   xlsx::write.xlsx(geo_md5_df, excel_path, sheetName="3. MD5 Checksums",  col.names=T, row.names=F, append=T)
