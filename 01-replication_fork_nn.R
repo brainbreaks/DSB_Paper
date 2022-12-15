@@ -1163,7 +1163,7 @@ if (!interactive()) {
 }
 
 tzNN_evaluate = function() {
-  df_all = readr::read_tsv("reports/01-replication_fork/crossvalidation_data_2022-12-13.tsv")
+  df_all = readr::read_tsv("reports/01-replication_fork_nn/model/crossvalidation_data_2022-12-13.tsv")
 
   pdf("reports/01-replication_fork/crossvalidation_performance_2022-12-13.pdf", width=8.27, height=8.27)
   rockr_all_data = df_all %>%
@@ -1197,73 +1197,61 @@ tzNN_evaluate = function() {
 
 tzNN_predict = function() {
   reticulate::virtualenv_python("r-tensorflow")
-  model = load_model("reports/01-replication_fork/models_new6/cv0")
-
-  celltype = "NPC"
-  repliseq_df = readr::read_tsv(paste0("~/Workspace/Datasets/zhao_bmc_repliseq_2020/results/zhao_m", celltype, "_repliseq50000.tsv"))
-  p = predict_model(model, repliseq_df, binsize=50e3, threshold=0.5)
-
-  #
-  # Export predictions
-  #
-  # p$forks %>%
-  #   dplyr::mutate(
-  #     replication_chrom=fork_chrom,
-  #     replication_strand=dplyr::case_when(fork_direction=="right"~"+", T~"-"),
-  #     replication_direction=dplyr::case_when(fork_direction=="right"~"telomeric", T~"centromeric"),
-  #     replication_length=fork_end-fork_start,
-  #     replication_start=dplyr::case_when(fork_direction=="right"~fork_start, T~fork_end),
-  #     replication_end=dplyr::case_when(fork_direction=="right"~fork_end, T~fork_start)) %>%
-  #   dplyr::select(dplyr::matches("replication_")) %>%
-  #   readr::write_tsv(paste0("data/replication_forks_", celltype, ".tsv"))
-  readr::write_tsv(p$forks, paste0("data/replication_forks_", celltype, ".tsv"))
-  readr::write_tsv(p$collisions, paste0("data/replication_collisions_", celltype, ".tsv"))
-
-  #
-  # Export predictions (BED)
-  #
-  path_suffix = "2022-11-12"
-  fork_bed_path = paste0("reports/01-replication_fork/forks-", celltype, "-", path_suffix, ".bed")
-  writeLines('track itemRgb=On visibility=2 colorByStrand="255,0,0 0,0,255"', con=fork_bed_path)
-  p$forks %>%
-    dplyr::mutate(fork_strand=dplyr::case_when(fork_direction=="telomeric"~"+", fork_direction=="centromeric"~"-"), thickStat=fork_start, thickEnd=fork_end, fork_color=dplyr::case_when(fork_direction=="telomeric"~"255,0,0", fork_direction=="centromeric"~"0,0,255")) %>%
-    dplyr::select(fork_chrom, fork_start, fork_end, fork_direction, fork_pred, fork_strand, thickStat, thickEnd, fork_color) %>%
-    readr::write_tsv(fork_bed_path, append=T, col_names=F)
-  p$significant %>%
-    dplyr::mutate(score=-log10(tz_pred), name=as.character(tz_start), strand="*") %>%
-    dplyr::select(tz_chrom, tz_start, tz_end, name, score, strand) %>%
-    readr::write_tsv(paste0("reports/01-replication_fork/predicted_tz_", celltype, "-", path_suffix, ".bed"), col_names=F)
-  p$regions %>%
-    dplyr::select(prediction_chrom, prediction_start, prediction_end) %>%
-    readr::write_tsv(paste0("reports/01-replication_fork/predicted_regions_tz_", celltype, "-", path_suffix, ".bed"), col_names=F)
-  p$all %>%
-    dplyr::group_by(tz_zoomout) %>%
-    dplyr::do((function(z){
-      z %>%
-        dplyr::select(tz_chrom, tz_start, tz_end, tz_pred) %>%
-        readr::write_tsv(paste0("reports/01-replication_fork/predicted_tz_", celltype, "-", path_suffix, "-zoomout", z$tz_zoomout[1], ".bedgraph"), col_names=F)
-    })(.))
-
-
-  #
-  # Export annotations
-  #
+  model = load_model("reports/01-replication_fork_nn/model/cv0")
   tz_df = readr::read_tsv("data/tz_annotation.tsv")
-  fork_annotated_path = "reports/01-replication_fork/forks_annotated.bed"
-  writeLines('track name="Replication forks" itemRgb=On visibility=2 colorByStrand="255,0,0 0,0,255"', con=fork_annotated_path)
-  tz_df %>%
-    dplyr::select(tz_train_chrom=tz_chrom, tz_train_end=tz_start, tz_train_start=tz_end, tz_iz_left, tz_iz_right) %>%
-    df2ranges(tz_train_chrom, tz_train_start, tz_train_start) %>%
-    innerJoinByOverlaps(predictions_significant_df %>% df2ranges(tz_chrom, tz_start, tz_end)) %>%
-    reshape2::melt(measure.vars=c("tz_iz_left", "tz_iz_right"), variable.name="fork_iz_location", value.name="fork_iz") %>%
-    dplyr::mutate(
-      fork_tz=tz_end/2+tz_start/2,
-      fork_chrom=tz_chrom, fork_name=dplyr::case_when(fork_iz_location=="tz_iz_left"~"right fork", fork_iz_location=="tz_iz_right"~"left fork"),
-      fork_start=pmin(fork_iz, fork_tz), fork_end=pmax(fork_tz, fork_iz), fork_score=-log10(tz_pred),
-      fork_strand=dplyr::case_when(fork_iz_location=="tz_iz_left"~"+", fork_iz_location=="tz_iz_right"~"-"),
-      thickStat=fork_start, thickEnd=fork_end, fork_color=dplyr::case_when(fork_strand=="+"~"#FF0000", fork_strand=="-"~"#0000FF")
-    ) %>%
-    dplyr::select(fork_chrom, fork_start, fork_end, fork_name, fork_score, fork_strand, thickStat, thickEnd, fork_color) %>%
-    readr::write_tsv(fork_annotated_path, append=T, col_names=F)
 
+  for(celltype in c("ESC", "NPC")) {
+    repliseq_df = readr::read_tsv(paste0("data/repliseq/GSE137764_repliseq_zhao_bmc2020_", celltype, "_repliseq50000.tsv"))
+    p = predict_model(model, repliseq_df, binsize=50e3, threshold=0.5)
+    readr::write_tsv(p$forks, paste0("data/replication_forks_", celltype, ".tsv"))
+    readr::write_tsv(p$collisions, paste0("data/replication_collisions_", celltype, ".tsv"))
+
+    #
+    # Export predictions (BED)
+    #
+    path_suffix = "2022-12-13"
+    fork_bed_path = paste0("reports/01-replication_fork_nn/predicted-", celltype, "-forks-", path_suffix, ".bed")
+    writeLines('track itemRgb=On visibility=2 colorByStrand="255,0,0 0,0,255"', con=fork_bed_path)
+    p$forks %>%
+      dplyr::mutate(fork_strand=dplyr::case_when(fork_direction=="telomeric"~"+", fork_direction=="centromeric"~"-"),
+                    thickStat=ifelse(fork_direction=="telomeric", fork_end-10e3, fork_start),
+                    thickEnd=ifelse(fork_direction=="telomeric", fork_end, fork_start+10e3),
+                    fork_color=dplyr::case_when(fork_direction=="telomeric"~"255,0,0", fork_direction=="centromeric"~"0,0,255")) %>%
+      dplyr::select(fork_chrom, fork_start, fork_end, fork_direction, fork_pred, fork_strand, thickStat, thickEnd, fork_color) %>%
+      readr::write_tsv(fork_bed_path, append=T, col_names=F)
+    p$significant %>%
+      dplyr::mutate(score=-log10(tz_pred), name=as.character(tz_start), strand="*") %>%
+      dplyr::select(tz_chrom, tz_start, tz_end, name, score, strand) %>%
+      readr::write_tsv(paste0("reports/01-replication_fork_nn/predicted-", celltype, "-tz-", path_suffix, ".bed"), col_names=F)
+    p$regions %>%
+      dplyr::select(prediction_chrom, prediction_start, prediction_end) %>%
+      readr::write_tsv(paste0("reports/01-replication_fork_nn/predicted-", celltype, "-regions-", path_suffix, ".bed"), col_names=F)
+    p$all %>%
+      dplyr::group_by(tz_zoomout) %>%
+      dplyr::do((function(z){
+        z %>%
+          dplyr::select(tz_chrom, tz_start, tz_end, tz_pred) %>%
+          readr::write_tsv(paste0("reports/01-replication_fork_nn/predicted-", celltype, "-scores-zoomout", z$tz_zoomout[1], "-", path_suffix, ".bedgraph"), col_names=F)
+      })(.))
+
+    #
+    # Export annotations
+    #
+    # fork_annotated_path = paste0("reports/01-replication_fork_nn/predicted-", celltype, "-forks_annotated-", path_suffix, ".bed")
+    # writeLines('track name="Replication forks" itemRgb=On visibility=2 colorByStrand="255,0,0 0,0,255"', con=fork_annotated_path)
+    # tz_df %>%
+    #   dplyr::select(tz_train_chrom=tz_chrom, tz_train_end=tz_start, tz_train_start=tz_end, tz_iz_left, tz_iz_right) %>%
+    #   df2ranges(tz_train_chrom, tz_train_start, tz_train_start) %>%
+    #   innerJoinByOverlaps(p$significant %>% df2ranges(tz_chrom, tz_start, tz_end)) %>%
+    #   reshape2::melt(measure.vars=c("tz_iz_left", "tz_iz_right"), variable.name="fork_iz_location", value.name="fork_iz") %>%
+    #   dplyr::mutate(
+    #     fork_tz=tz_end/2+tz_start/2,
+    #     fork_chrom=tz_chrom, fork_name=dplyr::case_when(fork_iz_location=="tz_iz_left"~"right fork", fork_iz_location=="tz_iz_right"~"left fork"),
+    #     fork_start=pmin(fork_iz, fork_tz), fork_end=pmax(fork_tz, fork_iz), fork_score=-log10(tz_pred),
+    #     fork_strand=dplyr::case_when(fork_iz_location=="tz_iz_left"~"+", fork_iz_location=="tz_iz_right"~"-"),
+    #     thickStat=fork_start, thickEnd=fork_end, fork_color=dplyr::case_when(fork_strand=="+"~"#FF0000", fork_strand=="-"~"#0000FF")
+    #   ) %>%
+    #   dplyr::select(fork_chrom, fork_start, fork_end, fork_name, fork_score, fork_strand, thickStat, thickEnd, fork_color) %>%
+    #   readr::write_tsv(fork_annotated_path, append=T, col_names=F)
+  }
 }

@@ -7,8 +7,12 @@ library(xlsx)
 devtools::load_all("breaktools/")
 source("00-utils.R")
 
+export_groseq_to_ncbi = function()
+{
 
-export_files_to_ncbi = function()
+}
+
+export_htgts_to_ncbi = function()
 {
   dir.create("reports/00-upload_ncbi", recursive=T, showWarnings=F)
 
@@ -37,7 +41,7 @@ export_files_to_ncbi = function()
   #
   # Load samples data
   #
-  samples_df = tlx_read_paper_samples("data/htgts_samples_all.tsv", "data/TLX_compiled") %>%
+  samples_df = tlx_read_samples("data/htgts_samples.tsv", "data/TLX_paper") %>%
     dplyr::filter(!grepl("Wei|Tena", experiment))
 
   #
@@ -59,10 +63,12 @@ export_files_to_ncbi = function()
         metadata_path = metadata_path[order(nchar(basename(metadata_path)))][1]
         metadata_df = z %>%
           dplyr::left_join(readr::read_tsv(metadata_path), by=c("sample"="Library")) %>%
+          dplyr::mutate(htgts_parameters=paste0("[", tidyr::replace_na(MID, ""), "]", Chr, ":", Start, "-", End, ":", Strand)) %>%
+          dplyr::mutate(htgts_barcode=tidyr::replace_na(MID, "")) %>%
           dplyr::mutate(metadata_exists=T) %>%
           dplyr::mutate(raw_path=paste0(run_path, "/preprocess/", sample, "_", run, "_R1.fq.gz"), raw_path_exists=file.exists(raw_path)) %>%
           dplyr::mutate(tlx_path=paste0(run_path, "/results/", sample, "_", run, "/", sample, "_", run, "_result.tlx"), tlx_path_exists=file.exists(tlx_path)) %>%
-          dplyr::select_at(c(colnames(z), "metadata_exists", "raw_path", "raw_path_exists", "tlx_path", "tlx_path_exists"))
+          dplyr::select_at(c(colnames(z), "htgts_parameters", "htgts_barcode", "metadata_exists", "raw_path", "raw_path_exists", "tlx_path", "tlx_path_exists"))
       } else {
         metadata_df = z %>% dplyr::bind_cols(metadata_exists=F, raw_path=NA_character_, raw_path_exists=F, tlx_path=NA_character_, tlx_path_exists=F)
       }
@@ -73,7 +79,7 @@ export_files_to_ncbi = function()
 
   # library name	title	organism	tissue	cell line	cell type	genotype	treatment	molecule	single or paired-end	instrument model	description	processed data file 	processed data file 	raw file	raw file	raw file	raw file
   geo_samples_df = samples_df %>%
-    dplyr::left_join(raw_df %>% dplyr::select(sample, raw_path), by="sample") %>%
+    dplyr::left_join(raw_df %>% dplyr::select(sample, raw_path, htgts_barcode), by="sample") %>%
     dplyr::left_join(batch_sequencer_kits_df, by="run") %>%
     dplyr::mutate(cellparental=toupper(gsub(".*(NXP[0-9]+).*", "\\1", description, ignore.case=T))) %>%
     dplyr::mutate(cellculture=gsub("/", "-", ifelse(grepl("ESC-NPC;NXP[0-9]+;([0-9/-]+).*", description, ignore.case=T), gsub("ESC-NPC;NXP[0-9]+;([0-9/-]+).*", "\\1", description, ignore.case=T), ""))) %>%
@@ -81,10 +87,10 @@ export_files_to_ncbi = function()
     dplyr::mutate(replicate=paste0("replicate_", 1:dplyr::n())) %>%
     data.frame() %>%
     dplyr::mutate(
-      `library name`=paste0("HTGTS_Sample", 1:dplyr::n()),
+      `library name`=paste0("HTGTS Sample ", 1:dplyr::n()),
       sample_id=gsub("_+", "_", gsub(" ", "-", paste0(bait_name, "_", gsub("[ .]", "", gsub(" uM [0-9]+h$", "", treatment)), "_", cellculture, "_", replicate))),
-      `title`=gsub("; *", "; ", paste(description, "LAM-HTGTS", replicate, sep="; ")),
-      `genotype`=paste("Xrcc4-/-::p53-/-", cellparental, gsub(" \\(.*", "", gsub("\\b(APH|DMSO).*", "", geo_samples_df$group)), sep=","),
+      `title`=paste0(gsub("; *", "; ", paste(description, "LAM-HTGTS", replicate, sep="; ")), "; Barcode ", htgts_barcode),
+      `genotype`=paste("Xrcc4-/-::p53-/-", cellparental, gsub(" \\(.*", "", gsub("\\b(APH|DMSO).*", "", group)), sep=","),
       `organism`=organism,
       `cell line`="ESC-NPC",
       `cell type`="Neural progenitor cells",
@@ -102,7 +108,6 @@ export_files_to_ncbi = function()
       tlx_clean_local_path=paste0("reports/00-upload_ncbi/TLX/", sample_id, ".tlx"),
       tlx_file=paste0(sample_id, ".tlx")
     )
-
 
   #
   # Remove Psyx from TLX files
@@ -180,23 +185,27 @@ export_files_to_ncbi = function()
   # Create script to copy all ftp files
   #
   cmd_ftpcopy = c(
-    "cd uploads/ch164594_Y54fyeWG",
+    "set log:file/xfer reports/00-upload_ncbi/upload.log",
+    "set xfer:log 1",
+    "set xfer:eta-period 60",
+    "set xfer:rate-period 60",
+    "set ftp:proxy http://www-int2.inet.dkfz-heidelberg.de:80",
+    'open -u "geoftp,Haf5Fatoryen" ftp://ftp-private.ncbi.nlm.nih.gov',
+    "bin",
+    # paste("put -e -O", "uploads/ch164594_Y54fyeWG", geo_samples_df$tlx_clean_local_path),
     "",
-    paste0("mput ", getwd(), "/reports/00-upload_ncbi/TLX/*.tlx"),
-    "",
-    paste("put", c(geo_samples_df$raw_local_path1, geo_samples_df$raw_local_path2), c(geo_samples_df$raw_file1, geo_samples_df$raw_file2)),
+    paste("put -e -O", "uploads/ch164594_Y54fyeWG", c(geo_samples_df$raw_local_path1, geo_samples_df$raw_local_path2), "-o", basename(c(geo_samples_df$raw_file1, geo_samples_df$raw_file2))),
     "",
     "bye"
   )
   writeLines(cmd_ftpcopy, con="reports/00-upload_ncbi/upload.ftp")
-  writeLines('cat upload.ftp | lftp  -u "geoftp,NtG5hT0U" ftp-private.ncbi.nlm.nih.gov', con="reports/00-upload_ncbi/upload.sh")
+  writeLines("#!/bin/bash\nlftp -f reports/00-upload_ncbi/upload.ftp", con="reports/00-upload_ncbi/upload.sh")
 
   #
   # Write EXCEL file describing samples uploaded to NCBI
   #
-  excel_path = "reports/00-upload_ncbi/ncbi.xlsx"
+  excel_path = "reports/00-upload_ncbi/geo_htgts.xlsx"
   xlsx::write.xlsx(geo_samples_export_df, excel_path, sheetName="2-1. Metadata Template",  col.names=T, row.names=F, append=F)
   xlsx::write.xlsx(geo_paired_export_df, excel_path, sheetName="2-2. PAIRED-END EXPERIMENTS",  col.names=T, row.names=F, append=T)
   xlsx::write.xlsx(geo_md5_df, excel_path, sheetName="3. MD5 Checksums",  col.names=T, row.names=F, append=T)
-
 }
