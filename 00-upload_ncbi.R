@@ -7,56 +7,23 @@ library(xlsx)
 devtools::load_all("breaktools/")
 source("00-utils.R")
 
-export_groseq_to_ncbi = function()
-{
-
-}
-
 export_htgts_to_ncbi = function()
 {
   dir.create("reports/00-upload_ncbi", recursive=T, showWarnings=F)
 
-  # samples_df = readr::read_tsv("data/htgts_samples.tsv") %>%
-  #   dplyr::filter(file.exists(paste0("data/TLX/", path))) %>%
-  #   dplyr::left_join(geo_samples_df %>% dplyr::select(sample, tlx_clean_local_path), by="sample") %>%
-  #   #dplyr::rename(path_original="path", path="tlx_clean_local_path") %>%
-  #   # dplyr::mutate(path=ifelse(is.na(path), path_original, basename(path))) %>%
-  #   dplyr::filter(
-  #     organism=="mouse" & celltype=="NPC" & sample!="VI035" & (
-  #       experiment=="APH concentration" |
-  #       grepl("Nrxn1|Ctnna2 promoter/enhancer", experiment) & grepl(".*\\((NXP047||NXP010|22|22/37|22/5|47/5|18/4|38/3)\\)", group) |
-  #       grepl("Wei|Tena", experiment)
-  #     )
-  #  ) %>%
-  #   dplyr::mutate(subset_detect_offtargets="Y")  %>%
-  #   dplyr::mutate(subset_detect_rdc=ifelse(grepl("(Ctnna2|Nrxn1) promoter/enhancer", experiment) | grepl("concentration", experiment) & concentration %in% c(0, 0.4) | grepl("Wei|Tena", experiment), "Y", "N")) %>%
-  #   dplyr::mutate(subset_aph_concentration=ifelse(experiment=="APH concentration", "Y", "N")) %>%
-  #   dplyr::mutate(subset_promoter_enhancer_deletion=ifelse(grepl("(Ctnna2|Nrxn1) promoter/enhancer", experiment), "Y", "N"))  %>%
-  #   dplyr::mutate(subset_multiomics_examples=ifelse(!control & (grepl("(Ctnna2|Nrxn1) promoter/enhancer", experiment) | grepl("concentration$", experiment) & concentration==0.4 | grepl("Wei|Tena", experiment)), "Y", "N")) %>%
-  #   dplyr::mutate(subset_pileups=subset_multiomics_examples)
-  # samples_df = readr::read_tsv("data/htgts_samples.tsv") %>%
-  #   dplyr::select(sample, experiment, run, celltype, treatment, group, group_short, control, organism, path ,path_original, bait_chrom, bait_name, alleles, concentration, description, subset_detect_offtargets, subset_detect_rdc, subset_aph_concentration, subset_promoter_enhancer_deletion, subset_multiomics_examples, subset_pileups) %>%
-  #   readr::write_tsv("data/htgts_samples.tsv")
-
   #
   # Load samples data
   #
-  samples_df = tlx_read_samples("data/htgts_samples.tsv", "data/TLX_paper") %>%
+  htgts_samples_df = tlx_read_samples("data/htgts_samples.tsv", "data/TLX_paper") %>%
     dplyr::filter(!grepl("Wei|Tena", experiment))
-
-  #
-  # Load information about sequencer for each run
-  #
-  batch_sequencer_kits_df = readr::read_tsv("data/batch_sequencer_kits.tsv")
 
   #
   # Find al the raw files
   #
-  raw_df = samples_df %>%
+  htgts_raw_df = htgts_samples_df %>%
     dplyr::group_by(run) %>%
     dplyr::do((function(z){
       zz<<-z
-      # z = samples_df %>% dplyr::filter(run=="B400_015")
       run_path = paste0("/omics/groups/OE0574/internal/peggy/HTGTS/", z$run[1])
       metadata_path = Sys.glob(paste0(run_path, "/", z$run[1], "*metadata*"))
       if(any(file.exists(metadata_path))) {
@@ -77,28 +44,27 @@ export_htgts_to_ncbi = function()
     })(.)) %>%
     dplyr::ungroup()
 
-  # library name	title	organism	tissue	cell line	cell type	genotype	treatment	molecule	single or paired-end	instrument model	description	processed data file 	processed data file 	raw file	raw file	raw file	raw file
-  geo_samples_df = samples_df %>%
-    dplyr::left_join(raw_df %>% dplyr::select(sample, raw_path, htgts_barcode), by="sample") %>%
-    dplyr::left_join(batch_sequencer_kits_df, by="run") %>%
+  geo_htgts_samples_df = htgts_samples_df %>%
+    dplyr::left_join(htgts_raw_df %>% dplyr::select(sample, raw_path, htgts_barcode), by="sample") %>%
     dplyr::mutate(cellparental=toupper(gsub(".*(NXP[0-9]+).*", "\\1", description, ignore.case=T))) %>%
     dplyr::mutate(cellculture=gsub("/", "-", ifelse(grepl("ESC-NPC;NXP[0-9]+;([0-9/-]+).*", description, ignore.case=T), gsub("ESC-NPC;NXP[0-9]+;([0-9/-]+).*", "\\1", description, ignore.case=T), ""))) %>%
     dplyr::group_by(organism, celltype, bait_name, treatment, cellculture) %>%
     dplyr::mutate(replicate=paste0("replicate_", 1:dplyr::n())) %>%
     data.frame() %>%
     dplyr::mutate(
+      study_geo=tidyr::replace_na(study_geo, "this study"),
       `library name`=paste0("HTGTS Sample ", 1:dplyr::n()),
-      sample_id=gsub("_+", "_", gsub(" ", "-", paste0(bait_name, "_", gsub("[ .]", "", gsub(" uM [0-9]+h$", "", treatment)), "_", cellculture, "_", replicate))),
-      `title`=paste0(gsub("; *", "; ", paste(description, "LAM-HTGTS", replicate, sep="; ")), "; Barcode ", htgts_barcode),
-      `genotype`=paste("Xrcc4-/-::p53-/-", cellparental, gsub(" \\(.*", "", gsub("\\b(APH|DMSO).*", "", group)), sep=","),
+      sample_id=gsub("_+", "_", gsub(" ", "-", paste0("HTGTS_", bait_name, "_", gsub("[ .]", "", gsub(" uM [0-9]+h$", "", treatment)), "_", cellculture, "_", replicate, "_", sample))),
+      `title`=paste0(gsub("; *", "; ", paste(description, "LAM-HTGTS", replicate, sep="; ")), "; Bait ", bait_name, "; Barcode ", htgts_barcode),
+      `genotype`=gsub(",$", "", paste("Xrcc4-/-::p53-/-", cellparental, gsub(" \\(.*", "", gsub("\\b(APH|DMSO).*", "", group)), sep=",")),
       `organism`=organism,
       `cell line`="ESC-NPC",
       `cell type`="Neural progenitor cells",
       `treatment`=treatment,
       `molecule`="genomic DNA",
       `single or paired-end`="paired-end",
-      `instrument model`=sequencer_kit,
-      description="",
+      `instrument model`=instrument_model,
+      description="LAM-HTGTS",
       raw_extention=gsub("[^.]+(\\..*)$", "\\1", basename(raw_path)),
       raw_local_path1=raw_path,
       raw_local_path2=gsub("_R1", "_R2", raw_local_path1),
@@ -112,7 +78,7 @@ export_htgts_to_ncbi = function()
   #
   # Remove Psyx from TLX files
   #
-  geo_samples_df %>%
+  geo_htgts_samples_df %>%
     dplyr::group_by(tlx_local_path) %>%
     dplyr::summarize(return=system(paste0("sed '/phiX/d' ", tlx_local_path, "  > ", tlx_clean_local_path)))
 
@@ -122,23 +88,23 @@ export_htgts_to_ncbi = function()
   if(T)
   {
     error = ""
-    if(any(!complete.cases(geo_samples_df))) {
-      current_error = paste0("NA values present in sample ids: ", paste(geo_samples_df$sample_id[!complete.cases(geo_samples_df)], collapse=", "))
+    if(any(!complete.cases(geo_htgts_samples_df))) {
+      current_error = paste0("NA values present in sample ids: ", paste(geo_htgts_samples_df$sample_id[!complete.cases(geo_htgts_samples_df)], collapse=", "))
       error = paste0(error, "\n", current_error)
     }
 
-    if(any(duplicated(geo_samples_df$sample_id))) {
-      current_error = paste0("Duplicate sample ids: ", paste(geo_samples_df$sample_id[duplicated(geo_samples_df$sample_id)], collapse=", "))
+    if(any(duplicated(geo_htgts_samples_df$sample_id))) {
+      current_error = paste0("Duplicate sample ids: ", paste(geo_htgts_samples_df$sample_id[duplicated(geo_htgts_samples_df$sample_id)], collapse=", "))
       error = paste0(error, "\n", current_error)
     }
 
-    raw_local_files = c(geo_samples_df$raw_local_path1, geo_samples_df$raw_local_path2)
+    raw_local_files = c(geo_htgts_samples_df$raw_local_path1, geo_htgts_samples_df$raw_local_path2)
     if(any(duplicated(raw_local_files))) {
       current_error = paste0("Duplicate raw_local_path1 or raw_local_path2: ", paste(raw_local_files[duplicated(raw_local_files)], collapse=", "))
       error = paste0(error, "\n", unique(current_error))
     }
 
-    file_sizes_df = dplyr::bind_rows(file.info(c(geo_samples_df$raw_local_path1, geo_samples_df$raw_local_path2, geo_samples_df$tlx_clean_local_path))) %>%
+    file_sizes_df = dplyr::bind_rows(file.info(c(geo_htgts_samples_df$raw_local_path1, geo_htgts_samples_df$raw_local_path2, geo_htgts_samples_df$tlx_clean_local_path))) %>%
       tibble::rownames_to_column("file_path") %>%
       dplyr::mutate(filetype=gsub(".*\\.(.*)$", "\\1", as.character(file_path))) %>%
       dplyr::mutate(size_validation=dplyr::case_when(
@@ -151,13 +117,13 @@ export_htgts_to_ncbi = function()
       error = paste0(error, "\n", current_error)
     }
 
-    if(any(duplicated(geo_samples_df$raw_local_path2))) {
-      current_error = paste0("Duplicate raw_local_path2: ", paste(geo_samples_df$raw_local_path2[duplicated(geo_samples_df$raw_local_path2)], collapse=", "))
+    if(any(duplicated(geo_htgts_samples_df$raw_local_path2))) {
+      current_error = paste0("Duplicate raw_local_path2: ", paste(geo_htgts_samples_df$raw_local_path2[duplicated(geo_htgts_samples_df$raw_local_path2)], collapse=", "))
       error = paste0(error, "\n", current_error)
     }
 
-    if(any(duplicated(geo_samples_df$tlx_clean_local_path))) {
-      current_error = paste0("Duplicate tlx_clean_local_path: ", paste(geo_samples_df$tlx_clean_local_path[duplicated(geo_samples_df$tlx_clean_local_path)], collapse=", "))
+    if(any(duplicated(geo_htgts_samples_df$tlx_clean_local_path))) {
+      current_error = paste0("Duplicate tlx_clean_local_path: ", paste(geo_htgts_samples_df$tlx_clean_local_path[duplicated(geo_htgts_samples_df$tlx_clean_local_path)], collapse=", "))
       error = paste0(error, "\n", current_error)
     }
 
@@ -166,18 +132,17 @@ export_htgts_to_ncbi = function()
     }
   }
 
-
-  geo_samples_export_df = geo_samples_df %>%
+  geo_htgts_samples_export_df = geo_htgts_samples_df %>%
     dplyr::select(`library name`, `title`, `organism`, `cell line`, `cell type`, `genotype`, `treatment`, `molecule`, `single or paired-end`, `instrument model`, `description`, tlx_file, raw_file1, raw_file2) %>%
     magrittr::set_names(c("library name", "title", "organism", "cell line", "cell type", "genotype", "treatment", "molecule", "single or paired-end", "instrument model", "description", "processed data file", "raw file", "raw file"))
 
-  geo_paired_export_df = geo_samples_df %>%
+  geo_paired_export_df = geo_htgts_samples_df %>%
     dplyr::select(`file name 1`=raw_file1, `file name 2`=raw_file2)
 
   geo_md5_df=dplyr::bind_rows(
-    geo_samples_df %>% dplyr::select(local_path=raw_local_path1, file=raw_file1),
-    geo_samples_df %>% dplyr::select(local_path=raw_local_path2, file=raw_file2),
-    geo_samples_df %>% dplyr::select(local_path=tlx_clean_local_path, file=tlx_file)) %>%
+    geo_htgts_samples_df %>% dplyr::select(local_path=raw_local_path1, file=raw_file1),
+    geo_htgts_samples_df %>% dplyr::select(local_path=raw_local_path2, file=raw_file2),
+    geo_htgts_samples_df %>% dplyr::select(local_path=tlx_clean_local_path, file=tlx_file)) %>%
     dplyr::mutate(md5=tools::md5sum(local_path)) %>%
     dplyr::select(`file name`=file, `file checksum`=md5)
 
@@ -192,9 +157,9 @@ export_htgts_to_ncbi = function()
     "set ftp:proxy http://www-int2.inet.dkfz-heidelberg.de:80",
     'open -u "geoftp,Haf5Fatoryen" ftp://ftp-private.ncbi.nlm.nih.gov',
     "bin",
-    # paste("put -e -O", "uploads/ch164594_Y54fyeWG", geo_samples_df$tlx_clean_local_path),
+    # paste("put -e -O", "uploads/ch164594_Y54fyeWG", geo_htgts_samples_df$tlx_clean_local_path),
     "",
-    paste("put -e -O", "uploads/ch164594_Y54fyeWG", c(geo_samples_df$raw_local_path1, geo_samples_df$raw_local_path2), "-o", basename(c(geo_samples_df$raw_file1, geo_samples_df$raw_file2))),
+    paste("put -e -O", "uploads/ch164594_Y54fyeWG", c(geo_htgts_samples_df$raw_local_path1, geo_htgts_samples_df$raw_local_path2), "-o", basename(c(geo_htgts_samples_df$raw_file1, geo_htgts_samples_df$raw_file2))),
     "",
     "bye"
   )
@@ -202,10 +167,134 @@ export_htgts_to_ncbi = function()
   writeLines("#!/bin/bash\nlftp -f reports/00-upload_ncbi/upload.ftp", con="reports/00-upload_ncbi/upload.sh")
 
   #
-  # Write EXCEL file describing samples uploaded to NCBI
+  # Write EXCEL file describing samples uploaded to GEO
   #
-  excel_path = "reports/00-upload_ncbi/geo_htgts.xlsx"
-  xlsx::write.xlsx(geo_samples_export_df, excel_path, sheetName="2-1. Metadata Template",  col.names=T, row.names=F, append=F)
-  xlsx::write.xlsx(geo_paired_export_df, excel_path, sheetName="2-2. PAIRED-END EXPERIMENTS",  col.names=T, row.names=F, append=T)
-  xlsx::write.xlsx(geo_md5_df, excel_path, sheetName="3. MD5 Checksums",  col.names=T, row.names=F, append=T)
+  geo_excel_path = "reports/00-upload_ncbi/geo_htgts.xlsx"
+  xlsx::write.xlsx(geo_htgts_samples_export_df, geo_excel_path, sheetName="2-1. Metadata Template",  col.names=T, row.names=F, append=F)
+  xlsx::write.xlsx(geo_paired_export_df, geo_excel_path, sheetName="2-2. PAIRED-END EXPERIMENTS",  col.names=T, row.names=F, append=T)
+  xlsx::write.xlsx(geo_md5_df, geo_excel_path, sheetName="3. MD5 Checksums",  col.names=T, row.names=F, append=T)
+
+  #
+  # LAM-HTGTS SRA data
+  #
+  sra_htgts_samples_export_df = geo_htgts_samples_df %>%
+    dplyr::mutate(
+      library_strategy="OTHER",
+      library_selection="OTHER",
+      library_source="GENOMIC",
+      library_layout="PAIRED",
+      platform="ILLUMINA",
+      instrument_model=gsub(" ?V\\d.*", "", `instrument model`),
+      dev_stage="Neural progenitor cells",
+      tissue="Embrionic stem cells",
+      design_description=description,
+      cell_line=paste0(cellparental, ifelse(cellculture!="", " ", ""), cellculture),
+      raw_path=raw_local_path1, raw_path1=raw_local_path2,
+      filename=paste0(sample_id, "_R1.fastq.gz"), filename1=paste0(sample_id, "_R2.fastq.gz") ) %>%
+    dplyr::select(sample_name=sample_id, sample_title=title, organism, strain=genotype, cell_line, bait_name, dev_stage, tissue, treatment, bait_name, replicate, dplyr::matches("library_"), platform, instrument_model, design_description, raw_path, raw_path1, filename, filename1)
+
+  #
+  # GRO-seq SRA data
+  #
+  groseq_fastq_paths_df = data.frame(raw_path=Sys.glob("/omics/groups/OE0574/internal/peggy/groseq/*/*/*R1.fastq.gz")) %>%
+    dplyr::mutate(ilse_number=gsub("-LR-.*", "", basename(raw_path)))
+  groseq_samples_df = readr::read_tsv("data/groseq_samples.tsv", na="<N/A>") %>%
+    dplyr::filter(published=="Y") %>%
+    dplyr::left_join(groseq_fastq_paths_df, by="ilse_number")
+  sra_groseq_samples_export_df = groseq_samples_df %>%
+    dplyr::mutate(
+      sample_name=paste0(sample_id, "_", sample),
+      library_strategy="OTHER",
+      library_selection="OTHER",
+      library_source="TRANSCRIPTOMIC",
+      library_layout="SINGLE",
+      bait_name="no bait",
+      cell_line=paste0(cell_parental, ifelse(cellculture!="", " ", ""), cellculture),
+      replicate=gsub(".*(replicate_\\d)$", "\\1", sample_id),
+      sample_title=paste0(gsub(".*,(ESC-NPC)", "\\1", genotype), " (", cellculture, "); ", replicate),
+      dev_stage="Neural progenitor cells", tissue="Embrionic stem cells", design_description="GRO-seq",
+      raw_path1="",
+      filename=paste0(sample_name, ".fastq.gz"), filename1=""
+    ) %>%
+    dplyr::select(sample_name, sample_title, organism, strain=genotype, cell_line, bait_name, dev_stage, tissue, treatment, replicate, dplyr::matches("library_"), platform, instrument_model, design_description, raw_path, raw_path1, filename, filename1)
+
+  #
+  # DRIP-seq SRA data
+  #
+  dripseq_fastq_paths_df = data.frame(raw_path=Sys.glob("/omics/groups/OE0574/internal/peggy/dripseq/ILSE24885_120422/0.fastq/*R1.fastq.gz")) %>%
+    dplyr::mutate(ilse_number=gsub("-LR-.*", "", basename(raw_path)))
+  dripseq_samples_df = readr::read_tsv("data/dripseq_samples.tsv", na="<N/A>") %>%
+    dplyr::filter(published=="Y") %>%
+    dplyr::left_join(dripseq_fastq_paths_df, by="ilse_number")
+  sra_dripseq_samples_export_df = dripseq_samples_df %>%
+    dplyr::mutate(
+      sample_name=paste0(sample_id, "_", sample),
+      bait_name="no bait",
+      cell_line=cell_parental,
+      library_strategy="OTHER",
+      library_selection="Restriction Digest",
+      library_source="GENOMIC",
+      library_layout="SINGLE",
+      sample_title=paste0(gsub(".*,(ESC-NPC)", "\\1", genotype), "; ", treatment, "; replicate_", gsub(".*(\\d)$", "\\1", sample_id)),
+      dev_stage="Neural progenitor cells", tissue="Embrionic stem cells", design_description="DRIP-seq",
+      raw_path1="",
+      filename=paste0(sample_name, ".fastq.gz"), filename1="",
+    ) %>%
+    dplyr::select(sample_name, sample_title, organism=organism, strain=genotype, cell_line, bait_name, dev_stage, tissue, treatment, replicate, dplyr::matches("library_"), platform, instrument_model, design_description, raw_path, raw_path1, filename, filename1)
+
+
+  #
+  # Create directory with links to SRA files
+  #
+  dir.create("reports/00-upload_ncbi/SRA", showWarnings=F, recursive=T)
+  sra_files_df = dplyr::bind_rows(
+    sra_htgts_samples_export_df %>% dplyr::mutate(pair_suffix="_R1") %>% dplyr::select(sample_name, pair_suffix, raw_path, filename),
+    sra_htgts_samples_export_df %>% dplyr::mutate(pair_suffix="_R2") %>% dplyr::select(sample_name, pair_suffix, raw_path=raw_path1, filename=filename1),
+    sra_groseq_samples_export_df %>% dplyr::mutate(pair_suffix="") %>% dplyr::select(sample_name, pair_suffix, raw_path, filename),
+    sra_dripseq_samples_export_df %>% dplyr::mutate(pair_suffix="") %>% dplyr::select(sample_name, pair_suffix, raw_path, filename)) %>%
+    dplyr::mutate(link=paste0("reports/00-upload_ncbi/SRA/", sample_name, pair_suffix, ".fastq.gz")) %>%
+    dplyr::group_by(sample_name, pair_suffix, link, raw_path) %>%
+    dplyr::summarize(return=R.utils::createLink(link=link, target=raw_path, overwrite=T), file.info(link)) %>%
+    dplyr::ungroup()
+
+  #
+  # Copy fastq.gz files to SRA
+  #
+  dir.create("reports/00-upload_ncbi/SRA_COPY", showWarnings=F, recursive=T)
+  sra_files_df = dplyr::bind_rows(
+    sra_htgts_samples_export_df %>% dplyr::mutate(pair_suffix="_R1") %>% dplyr::select(sample_name, pair_suffix, raw_path, filename),
+    sra_htgts_samples_export_df %>% dplyr::mutate(pair_suffix="_R2") %>% dplyr::select(sample_name, pair_suffix, raw_path=raw_path1, filename=filename1),
+    sra_groseq_samples_export_df %>% dplyr::mutate(pair_suffix="") %>% dplyr::select(sample_name, pair_suffix, raw_path, filename),
+    sra_dripseq_samples_export_df %>% dplyr::mutate(pair_suffix="") %>% dplyr::select(sample_name, pair_suffix, raw_path, filename)) %>%
+    dplyr::mutate(link=paste0("reports/00-upload_ncbi/SRA_COPY/", sample_name, pair_suffix, ".fastq.gz")) %>%
+    dplyr::group_by(sample_name, pair_suffix, link, raw_path) %>%
+    dplyr::summarize(return=R.utils::copyFile(srcPathname=raw_path, destPathname=link, overwrite=T), file.info(link)) %>%
+    # dplyr::summarize(return=R.utils::createLink(link=link, target=raw_path, overwrite=T), file.info(link)) %>%
+    dplyr::ungroup()
+
+
+  sra_small_samples = sra_files_df %>% dplyr::filter(size<=5e6)
+  if(nrow(sra_small_samples)>0) {
+    stop("Some samples are too small (<5Mb): ", paste(sra_small_samples$sample_name, collapse="\n"))
+  }
+
+  #
+  # Write TSV file describing samples uploaded to SRA
+  #
+  sra_samples_path = "reports/00-upload_ncbi/SRA_samples.tsv"
+  dplyr::bind_rows(sra_htgts_samples_export_df, sra_groseq_samples_export_df, sra_dripseq_samples_export_df) %>%
+    dplyr::mutate(sex='not collected') %>%
+    dplyr::select(sample_name, sample_title, organism, strain, cell_line, bait_name, dev_stage, tissue, sex, treatment, replicate) %>%
+    readr::write_tsv(file=sra_samples_path)
+
+  #
+  # Write TSV file files metadata uploaded to SRA
+  #
+  sra_metadata_path = "reports/00-upload_ncbi/SRA_metadata.tsv"
+  dplyr::bind_rows(sra_htgts_samples_export_df, sra_groseq_samples_export_df, sra_dripseq_samples_export_df) %>%
+    dplyr::mutate(library_ID=sample_name, title=paste0(design_description, " of ", organism, ": ", sample_title), filetype="fastq") %>%
+    dplyr::select(sample_name, library_ID, title, library_strategy, library_source, library_selection, library_layout, platform, instrument_model, design_description, filetype, filename, filename1) %>%
+    readr::write_tsv(file=sra_metadata_path)
+
+  # xlsx::write.xlsx(sra_samples_export_df, sra_excel_path, sheetName="Model.organism.animal.1.0",  col.names=T, row.names=F, append=F)
 }

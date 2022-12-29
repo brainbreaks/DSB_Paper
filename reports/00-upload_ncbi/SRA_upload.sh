@@ -1,0 +1,1 @@
+/home/s215v/.aspera/connect/bin/ascp -i /home/s215v/.aspera/aspera.openssh -QT -l100m -k1 -d /home/s215v/Workspace/DSB_Paper/reports/00-upload_ncbi/SRA subasp@upload.ncbi.nlm.nih.gov:/uploads/p.wei_dkfz-heidelberg.de_HG4axnHT/20221220-dripseq_groseq_htgts
