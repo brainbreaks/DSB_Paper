@@ -27,9 +27,9 @@ detect_offtargets = function()
   #
   # Read TLX data
   #
-  tlx_all_df = tlx_read_many(samples_df, threads=16) %>%
+  tlx_all_df = tlx_read_many(samples_df, threads=4) %>%
     tlx_extract_bait(bait_size=19, bait_region=12e6) %>%
-    tlx_calc_copynumber(bowtie2_index="genomes/mm10/mm10", max_hits=100, threads=16)
+    tlx_calc_copynumber(bowtie2_index="genomes/mm10/mm10", max_hits=100, threads=4)
 
   libfactors_df = tlx_all_df %>% tlx_libsizes()
 

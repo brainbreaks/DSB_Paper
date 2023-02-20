@@ -35,9 +35,9 @@ detect_rdc = function()
   #
   # Load TLX
   #
-  tlx_all_df = tlx_read_many(samples_df, threads=16) %>%
+  tlx_all_df = tlx_read_many(samples_df, threads=2) %>%
     tlx_extract_bait(bait_size=19, bait_region=12e6) %>%
-    tlx_calc_copynumber(bowtie2_index="genomes/mm10/mm10", max_hits=100, threads=16) %>%
+    tlx_calc_copynumber(bowtie2_index="genomes/mm10/mm10", max_hits=100, threads=8) %>%
     tlx_mark_offtargets(offtargets_df, offtarget_region=1e5, bait_region=1e4)
   libfactors_df = tlx_all_df %>% tlx_libsizes()
 
@@ -76,7 +76,7 @@ detect_rdc = function()
   # Detect RDC. Split coverage into telomeric, centromeric and combined and detect islands for each of the 3 subsets
   #
   rdc_power_df = data.frame()
-  for(sample_frac in seq(1, 1, 0.04)) {
+  for(sample_frac in seq(0.1, 1, 0.04)) {
     print(sample_frac)
     tlx_rdc_df = tlx_rdc_all_df %>%
       # dplyr::filter(tlx_group %in% c("APH-Inter (DKFZ)")) %>%
@@ -336,7 +336,7 @@ estimate_power = function()
     dplyr::filter(rdc_is_significant) %>%
     df2ranges(rdc_chrom, rdc_extended_start, rdc_extended_end) %>%
     leftJoinByOverlaps(
-      rdc_subset_df %>%
+      rdc_power_df %>%
         dplyr::filter(extsize==50e3 & sample_frac==1 & rdc_is_significant) %>%
         dplyr::select(ref_chrom=rdc_chrom, ref_extended_start=rdc_extended_start, ref_extended_end=rdc_extended_end) %>%
         df2ranges(ref_chrom, ref_extended_start, ref_extended_end)
