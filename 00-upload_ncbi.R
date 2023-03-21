@@ -7,6 +7,98 @@ library(xlsx)
 devtools::load_all("breaktools/")
 source("00-utils.R")
 
+remove_this = function()
+{
+
+  biosamples_ids = readr::read_tsv("reports/00-upload_ncbi/biosamples_ids.tsv") %>%
+    dplyr::mutate(sample_id=gsub("(.*_(rep|replicate)_?\\d+).*", "\\1", BioSample.name)) %>%
+    dplyr::mutate(b400_name=gsub(".*_([^_]+)$", "\\1", BioSample.name))
+  sra_ids = readr::read_tsv("reports/00-upload_ncbi/biosamples_ids.tsv") %>%
+    dplyr::select(Title, BioSample.name, BioSample.organism_name)
+  tlx_files = data.frame(tlx_path=list.files("data/TLX_paper")) %>%
+    dplyr::mutate(sample_id=paste0("HTGTS_", gsub(".tlx", "", tlx_path)))
+  tlx_annotations = readr::read_tsv("data/htgts_samples.tsv") %>%
+    dplyr::mutate(sample_id=paste0("HTGTS_", gsub("\\.tlx$", "", path)))
+
+  export_groseq_df = data.frame(groseq_path=list.files("reports/00-upload_ncbi/processed", pattern="GROseq.*bedgraph")) %>%
+    dplyr::mutate(b400_name=gsub(".*_([^_]+)_bin.*bedgraph", "\\1", groseq_path)) %>%
+    dplyr::mutate(strand=ifelse(grepl("bin.*-", groseq_path), "neg", "pos")) %>%
+    dplyr::inner_join(biosamples_ids %>% dplyr::filter(grepl("GROseq", BioSample.name)), by="b400_name") %>%
+    reshape2::dcast(Accession+Title+Links+Submission+BioSample.name+BioSample.organism_name+sample_id+b400_name ~ strand, value.var="groseq_path") %>%
+    dplyr::mutate(
+      cellparental="NXP010",
+      `cell line`="ESC-NPC",
+      `cell type`="Neural progenitor cells",
+      `genotype`=gsub("; replicate.*", "", Title)
+    ) %>%
+    dplyr::select(
+      `library name`=BioSample.name,
+      title=Title,
+      `cell line`,
+      `cell type`,
+      organism=BioSample.organism_name,
+      genotype,
+      `processed data file1`=neg,
+      `processed data file2`=pos,
+      `SRA accession`=Accession
+    )
+
+  export_tlx_df = tlx_files %>%
+    dplyr::inner_join(biosamples_ids, by="sample_id") %>%
+    dplyr::inner_join(tlx_annotations, by="sample_id") %>%
+    dplyr::mutate(cellparental=toupper(gsub(".*(NXP[0-9]+).*", "\\1", description, ignore.case=T))) %>%
+    dplyr::mutate(
+      `cell line`="ESC-NPC",
+      `cell type`="Neural progenitor cells",
+      tlx_path=paste0(BioSample.name, ".tlx"),
+      processed2="",
+      `genotype`=gsub(",$", "", paste("Xrcc4-/-::p53-/-", cellparental, gsub(" \\(.*", "", gsub("\\b(APH|DMSO).*", "", group)), sep=","))
+      ) %>%
+    dplyr::select(
+      `library name`=BioSample.name,
+      title=Title,
+      `cell line`,
+      `cell type`,
+      organism=BioSample.organism_name,
+      genotype,
+      `processed data file1`=tlx_path,
+      `processed data file2`=processed2,
+      `SRA accession`=Accession
+    )
+
+  export_dripseq_df = data.frame(dripseq_path=list.files("reports/00-upload_ncbi/processed", pattern="DRIPseq.*bedgraph")) %>%
+    dplyr::mutate(b400_name=gsub(".*_([^_]+)_bin.*bedgraph", "\\1", dripseq_path)) %>%
+    dplyr::mutate(strand=ifelse(grepl("bin.*-", dripseq_path), "neg", "pos")) %>%
+    dplyr::inner_join(biosamples_ids %>% dplyr::filter(grepl("DRIPseq", BioSample.name)), by="b400_name") %>%
+    reshape2::dcast(Accession+Title+Links+Submission+BioSample.name+BioSample.organism_name+sample_id+b400_name ~ strand, value.var="dripseq_path") %>%
+    dplyr::mutate(
+      `cell line`="ESC-NPC",
+      `cell type`="Neural progenitor cells",
+      `genotype`="Xrcc4-/-::p53-/-; ESC-NPC; NXP010"
+    ) %>%
+    dplyr::select(
+      `library name`=BioSample.name,
+      title=Title,
+      `cell line`,
+      `cell type`,
+      organism=BioSample.organism_name,
+      genotype,
+      `processed data file1`=neg,
+      `processed data file2`=pos,
+      `SRA accession`=Accession)
+
+  final_export = bind_rows(export_dripseq_df, export_groseq_df, export_tlx_df)
+  final_md5 = final_export %>%
+    reshape2::melt(measure.vars=c("processed data file1", "processed data file2")) %>%
+    dplyr::filter(!is.na(value) & value != "") %>%
+    dplyr::mutate(file_path=paste0("reports/00-upload_ncbi/processed/", value)) %>%
+    dplyr::mutate(md5=tools::md5sum(file_path)) %>%
+    dplyr::select(`file name`=value, `file checksum`=md5)
+
+  readr::write_tsv(final_md5, "reports/00-upload_ncbi/geo_metadata_md5.tsv")
+  readr::write_tsv(final_export,"reports/00-upload_ncbi/geo_metadata.tsv")
+}
+
 export_htgts_to_ncbi = function()
 {
   dir.create("reports/00-upload_ncbi", recursive=T, showWarnings=F)
