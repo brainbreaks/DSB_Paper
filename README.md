@@ -1,3 +1,4 @@
+[![DOI](https://zenodo.org/badge/477720049.svg)](https://zenodo.org/doi/10.5281/zenodo.10832657)
 ## Setup
 First,`bowtie2` and `bedtools` must be installed and accessible from the terminal. 
 
